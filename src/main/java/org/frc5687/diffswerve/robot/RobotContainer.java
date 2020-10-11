@@ -5,10 +5,14 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import org.frc5687.diffswerve.robot.commands.OutliersCommand;
 import org.frc5687.diffswerve.robot.subsystems.*;
+import org.frc5687.diffswerve.robot.commands.*;
 import org.frc5687.diffswerve.robot.util.*;
 
 public class RobotContainer extends OutliersContainer{
+
+    private DriveTrain _driveTrain;
 
 
     public RobotContainer(Robot robot, IdentityMode identityMode) {
@@ -16,6 +20,8 @@ public class RobotContainer extends OutliersContainer{
     }
     public void init() {
 
+        _driveTrain = new DriveTrain(this);
+        setDefaultCommand(_driveTrain, new DriveSwerveModule(_driveTrain));
     }
 
     public void periodic() {
@@ -40,9 +46,19 @@ public class RobotContainer extends OutliersContainer{
     public void autonomousInit() {
     }
 
+
+    private void setDefaultCommand(OutliersSubsystem subSystem, OutliersCommand command) {
+        if (subSystem==null || command==null) {
+            return;
+        }
+        CommandScheduler s = CommandScheduler.getInstance();
+        s.setDefaultCommand(subSystem, command);
+    }
+
     @Override
     public void updateDashboard() {
 
+        _driveTrain.updateDashboard();
     }
 
 

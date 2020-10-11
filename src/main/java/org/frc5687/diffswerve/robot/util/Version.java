@@ -6,7 +6,7 @@ package org.frc5687.diffswerve.robot.util;
  */
 
 public class Version {
-    public static final String BRANCH = "Init/#1-InitialFiles";
-    public static final String REVISION = "90a4750";
-    public static final String MODIFIED = " *";
+    public static final String BRANCH = "main";
+    public static final String REVISION = "919fa51";
+    public static final String MODIFIED = "";
 }
