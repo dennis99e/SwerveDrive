@@ -49,6 +49,14 @@ public class DiffSwerveModule {
         _leftFalcon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor,0,200);
         _rightFalcon.configForwardSoftLimitEnable(false);
         _leftFalcon.configForwardSoftLimitEnable(false);
+        _rightFalcon.config_kP(0,Constants.DriveTrain.VELOCITY_KP,200);
+        _rightFalcon.config_kI(0,Constants.DriveTrain.VELOCITY_KI,200);
+        _rightFalcon.config_kD(0,Constants.DriveTrain.VELOCITY_KD,200);
+        _rightFalcon.config_kF(0,Constants.DriveTrain.VELOCITY_KF,200);
+        _leftFalcon.config_kP(0,Constants.DriveTrain.VELOCITY_KP,200);
+        _leftFalcon.config_kI(0,Constants.DriveTrain.VELOCITY_KI,200);
+        _leftFalcon.config_kD(0,Constants.DriveTrain.VELOCITY_KD,200);
+        _leftFalcon.config_kF(0,Constants.DriveTrain.VELOCITY_KF,200);
     }
 
 
@@ -58,6 +66,11 @@ public class DiffSwerveModule {
     }
     public void setLeftFalcon(double speed){
         _leftFalcon.set(ControlMode.PercentOutput,speed);
+    }
+
+    public void setVelocityRPM(double RPM){
+        _rightFalcon.set(ControlMode.Velocity,(RPM * Constants.DriveTrain.TICKS_TO_ROTATIONS/ 600/ 1));
+        _leftFalcon.set(ControlMode.Velocity,(RPM * Constants.DriveTrain.TICKS_TO_ROTATIONS/ 600/ 1));
     }
 
     public double getModuleAngle(){

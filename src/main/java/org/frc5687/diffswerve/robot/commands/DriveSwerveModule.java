@@ -21,6 +21,7 @@ public class DriveSwerveModule extends OutliersCommand {
     @Override
     public void execute() {
         super.execute();
+        _driveTrain.setFrontRightVelocity(100);
         _driveTrain.setFrontRightSpeeds(0.1,0.1);
     }
 

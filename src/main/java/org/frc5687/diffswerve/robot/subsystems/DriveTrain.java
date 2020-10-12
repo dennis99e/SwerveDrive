@@ -22,12 +22,14 @@ public class DriveTrain extends OutliersSubsystem {
     public void updateDashboard() {
         metric("Right RPM",_frontRight.getRightFalconRPM());
         metric("Left RPM",_frontRight.getLeftFalconRPM());
-
     }
 
     public void setFrontRightSpeeds(double speedR, double speedL){
         _frontRight.setRightFalcon(speedR);
         _frontRight.setLeftFalcon(speedL);
+    }
+    public void setFrontRightVelocity(double RPM){
+        _frontRight.setVelocityRPM(RPM);
     }
 
 }
