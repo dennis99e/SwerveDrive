@@ -2,6 +2,7 @@ package org.frc5687.diffswerve.robot;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -19,7 +20,6 @@ public class RobotContainer extends OutliersContainer{
         super(identityMode);
     }
     public void init() {
-
         _driveTrain = new DriveTrain(this);
         setDefaultCommand(_driveTrain, new DriveSwerveModule(_driveTrain));
     }
@@ -57,6 +57,7 @@ public class RobotContainer extends OutliersContainer{
 
     @Override
     public void updateDashboard() {
+
 
         _driveTrain.updateDashboard();
     }

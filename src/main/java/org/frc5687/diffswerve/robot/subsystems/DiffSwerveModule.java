@@ -47,7 +47,8 @@ public class DiffSwerveModule {
 
         _rightFalcon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor,0,200);
         _leftFalcon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor,0,200);
-
+        _rightFalcon.configForwardSoftLimitEnable(false);
+        _leftFalcon.configForwardSoftLimitEnable(false);
     }
 
 

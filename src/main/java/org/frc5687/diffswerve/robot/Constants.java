@@ -3,7 +3,7 @@ package org.frc5687.diffswerve.robot;
 import javax.swing.*;
 
 public class Constants {
-    public static final int  TICKS_PER_UPDATE = 10;
+    public static final int  TICKS_PER_UPDATE = 1;
     public static final double METRIC_FLUSH_PERIOD = 1.0;
     public static final double UPDATE_PERIOD = 0.02;
     public static class DriveTrain {

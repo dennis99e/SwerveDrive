@@ -1,9 +1,7 @@
 package org.frc5687.diffswerve.robot.commands;
 
-import org.frc5687.diffswerve.robot.subsystems.DiffSwerveModule;
 import org.frc5687.diffswerve.robot.subsystems.DriveTrain;
 
-import static org.frc5687.diffswerve.robot.subsystems.DiffSwerveModule.ModuleID.FrontRight;
 
 public class DriveSwerveModule extends OutliersCommand {
 
@@ -12,6 +10,7 @@ public class DriveSwerveModule extends OutliersCommand {
 
     public DriveSwerveModule(DriveTrain driveTrain){
         _driveTrain = driveTrain;
+        addRequirements(_driveTrain);
     }
 
     @Override

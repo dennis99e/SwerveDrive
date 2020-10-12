@@ -1,5 +1,6 @@
 package org.frc5687.diffswerve.robot.subsystems;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.frc5687.diffswerve.robot.util.OutliersContainer;
 
 public class DriveTrain extends OutliersSubsystem {
@@ -8,6 +9,8 @@ public class DriveTrain extends OutliersSubsystem {
     public DriveTrain(OutliersContainer container){
         super(container);
         _frontRight = new DiffSwerveModule(DiffSwerveModule.ModuleID.FrontRight);
+        logMetrics("Left RPM","Right RPM");
+        enableMetrics();
     }
 
     @Override
@@ -17,9 +20,8 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
-        metric("Right RF RPM",_frontRight.getRightFalconRPM());
-        metric("Left RF RPM",_frontRight.getLeftFalconRPM());
-
+        metric("Right RPM",_frontRight.getRightFalconRPM());
+        metric("Left RPM",_frontRight.getLeftFalconRPM());
 
     }
 
@@ -27,4 +29,5 @@ public class DriveTrain extends OutliersSubsystem {
         _frontRight.setRightFalcon(speedR);
         _frontRight.setLeftFalcon(speedL);
     }
+
 }
