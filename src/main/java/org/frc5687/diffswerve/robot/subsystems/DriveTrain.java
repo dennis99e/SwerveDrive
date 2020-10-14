@@ -11,7 +11,7 @@ public class DriveTrain extends OutliersSubsystem {
     public DriveTrain(OutliersContainer container){
         super(container);
         _frontRight = new DiffSwerveModule(DiffSwerveModule.ModuleID.FrontRight);
-        logMetrics("Left RPM","Right RPM","Wanted Left Voltage", "Wanted Right Voltage");
+        logMetrics("Left Voltage", "Right Voltage", "Wheel Angular Velocity","Wheel Predicted Angular Velocity", "Wheel Reference Angular Velocity");
         enableMetrics();
     }
 
@@ -22,10 +22,15 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
-        metric("Right RPM",_frontRight.getRightFalconRPM());
-        metric("Left RPM",_frontRight.getLeftFalconRPM());
+//        metric("Right RPM",_frontRight.getRightFalconRPM());
+//        metric("Left RPM",_frontRight.getLeftFalconRPM());
         metric("Wanted Left Voltage",_frontRight.getLeftNextVoltage());
         metric("Wanted Right Voltage",_frontRight.getRightNextVoltage());
+        metric("Left Voltage",_frontRight.getLeftVoltage());
+        metric("Right Voltage",_frontRight.getRightVoltage());
+        metric("Wheel Angular Velocity",_frontRight.getWheelAngularVelocity());
+        metric("Wheel Predicted Angular Velocity",_frontRight.getPredictedWheelAngularVelocity());
+        metric("Wheel Reference Angular Velocity",_frontRight.getReferenceWheelAngularVelocity());
     }
     public void setFrontRightReference(Matrix<N3,N1> reference){
         _frontRight.setReference(reference);

@@ -45,11 +45,11 @@ public class DiffSwerveModule {
                         Constants.DifferentialSwerveModule.GEAR_RATIO_STEER, Constants.DifferentialSwerveModule.GEAR_RATIO_WHEEL
                 );
                 _swerveObserver = new KalmanFilter<>(Nat.N3(), Nat.N2(), _swerveModuleModel,
-                        Matrix.mat(Nat.N3(),Nat.N1()).fill(Units.degreesToRadians(2),Units.rotationsPerMinuteToRadiansPerSecond(50),Units.rotationsPerMinuteToRadiansPerSecond(50)),
-                        Matrix.mat(Nat.N2(),Nat.N1()).fill(Units.degreesToRadians(0.001),Units.rotationsPerMinuteToRadiansPerSecond(3)),
+                        Matrix.mat(Nat.N3(),Nat.N1()).fill(Units.degreesToRadians(Constants.DifferentialSwerveModule.FrontRight.MODEL_AZIMUTH_ANGLE_NOISE),Units.rotationsPerMinuteToRadiansPerSecond(Constants.DifferentialSwerveModule.FrontRight.MODEL_AZIMUTH_ANG_VELOCITY_NOISE),Units.rotationsPerMinuteToRadiansPerSecond(Constants.DifferentialSwerveModule.FrontRight.MODEL_WHEEL_ANG_VELOCITY_NOISE)),
+                        Matrix.mat(Nat.N2(),Nat.N1()).fill(Units.degreesToRadians(Constants.DifferentialSwerveModule.FrontRight.SENSOR_AZIMUTH_ANGLE_NOISE),Units.rotationsPerMinuteToRadiansPerSecond(Constants.DifferentialSwerveModule.FrontRight.SENSOR_WHEEL_ANG_VELOCITY_NOISE)),
                         0.020
                 );
-                _swerveController = new LinearQuadraticRegulator<>(_swerveModuleModel, VecBuilder.fill(Constants.DifferentialSwerveModule.FrontLeft.Q_AZIMUTH,Constants.DifferentialSwerveModule.FrontLeft.Q_AZIMUTH_ANG_VELOCITY,Constants.DifferentialSwerveModule.FrontLeft.Q_WHEEL_ANG_VELOCITY),
+                _swerveController = new LinearQuadraticRegulator<>(_swerveModuleModel, VecBuilder.fill(Constants.DifferentialSwerveModule.FrontRight.Q_AZIMUTH,Constants.DifferentialSwerveModule.FrontRight.Q_AZIMUTH_ANG_VELOCITY,Constants.DifferentialSwerveModule.FrontRight.Q_WHEEL_ANG_VELOCITY),
                         VecBuilder.fill(12.0, 12.0),
                         0.020
                 );
@@ -69,8 +69,8 @@ public class DiffSwerveModule {
                         Constants.DifferentialSwerveModule.GEAR_RATIO_STEER, Constants.DifferentialSwerveModule.GEAR_RATIO_WHEEL
                 );
                 _swerveObserver = new KalmanFilter<>(Nat.N3(), Nat.N2(), _swerveModuleModel,
-                        Matrix.mat(Nat.N3(),Nat.N1()).fill(Units.degreesToRadians(2),Units.rotationsPerMinuteToRadiansPerSecond(900),Units.rotationsPerMinuteToRadiansPerSecond(900)),
-                        Matrix.mat(Nat.N2(),Nat.N1()).fill(Units.degreesToRadians(0.001),Units.rotationsPerMinuteToRadiansPerSecond(500)),
+                        Matrix.mat(Nat.N3(),Nat.N1()).fill(Units.degreesToRadians(Constants.DifferentialSwerveModule.FrontLeft.MODEL_AZIMUTH_ANGLE_NOISE),Units.rotationsPerMinuteToRadiansPerSecond(Constants.DifferentialSwerveModule.FrontLeft.MODEL_AZIMUTH_ANG_VELOCITY_NOISE),Units.rotationsPerMinuteToRadiansPerSecond(Constants.DifferentialSwerveModule.FrontLeft.MODEL_WHEEL_ANG_VELOCITY_NOISE)),
+                        Matrix.mat(Nat.N2(),Nat.N1()).fill(Units.degreesToRadians(Constants.DifferentialSwerveModule.FrontLeft.SENSOR_AZIMUTH_ANGLE_NOISE),Units.rotationsPerMinuteToRadiansPerSecond(Constants.DifferentialSwerveModule.FrontLeft.SENSOR_WHEEL_ANG_VELOCITY_NOISE)),
                         0.020
                 );
                 _swerveController = new LinearQuadraticRegulator<>(_swerveModuleModel, VecBuilder.fill(Constants.DifferentialSwerveModule.FrontLeft.Q_AZIMUTH,Constants.DifferentialSwerveModule.FrontLeft.Q_AZIMUTH_ANG_VELOCITY,Constants.DifferentialSwerveModule.FrontLeft.Q_WHEEL_ANG_VELOCITY),
@@ -93,8 +93,8 @@ public class DiffSwerveModule {
                 _swerveModuleModel = createDifferentialSwerveModule(DCMotor.getFalcon500(2),Constants.DifferentialSwerveModule.BottomRight.INERTIA_STEER,Constants.DifferentialSwerveModule.BottomRight.INERTIA_WHEEL,
                     Constants.DifferentialSwerveModule.GEAR_RATIO_STEER, Constants.DifferentialSwerveModule.GEAR_RATIO_WHEEL);
                 _swerveObserver = new KalmanFilter<>(Nat.N3(), Nat.N2(), _swerveModuleModel,
-                        Matrix.mat(Nat.N3(),Nat.N1()).fill(Units.degreesToRadians(2),Units.rotationsPerMinuteToRadiansPerSecond(50),Units.rotationsPerMinuteToRadiansPerSecond(50)),
-                        Matrix.mat(Nat.N2(),Nat.N1()).fill(Units.degreesToRadians(0.001),Units.rotationsPerMinuteToRadiansPerSecond(3)),
+                        Matrix.mat(Nat.N3(),Nat.N1()).fill(Units.degreesToRadians(Constants.DifferentialSwerveModule.BottomRight.MODEL_AZIMUTH_ANGLE_NOISE),Units.rotationsPerMinuteToRadiansPerSecond(Constants.DifferentialSwerveModule.BottomRight.MODEL_AZIMUTH_ANG_VELOCITY_NOISE),Units.rotationsPerMinuteToRadiansPerSecond(Constants.DifferentialSwerveModule.BottomRight.MODEL_WHEEL_ANG_VELOCITY_NOISE)),
+                        Matrix.mat(Nat.N2(),Nat.N1()).fill(Units.degreesToRadians(Constants.DifferentialSwerveModule.BottomRight.SENSOR_AZIMUTH_ANGLE_NOISE),Units.rotationsPerMinuteToRadiansPerSecond(Constants.DifferentialSwerveModule.BottomRight.SENSOR_WHEEL_ANG_VELOCITY_NOISE)),
                         0.020
                 );
                 _swerveController = new LinearQuadraticRegulator<>(_swerveModuleModel, VecBuilder.fill(Constants.DifferentialSwerveModule.BottomRight.Q_AZIMUTH,Constants.DifferentialSwerveModule.BottomRight.Q_AZIMUTH_ANG_VELOCITY,Constants.DifferentialSwerveModule.BottomRight.Q_WHEEL_ANG_VELOCITY),
@@ -116,8 +116,8 @@ public class DiffSwerveModule {
                 _swerveModuleModel = createDifferentialSwerveModule(DCMotor.getFalcon500(2),Constants.DifferentialSwerveModule.BottomLeft.INERTIA_STEER,Constants.DifferentialSwerveModule.BottomLeft.INERTIA_WHEEL,
                     Constants.DifferentialSwerveModule.GEAR_RATIO_STEER, Constants.DifferentialSwerveModule.GEAR_RATIO_WHEEL);
                 _swerveObserver = new KalmanFilter<>(Nat.N3(), Nat.N2(), _swerveModuleModel,
-                        Matrix.mat(Nat.N3(),Nat.N1()).fill(Units.degreesToRadians(2),Units.rotationsPerMinuteToRadiansPerSecond(50),Units.rotationsPerMinuteToRadiansPerSecond(50)),
-                        Matrix.mat(Nat.N2(),Nat.N1()).fill(Units.degreesToRadians(0.001),Units.rotationsPerMinuteToRadiansPerSecond(3)),
+                        Matrix.mat(Nat.N3(),Nat.N1()).fill(Units.degreesToRadians(Constants.DifferentialSwerveModule.BottomLeft.MODEL_AZIMUTH_ANGLE_NOISE),Units.rotationsPerMinuteToRadiansPerSecond(Constants.DifferentialSwerveModule.BottomLeft.MODEL_AZIMUTH_ANG_VELOCITY_NOISE),Units.rotationsPerMinuteToRadiansPerSecond(Constants.DifferentialSwerveModule.BottomLeft.MODEL_WHEEL_ANG_VELOCITY_NOISE)),
+                        Matrix.mat(Nat.N2(),Nat.N1()).fill(Units.degreesToRadians(Constants.DifferentialSwerveModule.BottomLeft.SENSOR_AZIMUTH_ANGLE_NOISE),Units.rotationsPerMinuteToRadiansPerSecond(Constants.DifferentialSwerveModule.BottomLeft.SENSOR_WHEEL_ANG_VELOCITY_NOISE)),
                         0.020
                 );
                 _swerveController = new LinearQuadraticRegulator<>(_swerveModuleModel, VecBuilder.fill(Constants.DifferentialSwerveModule.BottomLeft.Q_AZIMUTH,Constants.DifferentialSwerveModule.BottomLeft.Q_AZIMUTH_ANG_VELOCITY,Constants.DifferentialSwerveModule.BottomLeft.Q_WHEEL_ANG_VELOCITY),
@@ -189,12 +189,22 @@ public class DiffSwerveModule {
     public double getLeftFalconRPM(){
         return _leftFalcon.getSelectedSensorVelocity() / Constants.DriveTrain.TICKS_TO_ROTATIONS * 600.0 * Constants.DriveTrain.GEAR_RATIO;
     }
+    public double getLeftVoltage(){
+        return _leftFalcon.getMotorOutputVoltage();
+    }
+    public double getRightVoltage(){
+        return _rightFalcon.getMotorOutputVoltage();
+    }
     public void periodic(){
         _swerveControlLoop.setNextR(_reference);
         _swerveControlLoop.correct(VecBuilder.fill(getModuleAngle(),getWheelAngularVelocity()));
         _swerveControlLoop.predict(0.020);
-        SmartDashboard.putNumberArray("y",_swerveControlLoop.getError().getData());
-        SmartDashboard.putNumberArray("xhat",_swerveControlLoop.getXHat().getData());
+    }
+    public double getPredictedWheelAngularVelocity(){
+        return _swerveControlLoop.getXHat(2);
+    }
+    public double getReferenceWheelAngularVelocity(){
+        return _swerveControlLoop.getNextR(2);
     }
 
     public void setReference(Matrix<N3,N1> reference){

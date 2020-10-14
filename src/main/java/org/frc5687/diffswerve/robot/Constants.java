@@ -27,9 +27,14 @@ public class Constants {
         public static class FrontRight{
             public static final double INERTIA_WHEEL = 0.00012;
             public static final double INERTIA_STEER = 0.00012;
-            public static final double Q_AZIMUTH_ANG_VELOCITY = 1.0;
-            public static final double Q_AZIMUTH = 1.0;
-            public static final double Q_WHEEL_ANG_VELOCITY = 1.0;
+            public static final double Q_AZIMUTH_ANG_VELOCITY = 0.01;
+            public static final double Q_AZIMUTH = 0.01;
+            public static final double Q_WHEEL_ANG_VELOCITY = 0.6;
+            public static final double MODEL_AZIMUTH_ANGLE_NOISE = 2; // degrees
+            public static final double MODEL_AZIMUTH_ANG_VELOCITY_NOISE = 500; // RPM
+            public static final double MODEL_WHEEL_ANG_VELOCITY_NOISE = 500; // RPM
+            public static final double SENSOR_AZIMUTH_ANGLE_NOISE = 0.01; // degrees
+            public static final double SENSOR_WHEEL_ANG_VELOCITY_NOISE = 50; //degrees
         }public static class FrontLeft{
             public static final double INERTIA_WHEEL = 0.00012;
             public static final double INERTIA_STEER = 0.00012;
@@ -37,18 +42,33 @@ public class Constants {
             public static final double Q_AZIMUTH_ANG_VELOCITY = 0.00001;
             public static final double Q_AZIMUTH = 0.00001;
             public static final double Q_WHEEL_ANG_VELOCITY = 0.6;
+            public static final double MODEL_AZIMUTH_ANGLE_NOISE = 2; // rad
+            public static final double MODEL_AZIMUTH_ANG_VELOCITY_NOISE = 500; // rads/s
+            public static final double MODEL_WHEEL_ANG_VELOCITY_NOISE = 500; // rads/s
+            public static final double SENSOR_AZIMUTH_ANGLE_NOISE = 0.01; // degrees
+            public static final double SENSOR_WHEEL_ANG_VELOCITY_NOISE = 50; //degrees
         }public static class BottomRight{
             public static final double INERTIA_WHEEL = 0.001;
             public static final double INERTIA_STEER = 0.001;
             public static final double Q_AZIMUTH_ANG_VELOCITY = 1.0;
             public static final double Q_AZIMUTH = 1.0;
             public static final double Q_WHEEL_ANG_VELOCITY = 1.0;
+            public static final double MODEL_AZIMUTH_ANGLE_NOISE = 2; // rad
+            public static final double MODEL_AZIMUTH_ANG_VELOCITY_NOISE = 500; // rads/s
+            public static final double MODEL_WHEEL_ANG_VELOCITY_NOISE = 500; // rads/s
+            public static final double SENSOR_AZIMUTH_ANGLE_NOISE = 0.01; // degrees
+            public static final double SENSOR_WHEEL_ANG_VELOCITY_NOISE = 50; //degrees
         }public static class BottomLeft{
             public static final double INERTIA_WHEEL = 0.001;
             public static final double INERTIA_STEER = 0.001;
             public static final double Q_AZIMUTH_ANG_VELOCITY = 1.0;
             public static final double Q_AZIMUTH = 1.0;
             public static final double Q_WHEEL_ANG_VELOCITY = 1.0;
+            public static final double MODEL_AZIMUTH_ANGLE_NOISE = 2; // rad
+            public static final double MODEL_AZIMUTH_ANG_VELOCITY_NOISE = 500; // rads/s
+            public static final double MODEL_WHEEL_ANG_VELOCITY_NOISE = 500; // rads/s
+            public static final double SENSOR_AZIMUTH_ANGLE_NOISE = 0.01; // degrees
+            public static final double SENSOR_WHEEL_ANG_VELOCITY_NOISE = 50; //degrees
         }
     }
 }
