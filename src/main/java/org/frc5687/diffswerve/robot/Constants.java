@@ -14,10 +14,10 @@ public class Constants {
         public static final double TICKS_TO_ROTATIONS = 2048.0;
         public static final double GEAR_RATIO = 1.0;
 
-        public static final double VELOCITY_KP = 0.001;
-        public static final double VELOCITY_KI = 0.0;
-        public static final double VELOCITY_KD = 0.0;
-        public static final double VELOCITY_KF = 0.001;
+        public static final double VELOCITY_KP = 0.25;
+        public static final double VELOCITY_KI = 0.0001;
+        public static final double VELOCITY_KD = 0.3;
+        public static final double VELOCITY_KF = 0.000;
     }
     public static class DifferentialSwerveModule {
         public static final double GEAR_RATIO_WHEEL = 6.48;

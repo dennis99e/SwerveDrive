@@ -146,6 +146,8 @@ public class DiffSwerveModule {
         _leftFalcon.config_kI(0,Constants.DriveTrain.VELOCITY_KI,200);
         _leftFalcon.config_kD(0,Constants.DriveTrain.VELOCITY_KD,200);
         _leftFalcon.config_kF(0,Constants.DriveTrain.VELOCITY_KF,200);
+        _rightFalcon.configClosedloopRamp(0);
+        _leftFalcon.configClosedloopRamp(0);
     }
 
 
