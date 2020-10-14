@@ -20,8 +20,8 @@ public class Constants {
         public static final double VELOCITY_KF = 0.000;
     }
     public static class DifferentialSwerveModule {
-        public static final double GEAR_RATIO_WHEEL = 6.48;
-        public static final double GEAR_RATIO_STEER = 4.0;
+        public static final double GEAR_RATIO_WHEEL = 1.0; //6.48;
+        public static final double GEAR_RATIO_STEER =1.0;// 4.0;
 
         // Create Parameters for DiffSwerve State Space
         public static class FrontRight{

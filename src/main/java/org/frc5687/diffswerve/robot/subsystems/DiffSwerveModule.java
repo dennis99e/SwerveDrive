@@ -165,7 +165,7 @@ public class DiffSwerveModule {
     }
 
     public double getModuleAngle(){
-        return _lampreyEncoder.getDistance()*(2.0*Math.PI); //TODO: Gear Ratio.
+        return 0;//_lampreyEncoder.getDistance()*(2.0*Math.PI); //TODO: Gear Ratio.
     }
 
     public double getWheelAngularVelocity(){
@@ -182,6 +182,9 @@ public class DiffSwerveModule {
         _swerveControlLoop.setNextR(_reference);
         _swerveControlLoop.correct(VecBuilder.fill(getModuleAngle(),getWheelAngularVelocity()));
         _swerveControlLoop.predict(0.020);
+    }
+    public void setReference(Matrix<N3,N1> reference){
+       _reference = reference;
     }
     public double getLeftNextVoltage(){
         return _swerveControlLoop.getU(0);

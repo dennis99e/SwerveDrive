@@ -1,5 +1,7 @@
 package org.frc5687.diffswerve.robot.commands;
 
+import edu.wpi.first.wpiutil.math.Matrix;
+import edu.wpi.first.wpiutil.math.Nat;
 import org.frc5687.diffswerve.robot.subsystems.DriveTrain;
 
 
@@ -16,13 +18,14 @@ public class DriveSwerveModule extends OutliersCommand {
     @Override
     public void initialize() {
         super.initialize();
-        _driveTrain.setFrontRightVelocity(500);
+        _driveTrain.setFrontRightReference(Matrix.mat(Nat.N3(),Nat.N1()).fill(0,0,0));
     }
 
 
     @Override
     public void execute() {
         super.execute();
+        _driveTrain.setFrontRightReference(Matrix.mat(Nat.N3(),Nat.N1()).fill(0,0,100));
 //        _driveTrain.setFrontRightVelocity(100);
 //        _driveTrain.setFrontRightSpeeds(0.1,0.1);
     }
