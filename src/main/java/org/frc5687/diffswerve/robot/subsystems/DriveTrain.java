@@ -10,8 +10,8 @@ public class DriveTrain extends OutliersSubsystem {
     public DriveTrain(OutliersContainer container){
         super(container);
         _frontRight = new DiffSwerveModule(DiffSwerveModule.ModuleID.FrontRight);
-        logMetrics("Left RPM","Right RPM");
-        enableMetrics();
+//        logMetrics("Left RPM","Right RPM");
+        //enableMetrics();
     }
 
     @Override

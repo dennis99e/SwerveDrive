@@ -7,6 +7,6 @@ package org.frc5687.diffswerve.robot.util;
 
 public class Version {
     public static final String BRANCH = "DriveTrain/#3-PIDControl";
-    public static final String REVISION = "6890561";
+    public static final String REVISION = "6d668b8";
     public static final String MODIFIED = "";
 }

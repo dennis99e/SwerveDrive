@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpiutil.math.*;
 import edu.wpi.first.wpiutil.math.numbers.*;
+import org.ejml.data.DMatrix2x2;
 import org.frc5687.diffswerve.robot.Constants;
 import org.frc5687.diffswerve.robot.RobotMap;
 
@@ -32,6 +33,7 @@ public class DiffSwerveModule {
 
     public DiffSwerveModule(ModuleID id){
         _modID = id;
+        _reference = Matrix.mat(Nat.N3(),Nat.N1()).fill(0,0,0);
         switch (_modID) {
             case FrontRight:
                 _positionVector = new Translation2d(Constants.DriveTrain.WIDTH/2.0, Constants.DriveTrain.LENGTH/2.0);
@@ -181,7 +183,7 @@ public class DiffSwerveModule {
     public void periodic(){
         _swerveControlLoop.setNextR(_reference);
         _swerveControlLoop.correct(VecBuilder.fill(getModuleAngle(),getWheelAngularVelocity()));
-        _swerveControlLoop.predict(0.020);
+//        _swerveControlLoop.predict(0.020);
     }
     public void setReference(Matrix<N3,N1> reference){
        _reference = reference;

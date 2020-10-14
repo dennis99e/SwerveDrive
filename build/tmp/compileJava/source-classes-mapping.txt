@@ -10,30 +10,6 @@ org/frc5687/diffswerve/robot/Constants.java
  org.frc5687.diffswerve.robot.Constants$DriveTrain
 org/frc5687/diffswerve/robot/commands/OutliersCommand.java
  org.frc5687.diffswerve.robot.commands.OutliersCommand
-org/frc5687/diffswerve/robot/commands/DriveSwerveModule.java
- org.frc5687.diffswerve.robot.commands.DriveSwerveModule
-org/frc5687/diffswerve/robot/RobotContainer.java
- org.frc5687.diffswerve.robot.RobotContainer
-org/frc5687/diffswerve/robot/util/RioLogger.java
- org.frc5687.diffswerve.robot.util.RioLogger
- org.frc5687.diffswerve.robot.util.RioLogger$LogLevel
-org/frc5687/diffswerve/robot/Main.java
- org.frc5687.diffswerve.robot.Main
-org/frc5687/diffswerve/robot/util/OutliersRobot.java
- org.frc5687.diffswerve.robot.util.OutliersRobot
-org/frc5687/diffswerve/robot/subsystems/OutliersSubsystem.java
- org.frc5687.diffswerve.robot.subsystems.OutliersSubsystem
-org/frc5687/diffswerve/robot/util/OutliersContainer.java
- org.frc5687.diffswerve.robot.util.OutliersContainer
- org.frc5687.diffswerve.robot.util.OutliersContainer$IdentityMode
-org/frc5687/diffswerve/robot/util/Version.java
- org.frc5687.diffswerve.robot.util.Version
-org/frc5687/diffswerve/robot/subsystems/DiffSwerveModule.java
- org.frc5687.diffswerve.robot.subsystems.DiffSwerveModule
- org.frc5687.diffswerve.robot.subsystems.DiffSwerveModule$1
- org.frc5687.diffswerve.robot.subsystems.DiffSwerveModule$ModuleID
-org/frc5687/diffswerve/robot/Robot.java
- org.frc5687.diffswerve.robot.Robot
 org/frc5687/diffswerve/robot/util/MetricTracker.java
  org.frc5687.diffswerve.robot.util.MetricTracker
 org/frc5687/diffswerve/robot/RobotMap.java
@@ -45,5 +21,29 @@ org/frc5687/diffswerve/robot/RobotMap.java
  org.frc5687.diffswerve.robot.RobotMap$PCM
  org.frc5687.diffswerve.robot.RobotMap$PDP
  org.frc5687.diffswerve.robot.RobotMap$PWM
+org/frc5687/diffswerve/robot/util/RioLogger.java
+ org.frc5687.diffswerve.robot.util.RioLogger
+ org.frc5687.diffswerve.robot.util.RioLogger$LogLevel
+org/frc5687/diffswerve/robot/commands/DriveSwerveModule.java
+ org.frc5687.diffswerve.robot.commands.DriveSwerveModule
+org/frc5687/diffswerve/robot/util/OutliersRobot.java
+ org.frc5687.diffswerve.robot.util.OutliersRobot
+org/frc5687/diffswerve/robot/subsystems/OutliersSubsystem.java
+ org.frc5687.diffswerve.robot.subsystems.OutliersSubsystem
+org/frc5687/diffswerve/robot/util/OutliersContainer.java
+ org.frc5687.diffswerve.robot.util.OutliersContainer
+ org.frc5687.diffswerve.robot.util.OutliersContainer$IdentityMode
+org/frc5687/diffswerve/robot/util/Version.java
+ org.frc5687.diffswerve.robot.util.Version
+org/frc5687/diffswerve/robot/RobotContainer.java
+ org.frc5687.diffswerve.robot.RobotContainer
+org/frc5687/diffswerve/robot/Main.java
+ org.frc5687.diffswerve.robot.Main
+org/frc5687/diffswerve/robot/Robot.java
+ org.frc5687.diffswerve.robot.Robot
+org/frc5687/diffswerve/robot/subsystems/DiffSwerveModule.java
+ org.frc5687.diffswerve.robot.subsystems.DiffSwerveModule
+ org.frc5687.diffswerve.robot.subsystems.DiffSwerveModule$1
+ org.frc5687.diffswerve.robot.subsystems.DiffSwerveModule$ModuleID
 org/frc5687/diffswerve/robot/subsystems/DriveTrain.java
  org.frc5687.diffswerve.robot.subsystems.DriveTrain
