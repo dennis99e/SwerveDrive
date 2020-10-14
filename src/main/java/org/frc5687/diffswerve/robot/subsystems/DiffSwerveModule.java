@@ -3,11 +3,13 @@ package org.frc5687.diffswerve.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.controller.LinearQuadraticRegulator;
 import edu.wpi.first.wpilibj.estimator.KalmanFilter;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.system.LinearSystem;
 import edu.wpi.first.wpilibj.system.LinearSystemLoop;
 import edu.wpi.first.wpilibj.system.plant.DCMotor;
@@ -67,8 +69,8 @@ public class DiffSwerveModule {
                         Constants.DifferentialSwerveModule.GEAR_RATIO_STEER, Constants.DifferentialSwerveModule.GEAR_RATIO_WHEEL
                 );
                 _swerveObserver = new KalmanFilter<>(Nat.N3(), Nat.N2(), _swerveModule,
-                        Matrix.mat(Nat.N3(),Nat.N1()).fill(Units.degreesToRadians(2),Units.rotationsPerMinuteToRadiansPerSecond(50),Units.rotationsPerMinuteToRadiansPerSecond(50)),
-                        Matrix.mat(Nat.N2(),Nat.N1()).fill(Units.degreesToRadians(0.001),Units.rotationsPerMinuteToRadiansPerSecond(3)),
+                        Matrix.mat(Nat.N3(),Nat.N1()).fill(Units.degreesToRadians(2),Units.rotationsPerMinuteToRadiansPerSecond(900),Units.rotationsPerMinuteToRadiansPerSecond(900)),
+                        Matrix.mat(Nat.N2(),Nat.N1()).fill(Units.degreesToRadians(0.001),Units.rotationsPerMinuteToRadiansPerSecond(500)),
                         0.020
                 );
                 _swerveController = new LinearQuadraticRegulator<>(_swerveModule, VecBuilder.fill(Constants.DifferentialSwerveModule.FrontLeft.Q_AZIMUTH,Constants.DifferentialSwerveModule.FrontLeft.Q_AZIMUTH_ANG_VELOCITY,Constants.DifferentialSwerveModule.FrontLeft.Q_WHEEL_ANG_VELOCITY),
@@ -150,6 +152,7 @@ public class DiffSwerveModule {
         _leftFalcon.config_kF(0,Constants.DriveTrain.VELOCITY_KF,200);
         _rightFalcon.configClosedloopRamp(0);
         _leftFalcon.configClosedloopRamp(0);
+        _swerveControlLoop.reset(VecBuilder.fill(0,0,0));
     }
 
 
@@ -159,6 +162,12 @@ public class DiffSwerveModule {
     }
     public void setLeftFalcon(double speed){
         _leftFalcon.set(ControlMode.PercentOutput,speed);
+    }
+    public void setRightFalconVoltage(double voltage) {
+        _rightFalcon.set(TalonFXControlMode.PercentOutput,voltage/12.0);
+    }
+    public void setLeftFalconVoltage(double voltage) {
+        _leftFalcon.set(TalonFXControlMode.PercentOutput,voltage/12.0);
     }
 
     public void setVelocityRPM(double RPM){
@@ -171,7 +180,7 @@ public class DiffSwerveModule {
     }
 
     public double getWheelAngularVelocity(){
-        return (getLeftFalconRPM() * Constants.DifferentialSwerveModule.GEAR_RATIO_WHEEL * getRightFalconRPM() * Constants.DifferentialSwerveModule.GEAR_RATIO_WHEEL)/2.0;
+        return Units.rotationsPerMinuteToRadiansPerSecond(getLeftFalconRPM() * Constants.DifferentialSwerveModule.GEAR_RATIO_WHEEL + getRightFalconRPM() * Constants.DifferentialSwerveModule.GEAR_RATIO_WHEEL)/2.0;
     }
     public double getRightFalconRPM(){
         return _rightFalcon.getSelectedSensorVelocity() / Constants.DriveTrain.TICKS_TO_ROTATIONS * 600.0 * Constants.DriveTrain.GEAR_RATIO;
@@ -184,7 +193,10 @@ public class DiffSwerveModule {
         _swerveControlLoop.setNextR(_reference);
         _swerveControlLoop.correct(VecBuilder.fill(getModuleAngle(),getWheelAngularVelocity()));
         _swerveControlLoop.predict(0.020);
+        SmartDashboard.putNumberArray("y",_swerveControlLoop.getError().getData());
+        SmartDashboard.putNumberArray("xhat",_swerveControlLoop.getXHat().getData());
     }
+
     public void setReference(Matrix<N3,N1> reference){
        _reference = reference;
     }
