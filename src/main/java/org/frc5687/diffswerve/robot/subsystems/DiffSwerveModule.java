@@ -183,7 +183,7 @@ public class DiffSwerveModule {
     public void periodic(){
         _swerveControlLoop.setNextR(_reference);
         _swerveControlLoop.correct(VecBuilder.fill(getModuleAngle(),getWheelAngularVelocity()));
-//        _swerveControlLoop.predict(0.020);
+        _swerveControlLoop.predict(0.020);
     }
     public void setReference(Matrix<N3,N1> reference){
        _reference = reference;
