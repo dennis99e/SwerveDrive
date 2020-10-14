@@ -19,4 +19,36 @@ public class Constants {
         public static final double VELOCITY_KD = 0.0;
         public static final double VELOCITY_KF = 0.001;
     }
+    public static class DifferentialSwerveModule {
+        public static final double GEAR_RATIO_WHEEL = 6.48;
+        public static final double GEAR_RATIO_STEER = 4.0;
+
+        // Create Parameters for DiffSwerve State Space
+        public static class FrontRight{
+            public static final double INERTIA_WHEEL = 0.001;
+            public static final double INERTIA_STEER = 0.001;
+            public static final double Q_AZIMUTH_ANG_VELOCITY = 1.0;
+            public static final double Q_AZIMUTH = 1.0;
+            public static final double Q_WHEEL_ANG_VELOCITY = 1.0;
+        }public static class FrontLeft{
+            public static final double INERTIA_WHEEL = 0.001;
+            public static final double INERTIA_STEER = 0.001;
+
+            public static final double Q_AZIMUTH_ANG_VELOCITY = 1.0;
+            public static final double Q_AZIMUTH = 1.0;
+            public static final double Q_WHEEL_ANG_VELOCITY = 1.0;
+        }public static class BottomRight{
+            public static final double INERTIA_WHEEL = 0.001;
+            public static final double INERTIA_STEER = 0.001;
+            public static final double Q_AZIMUTH_ANG_VELOCITY = 1.0;
+            public static final double Q_AZIMUTH = 1.0;
+            public static final double Q_WHEEL_ANG_VELOCITY = 1.0;
+        }public static class BottomLeft{
+            public static final double INERTIA_WHEEL = 0.001;
+            public static final double INERTIA_STEER = 0.001;
+            public static final double Q_AZIMUTH_ANG_VELOCITY = 1.0;
+            public static final double Q_AZIMUTH = 1.0;
+            public static final double Q_WHEEL_ANG_VELOCITY = 1.0;
+        }
+    }
 }
