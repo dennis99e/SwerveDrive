@@ -25,18 +25,18 @@ public class Constants {
 
         // Create Parameters for DiffSwerve State Space
         public static class FrontRight{
-            public static final double INERTIA_WHEEL = 0.001;
-            public static final double INERTIA_STEER = 0.001;
+            public static final double INERTIA_WHEEL = 0.00012;
+            public static final double INERTIA_STEER = 0.00012;
             public static final double Q_AZIMUTH_ANG_VELOCITY = 1.0;
             public static final double Q_AZIMUTH = 1.0;
             public static final double Q_WHEEL_ANG_VELOCITY = 1.0;
         }public static class FrontLeft{
-            public static final double INERTIA_WHEEL = 0.001;
-            public static final double INERTIA_STEER = 0.001;
+            public static final double INERTIA_WHEEL = 0.00012;
+            public static final double INERTIA_STEER = 0.00012;
 
-            public static final double Q_AZIMUTH_ANG_VELOCITY = 1.0;
-            public static final double Q_AZIMUTH = 1.0;
-            public static final double Q_WHEEL_ANG_VELOCITY = 1.0;
+            public static final double Q_AZIMUTH_ANG_VELOCITY = 0.00001;
+            public static final double Q_AZIMUTH = 0.00001;
+            public static final double Q_WHEEL_ANG_VELOCITY = 0.6;
         }public static class BottomRight{
             public static final double INERTIA_WHEEL = 0.001;
             public static final double INERTIA_STEER = 0.001;
