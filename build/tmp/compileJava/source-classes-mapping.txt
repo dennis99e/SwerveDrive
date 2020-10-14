@@ -22,8 +22,6 @@ org/frc5687/diffswerve/robot/subsystems/OutliersSubsystem.java
 org/frc5687/diffswerve/robot/util/OutliersContainer.java
  org.frc5687.diffswerve.robot.util.OutliersContainer
  org.frc5687.diffswerve.robot.util.OutliersContainer$IdentityMode
-org/frc5687/diffswerve/robot/util/Version.java
- org.frc5687.diffswerve.robot.util.Version
 org/frc5687/diffswerve/robot/subsystems/DiffSwerveModule.java
  org.frc5687.diffswerve.robot.subsystems.DiffSwerveModule
  org.frc5687.diffswerve.robot.subsystems.DiffSwerveModule$ModuleID

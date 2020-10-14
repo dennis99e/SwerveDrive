@@ -1,27 +1,26 @@
+/* (C)2020 */
 package org.frc5687.diffswerve.robot;
 
-import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import org.frc5687.diffswerve.robot.util.*;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import org.frc5687.diffswerve.robot.util.*;
 
 /**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the TimedRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the build.gradle file in the
+ * The VM is configured to automatically run this class, and to call the functions corresponding to
+ * each mode, as described in the TimedRobot documentation. If you change the name of this class or
+ * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends OutliersRobot implements ILoggingSource{
+public class Robot extends OutliersRobot implements ILoggingSource {
 
-    public static OutliersContainer.IdentityMode _identityMode = OutliersContainer.IdentityMode.competition;
+    public static OutliersContainer.IdentityMode _identityMode =
+            OutliersContainer.IdentityMode.competition;
     private RioLogger.LogLevel _dsLogLevel = RioLogger.LogLevel.warn;
     private RioLogger.LogLevel _fileLogLevel = RioLogger.LogLevel.warn;
 
@@ -36,8 +35,8 @@ public class Robot extends OutliersRobot implements ILoggingSource{
     private Command _autoCommand;
 
     /**
-     * This function is setRollerSpeed when the robot is first started up and should be
-     * used for any initialization code.
+     * This function is setRollerSpeed when the robot is first started up and should be used for any
+     * initialization code.
      */
     @Override
     public void robotInit() {
@@ -45,26 +44,23 @@ public class Robot extends OutliersRobot implements ILoggingSource{
         RioLogger.getInstance().init(_fileLogLevel, _dsLogLevel);
         LiveWindow.disableAllTelemetry();
 
-
-        metric("Branch", Version.BRANCH);
         metric("Identity", _identityMode.toString());
-        info("Starting " + this.getClass().getCanonicalName() + " from branch " + Version.BRANCH);
         info("Robot " + _name + " running in " + _identityMode.toString() + " mode");
 
         _robotContainer = new RobotContainer(this, _identityMode);
         _robotContainer.init();
 
-        // Periodically flushes metrics (might be good to configure enable/disable via USB config file)
+        // Periodically flushes metrics (might be good to configure enable/disable via USB config
+        // file)
         new Notifier(MetricTracker::flushAll).startPeriodic(Constants.METRIC_FLUSH_PERIOD);
     }
 
     /**
-     * This function is called every robot packet, no matter the mode. Use
-     * this for items like diagnostics that you want ran during disabled,
-     * autonomous, teleoperated and test.
+     * This function is called every robot packet, no matter the mode. Use this for items like
+     * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
      *
-     * <p>This runs after the mode specific periodic functions, but before
-     * LiveWindow and SmartDashboard integrated updating.
+     * <p>This runs after the mode specific periodic functions, but before LiveWindow and
+     * SmartDashboard integrated updating.
      */
     @Override
     public void robotPeriodic() {
@@ -72,15 +68,14 @@ public class Robot extends OutliersRobot implements ILoggingSource{
     }
 
     /**
-     * This autonomous (along with the chooser code above) shows how to select
-     * between different autonomous modes using the dashboard. The sendable
-     * chooser code works with the Java SmartDashboard. If you prefer the
-     * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-     * getString line to get the auto name from the text box below the Gyro
+     * This autonomous (along with the chooser code above) shows how to select between different
+     * autonomous modes using the dashboard. The sendable chooser code works with the Java
+     * SmartDashboard. If you prefer the LabVIEW Dashboard, remove all of the chooser code and
+     * uncomment the getString line to get the auto name from the text box below the Gyro
      *
-     * <p>You can add additional auto modes by adding additional comparisons to
-     * the switch structure below with additional strings. If using the
-     * SendableChooser make sure to add them to the chooser code above as well.
+     * <p>You can add additional auto modes by adding additional comparisons to the switch structure
+     * below with additional strings. If using the SendableChooser make sure to add them to the
+     * chooser code above as well.
      */
     @Override
     public void autonomousInit() {
@@ -89,31 +84,22 @@ public class Robot extends OutliersRobot implements ILoggingSource{
         if (_autoCommand != null) {
             _autoCommand.schedule();
         }
-
     }
-
-
 
     public void teleopInit() {
         _fmsConnected = DriverStation.getInstance().isFMSAttached();
         _robotContainer.teleopInit();
 
-        //_limelight.disableLEDs();
+        // _limelight.disableLEDs();
     }
 
-    /**
-     * This function is called periodically during autonomous.
-     */
+    /** This function is called periodically during autonomous. */
     @Override
-    public void autonomousPeriodic() {
-    }
+    public void autonomousPeriodic() {}
 
-    /**
-     * This function is called periodically during operator control.
-     */
+    /** This function is called periodically during operator control. */
     @Override
-    public void teleopPeriodic() {
-    }
+    public void teleopPeriodic() {}
 
     private void ourPeriodic() {
 
@@ -124,12 +110,9 @@ public class Robot extends OutliersRobot implements ILoggingSource{
         CommandScheduler.getInstance().run();
         update();
         updateDashboard();
-
     }
 
-    /**
-     * This function is called periodically during test mode.
-     */
+    /** This function is called periodically during test mode. */
     @Override
     public void testPeriodic() {
         CommandScheduler.getInstance().run();
@@ -137,11 +120,11 @@ public class Robot extends OutliersRobot implements ILoggingSource{
 
     @Override
     public void disabledInit() {
-        //_limelight.disableLEDs();
+        // _limelight.disableLEDs();
         RioLogger.getInstance().forceSync();
         RioLogger.getInstance().close();
         _robotContainer.disabledInit();
-//        MetricTracker.flushAll();
+        //        MetricTracker.flushAll();
     }
 
     @Override
@@ -208,10 +191,5 @@ public class Robot extends OutliersRobot implements ILoggingSource{
         }
     }
 
-    private void update() {
-
-    }
-
-
-
+    private void update() {}
 }
