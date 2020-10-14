@@ -1,8 +1,11 @@
 /* (C)2020 */
 package org.frc5687.diffswerve.robot.subsystems;
 
+import static org.frc5687.diffswerve.robot.RobotMap.CAN.TALONFX.*;
+
 import edu.wpi.first.wpiutil.math.Matrix;
 import edu.wpi.first.wpiutil.math.numbers.*;
+import org.frc5687.diffswerve.robot.Constants;
 import org.frc5687.diffswerve.robot.util.OutliersContainer;
 
 public class DriveTrain extends OutliersSubsystem {
@@ -10,7 +13,9 @@ public class DriveTrain extends OutliersSubsystem {
 
     public DriveTrain(OutliersContainer container) {
         super(container);
-        _frontRight = new DiffSwerveModule(DiffSwerveModule.ModuleID.FrontRight);
+        _frontRight =
+                new DiffSwerveModule(
+                        Constants.DriveTrain.FRONT_RIGHT_POSITION, FR_LEFT_FALCON, FR_RIGHT_FALCON);
         logMetrics(
                 "Left Voltage",
                 "Right Voltage",

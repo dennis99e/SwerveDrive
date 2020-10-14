@@ -3,10 +3,6 @@ org/frc5687/diffswerve/robot/util/ILoggingSource.java
 org/frc5687/diffswerve/robot/Constants.java
  org.frc5687.diffswerve.robot.Constants
  org.frc5687.diffswerve.robot.Constants$DifferentialSwerveModule
- org.frc5687.diffswerve.robot.Constants$DifferentialSwerveModule$BottomLeft
- org.frc5687.diffswerve.robot.Constants$DifferentialSwerveModule$BottomRight
- org.frc5687.diffswerve.robot.Constants$DifferentialSwerveModule$FrontLeft
- org.frc5687.diffswerve.robot.Constants$DifferentialSwerveModule$FrontRight
  org.frc5687.diffswerve.robot.Constants$DriveTrain
 org/frc5687/diffswerve/robot/commands/OutliersCommand.java
  org.frc5687.diffswerve.robot.commands.OutliersCommand
@@ -30,12 +26,9 @@ org/frc5687/diffswerve/robot/util/Version.java
  org.frc5687.diffswerve.robot.util.Version
 org/frc5687/diffswerve/robot/subsystems/DiffSwerveModule.java
  org.frc5687.diffswerve.robot.subsystems.DiffSwerveModule
- org.frc5687.diffswerve.robot.subsystems.DiffSwerveModule$1
  org.frc5687.diffswerve.robot.subsystems.DiffSwerveModule$ModuleID
 org/frc5687/diffswerve/robot/Robot.java
  org.frc5687.diffswerve.robot.Robot
-org/frc5687/diffswerve/robot/util/MetricTracker.java
- org.frc5687.diffswerve.robot.util.MetricTracker
 org/frc5687/diffswerve/robot/RobotMap.java
  org.frc5687.diffswerve.robot.RobotMap
  org.frc5687.diffswerve.robot.RobotMap$Analog
@@ -45,5 +38,7 @@ org/frc5687/diffswerve/robot/RobotMap.java
  org.frc5687.diffswerve.robot.RobotMap$PCM
  org.frc5687.diffswerve.robot.RobotMap$PDP
  org.frc5687.diffswerve.robot.RobotMap$PWM
+org/frc5687/diffswerve/robot/util/MetricTracker.java
+ org.frc5687.diffswerve.robot.util.MetricTracker
 org/frc5687/diffswerve/robot/subsystems/DriveTrain.java
  org.frc5687.diffswerve.robot.subsystems.DriveTrain

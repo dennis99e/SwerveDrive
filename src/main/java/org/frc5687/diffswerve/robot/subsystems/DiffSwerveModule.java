@@ -1,6 +1,8 @@
 /* (C)2020 */
 package org.frc5687.diffswerve.robot.subsystems;
 
+import static org.frc5687.diffswerve.robot.Constants.DifferentialSwerveModule.*;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
@@ -16,7 +18,6 @@ import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpiutil.math.*;
 import edu.wpi.first.wpiutil.math.numbers.*;
 import org.frc5687.diffswerve.robot.Constants;
-import org.frc5687.diffswerve.robot.RobotMap;
 
 public class DiffSwerveModule {
     private TalonFX _rightFalcon; // TODO: correct names when model is finished.
@@ -30,259 +31,46 @@ public class DiffSwerveModule {
     private LinearSystemLoop<N3, N2, N2> _swerveControlLoop;
     private Matrix<N3, N1> _reference; // same thing as a set point.
 
-    public DiffSwerveModule(ModuleID id) {
-        _modID = id;
+    public DiffSwerveModule(Translation2d positionVector, int leftMotorID, int rightMotorID) {
         _reference = Matrix.mat(Nat.N3(), Nat.N1()).fill(0, 0, 0);
-        switch (_modID) {
-            case FrontRight:
-                _positionVector =
-                        new Translation2d(
-                                Constants.DriveTrain.WIDTH / 2.0,
-                                Constants.DriveTrain.LENGTH / 2.0);
-                _rightFalcon = new TalonFX(RobotMap.CAN.TALONFX.FR_RIGHT_FALCON);
-                _leftFalcon = new TalonFX(RobotMap.CAN.TALONFX.FR_LEFT_FALCON);
-                _swerveModuleModel =
-                        createDifferentialSwerveModule(
-                                DCMotor.getFalcon500(2),
-                                Constants.DifferentialSwerveModule.FrontRight.INERTIA_STEER,
-                                Constants.DifferentialSwerveModule.FrontRight.INERTIA_WHEEL,
-                                Constants.DifferentialSwerveModule.GEAR_RATIO_STEER,
-                                Constants.DifferentialSwerveModule.GEAR_RATIO_WHEEL);
-                _swerveObserver =
-                        new KalmanFilter<>(
-                                Nat.N3(),
-                                Nat.N2(),
-                                _swerveModuleModel,
-                                Matrix.mat(Nat.N3(), Nat.N1())
-                                        .fill(
-                                                Units.degreesToRadians(
-                                                        Constants.DifferentialSwerveModule
-                                                                .FrontRight
-                                                                .MODEL_AZIMUTH_ANGLE_NOISE),
-                                                Units.rotationsPerMinuteToRadiansPerSecond(
-                                                        Constants.DifferentialSwerveModule
-                                                                .FrontRight
-                                                                .MODEL_AZIMUTH_ANG_VELOCITY_NOISE),
-                                                Units.rotationsPerMinuteToRadiansPerSecond(
-                                                        Constants.DifferentialSwerveModule
-                                                                .FrontRight
-                                                                .MODEL_WHEEL_ANG_VELOCITY_NOISE)),
-                                Matrix.mat(Nat.N2(), Nat.N1())
-                                        .fill(
-                                                Units.degreesToRadians(
-                                                        Constants.DifferentialSwerveModule
-                                                                .FrontRight
-                                                                .SENSOR_AZIMUTH_ANGLE_NOISE),
-                                                Units.rotationsPerMinuteToRadiansPerSecond(
-                                                        Constants.DifferentialSwerveModule
-                                                                .FrontRight
-                                                                .SENSOR_WHEEL_ANG_VELOCITY_NOISE)),
-                                0.020);
-                _swerveController =
-                        new LinearQuadraticRegulator<>(
-                                _swerveModuleModel,
-                                VecBuilder.fill(
-                                        Constants.DifferentialSwerveModule.FrontRight.Q_AZIMUTH,
-                                        Constants.DifferentialSwerveModule.FrontRight
-                                                .Q_AZIMUTH_ANG_VELOCITY,
-                                        Constants.DifferentialSwerveModule.FrontRight
-                                                .Q_WHEEL_ANG_VELOCITY),
-                                VecBuilder.fill(12.0, 12.0),
-                                0.020);
-                _swerveControlLoop =
-                        new LinearSystemLoop<>(
-                                _swerveModuleModel,
-                                _swerveController,
-                                _swerveObserver,
-                                12.0,
-                                0.020);
-                break;
-            case FrontLeft:
-                _positionVector =
-                        new Translation2d(
-                                -Constants.DriveTrain.WIDTH / 2.0,
-                                Constants.DriveTrain.LENGTH / 2.0);
-                _rightFalcon = new TalonFX(RobotMap.CAN.TALONFX.FL_RIGHT_FALCON);
-                _leftFalcon = new TalonFX(RobotMap.CAN.TALONFX.FL_LEFT_FALCON);
-                _swerveModuleModel =
-                        createDifferentialSwerveModule(
-                                DCMotor.getFalcon500(2),
-                                Constants.DifferentialSwerveModule.FrontLeft.INERTIA_STEER,
-                                Constants.DifferentialSwerveModule.FrontLeft.INERTIA_WHEEL,
-                                Constants.DifferentialSwerveModule.GEAR_RATIO_STEER,
-                                Constants.DifferentialSwerveModule.GEAR_RATIO_WHEEL);
-                _swerveObserver =
-                        new KalmanFilter<>(
-                                Nat.N3(),
-                                Nat.N2(),
-                                _swerveModuleModel,
-                                Matrix.mat(Nat.N3(), Nat.N1())
-                                        .fill(
-                                                Units.degreesToRadians(
-                                                        Constants.DifferentialSwerveModule.FrontLeft
-                                                                .MODEL_AZIMUTH_ANGLE_NOISE),
-                                                Units.rotationsPerMinuteToRadiansPerSecond(
-                                                        Constants.DifferentialSwerveModule.FrontLeft
-                                                                .MODEL_AZIMUTH_ANG_VELOCITY_NOISE),
-                                                Units.rotationsPerMinuteToRadiansPerSecond(
-                                                        Constants.DifferentialSwerveModule.FrontLeft
-                                                                .MODEL_WHEEL_ANG_VELOCITY_NOISE)),
-                                Matrix.mat(Nat.N2(), Nat.N1())
-                                        .fill(
-                                                Units.degreesToRadians(
-                                                        Constants.DifferentialSwerveModule.FrontLeft
-                                                                .SENSOR_AZIMUTH_ANGLE_NOISE),
-                                                Units.rotationsPerMinuteToRadiansPerSecond(
-                                                        Constants.DifferentialSwerveModule.FrontLeft
-                                                                .SENSOR_WHEEL_ANG_VELOCITY_NOISE)),
-                                0.020);
-                _swerveController =
-                        new LinearQuadraticRegulator<>(
-                                _swerveModuleModel,
-                                VecBuilder.fill(
-                                        Constants.DifferentialSwerveModule.FrontLeft.Q_AZIMUTH,
-                                        Constants.DifferentialSwerveModule.FrontLeft
-                                                .Q_AZIMUTH_ANG_VELOCITY,
-                                        Constants.DifferentialSwerveModule.FrontLeft
-                                                .Q_WHEEL_ANG_VELOCITY),
-                                VecBuilder.fill(12.0, 12.0),
-                                0.020);
-                _swerveControlLoop =
-                        new LinearSystemLoop<>(
-                                _swerveModuleModel,
-                                _swerveController,
-                                _swerveObserver,
-                                12.0,
-                                0.020);
+        _positionVector = positionVector;
+        _leftFalcon = new TalonFX(leftMotorID);
+        _rightFalcon = new TalonFX(rightMotorID);
+        _swerveModuleModel =
+                createDifferentialSwerveModule(
+                        DCMotor.getFalcon500(2),
+                        INERTIA_STEER,
+                        INERTIA_WHEEL,
+                        GEAR_RATIO_STEER,
+                        GEAR_RATIO_WHEEL);
+        _swerveObserver =
+                new KalmanFilter<>(
+                        Nat.N3(),
+                        Nat.N2(),
+                        _swerveModuleModel,
+                        Matrix.mat(Nat.N3(), Nat.N1())
+                                .fill(
+                                        Units.degreesToRadians(MODEL_AZIMUTH_ANGLE_NOISE),
+                                        Units.rotationsPerMinuteToRadiansPerSecond(
+                                                MODEL_AZIMUTH_ANG_VELOCITY_NOISE),
+                                        Units.rotationsPerMinuteToRadiansPerSecond(
+                                                MODEL_WHEEL_ANG_VELOCITY_NOISE)),
+                        Matrix.mat(Nat.N2(), Nat.N1())
+                                .fill(
+                                        Units.degreesToRadians(SENSOR_AZIMUTH_ANGLE_NOISE),
+                                        Units.rotationsPerMinuteToRadiansPerSecond(
+                                                SENSOR_WHEEL_ANG_VELOCITY_NOISE)),
+                        0.020);
+        _swerveController =
+                new LinearQuadraticRegulator<>(
+                        _swerveModuleModel,
+                        VecBuilder.fill(Q_AZIMUTH, Q_AZIMUTH_ANG_VELOCITY, Q_WHEEL_ANG_VELOCITY),
+                        VecBuilder.fill(12.0, 12.0),
+                        0.020);
+        _swerveControlLoop =
+                new LinearSystemLoop<>(
+                        _swerveModuleModel, _swerveController, _swerveObserver, 12.0, 0.020);
 
-                break;
-            case BottomRight:
-                _positionVector =
-                        new Translation2d(
-                                Constants.DriveTrain.WIDTH / 2.0,
-                                -Constants.DriveTrain.LENGTH / 2.0);
-                _rightFalcon = new TalonFX(RobotMap.CAN.TALONFX.BR_RIGHT_FALCON);
-                _leftFalcon = new TalonFX(RobotMap.CAN.TALONFX.BR_LEFT_FALCON);
-                _swerveModuleModel =
-                        createDifferentialSwerveModule(
-                                DCMotor.getFalcon500(2),
-                                Constants.DifferentialSwerveModule.BottomRight.INERTIA_STEER,
-                                Constants.DifferentialSwerveModule.BottomRight.INERTIA_WHEEL,
-                                Constants.DifferentialSwerveModule.GEAR_RATIO_STEER,
-                                Constants.DifferentialSwerveModule.GEAR_RATIO_WHEEL);
-                _swerveObserver =
-                        new KalmanFilter<>(
-                                Nat.N3(),
-                                Nat.N2(),
-                                _swerveModuleModel,
-                                Matrix.mat(Nat.N3(), Nat.N1())
-                                        .fill(
-                                                Units.degreesToRadians(
-                                                        Constants.DifferentialSwerveModule
-                                                                .BottomRight
-                                                                .MODEL_AZIMUTH_ANGLE_NOISE),
-                                                Units.rotationsPerMinuteToRadiansPerSecond(
-                                                        Constants.DifferentialSwerveModule
-                                                                .BottomRight
-                                                                .MODEL_AZIMUTH_ANG_VELOCITY_NOISE),
-                                                Units.rotationsPerMinuteToRadiansPerSecond(
-                                                        Constants.DifferentialSwerveModule
-                                                                .BottomRight
-                                                                .MODEL_WHEEL_ANG_VELOCITY_NOISE)),
-                                Matrix.mat(Nat.N2(), Nat.N1())
-                                        .fill(
-                                                Units.degreesToRadians(
-                                                        Constants.DifferentialSwerveModule
-                                                                .BottomRight
-                                                                .SENSOR_AZIMUTH_ANGLE_NOISE),
-                                                Units.rotationsPerMinuteToRadiansPerSecond(
-                                                        Constants.DifferentialSwerveModule
-                                                                .BottomRight
-                                                                .SENSOR_WHEEL_ANG_VELOCITY_NOISE)),
-                                0.020);
-                _swerveController =
-                        new LinearQuadraticRegulator<>(
-                                _swerveModuleModel,
-                                VecBuilder.fill(
-                                        Constants.DifferentialSwerveModule.BottomRight.Q_AZIMUTH,
-                                        Constants.DifferentialSwerveModule.BottomRight
-                                                .Q_AZIMUTH_ANG_VELOCITY,
-                                        Constants.DifferentialSwerveModule.BottomRight
-                                                .Q_WHEEL_ANG_VELOCITY),
-                                VecBuilder.fill(12.0, 12.0),
-                                0.020);
-                _swerveControlLoop =
-                        new LinearSystemLoop<>(
-                                _swerveModuleModel,
-                                _swerveController,
-                                _swerveObserver,
-                                12.0,
-                                0.020);
-                break;
-            case BottomLeft:
-                _positionVector =
-                        new Translation2d(
-                                Constants.DriveTrain.WIDTH / 2.0,
-                                -Constants.DriveTrain.LENGTH / 2.0);
-                _rightFalcon = new TalonFX(RobotMap.CAN.TALONFX.BL_RIGHT_FALCON);
-                _leftFalcon = new TalonFX(RobotMap.CAN.TALONFX.BL_LEFT_FALCON);
-                _swerveModuleModel =
-                        createDifferentialSwerveModule(
-                                DCMotor.getFalcon500(2),
-                                Constants.DifferentialSwerveModule.BottomLeft.INERTIA_STEER,
-                                Constants.DifferentialSwerveModule.BottomLeft.INERTIA_WHEEL,
-                                Constants.DifferentialSwerveModule.GEAR_RATIO_STEER,
-                                Constants.DifferentialSwerveModule.GEAR_RATIO_WHEEL);
-                _swerveObserver =
-                        new KalmanFilter<>(
-                                Nat.N3(),
-                                Nat.N2(),
-                                _swerveModuleModel,
-                                Matrix.mat(Nat.N3(), Nat.N1())
-                                        .fill(
-                                                Units.degreesToRadians(
-                                                        Constants.DifferentialSwerveModule
-                                                                .BottomLeft
-                                                                .MODEL_AZIMUTH_ANGLE_NOISE),
-                                                Units.rotationsPerMinuteToRadiansPerSecond(
-                                                        Constants.DifferentialSwerveModule
-                                                                .BottomLeft
-                                                                .MODEL_AZIMUTH_ANG_VELOCITY_NOISE),
-                                                Units.rotationsPerMinuteToRadiansPerSecond(
-                                                        Constants.DifferentialSwerveModule
-                                                                .BottomLeft
-                                                                .MODEL_WHEEL_ANG_VELOCITY_NOISE)),
-                                Matrix.mat(Nat.N2(), Nat.N1())
-                                        .fill(
-                                                Units.degreesToRadians(
-                                                        Constants.DifferentialSwerveModule
-                                                                .BottomLeft
-                                                                .SENSOR_AZIMUTH_ANGLE_NOISE),
-                                                Units.rotationsPerMinuteToRadiansPerSecond(
-                                                        Constants.DifferentialSwerveModule
-                                                                .BottomLeft
-                                                                .SENSOR_WHEEL_ANG_VELOCITY_NOISE)),
-                                0.020);
-                _swerveController =
-                        new LinearQuadraticRegulator<>(
-                                _swerveModuleModel,
-                                VecBuilder.fill(
-                                        Constants.DifferentialSwerveModule.BottomLeft.Q_AZIMUTH,
-                                        Constants.DifferentialSwerveModule.BottomLeft
-                                                .Q_AZIMUTH_ANG_VELOCITY,
-                                        Constants.DifferentialSwerveModule.BottomLeft
-                                                .Q_WHEEL_ANG_VELOCITY),
-                                VecBuilder.fill(12.0, 12.0),
-                                0.020);
-                _swerveControlLoop =
-                        new LinearSystemLoop<>(
-                                _swerveModuleModel,
-                                _swerveController,
-                                _swerveObserver,
-                                12.0,
-                                0.020);
-                break;
-        }
         _rightFalcon.setInverted(Constants.DriveTrain.RIGHT_INVERTED);
         _leftFalcon.setInverted(Constants.DriveTrain.LEFT_INVERTED);
         _rightFalcon.setSensorPhase(false);
