@@ -1,12 +1,13 @@
 /* (C)2020 */
 package org.frc5687.diffswerve.robot.subsystems;
 
+import static org.frc5687.diffswerve.robot.Constants.DriveTrain.*;
 import static org.frc5687.diffswerve.robot.RobotMap.CAN.TALONFX.*;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpiutil.math.Matrix;
 import edu.wpi.first.wpiutil.math.numbers.*;
-import org.frc5687.diffswerve.robot.Constants;
+import org.frc5687.diffswerve.robot.RobotMap;
 import org.frc5687.diffswerve.robot.util.OutliersContainer;
 
 public class DriveTrain extends OutliersSubsystem {
@@ -16,7 +17,10 @@ public class DriveTrain extends OutliersSubsystem {
         super(container);
         _frontRight =
                 new DiffSwerveModule(
-                        Constants.DriveTrain.FRONT_RIGHT_POSITION, FR_LEFT_FALCON, FR_RIGHT_FALCON);
+                        FRONT_RIGHT_POSITION,
+                        FR_LEFT_FALCON,
+                        FR_RIGHT_FALCON,
+                        RobotMap.DIO.ENCODER_FR);
         //        logMetrics(
         //                "Left Voltage",
         //                "Right Voltage",
@@ -35,6 +39,7 @@ public class DriveTrain extends OutliersSubsystem {
     public void updateDashboard() {
         //        metric("Right RPM",_frontRight.getRightFalconRPM());
         //        metric("Left RPM",_frontRight.getLeftFalconRPM());
+        metric("Encoder Angle", _frontRight.getModuleAngle());
         metric("Wanted Left Voltage", _frontRight.getLeftNextVoltage());
         metric("Wanted Right Voltage", _frontRight.getRightNextVoltage());
         metric("Left Voltage", _frontRight.getLeftVoltage());

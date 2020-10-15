@@ -7,10 +7,11 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import edu.wpi.first.wpilibj.AnalogEncoder;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.controller.LinearQuadraticRegulator;
 import edu.wpi.first.wpilibj.estimator.KalmanFilter;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.system.LinearSystem;
 import edu.wpi.first.wpilibj.system.LinearSystemLoop;
 import edu.wpi.first.wpilibj.system.plant.DCMotor;
@@ -22,7 +23,7 @@ import org.frc5687.diffswerve.robot.Constants;
 public class DiffSwerveModule {
     private TalonFX _rightFalcon; // TODO: correct names when model is finished.
     private TalonFX _leftFalcon; // TODO: correct names when model is finished.
-    private AnalogEncoder _lampreyEncoder;
+    private DutyCycleEncoder _lampreyEncoder;
     private ModuleID _modID;
     private Translation2d _positionVector;
     private LinearSystem<N3, N2, N2> _swerveModuleModel;
@@ -31,7 +32,9 @@ public class DiffSwerveModule {
     private LinearSystemLoop<N3, N2, N2> _swerveControlLoop;
     private Matrix<N3, N1> _reference; // same thing as a set point.
 
-    public DiffSwerveModule(Translation2d positionVector, int leftMotorID, int rightMotorID) {
+    public DiffSwerveModule(
+            Translation2d positionVector, int leftMotorID, int rightMotorID, int encoderDIO) {
+        _lampreyEncoder = new DutyCycleEncoder(encoderDIO);
         _reference = Matrix.mat(Nat.N3(), Nat.N1()).fill(0, 0, 0);
         _positionVector = positionVector;
         _leftFalcon = new TalonFX(leftMotorID);
@@ -117,7 +120,8 @@ public class DiffSwerveModule {
     }
 
     public double getModuleAngle() {
-        return 0; // _lampreyEncoder.getDistance()*(2.0*Math.PI); //TODO: Gear Ratio.
+        return _lampreyEncoder.getDistance(); // * (2.0 * Math.PI);
+        //        return 0; // _lampreyEncoder.getDistance()*(2.0*Math.PI); //TODO: Gear Ratio.
     }
 
     public double getWheelAngularVelocity() {
