@@ -37,8 +37,8 @@ public class Constants {
         public static final double GEAR_RATIO_STEER = 1.0; // 4.0;
 
         // Create Parameters for DiffSwerve State Space
-        public static final double INERTIA_WHEEL = 0.00012;
-        public static final double INERTIA_STEER = 0.00012;
+        public static final double INERTIA_WHEEL = 0.00007;
+        public static final double INERTIA_STEER = 0.00007;
         public static final double Q_AZIMUTH_ANG_VELOCITY = 0.01;
         public static final double Q_AZIMUTH = 0.4;
         public static final double Q_WHEEL_ANG_VELOCITY = 1;

@@ -23,7 +23,6 @@ public class DiffSwerveModule {
     private TalonFX _rightFalcon; // TODO: correct names when model is finished.
     private TalonFX _leftFalcon; // TODO: correct names when model is finished.
     private DutyCycleEncoder _lampreyEncoder;
-    private ModuleID _modID;
     private Translation2d _positionVector;
     private LinearSystem<N3, N2, N2> _swerveModuleModel;
     private KalmanFilter<N3, N2, N2> _swerveObserver;
@@ -207,23 +206,6 @@ public class DiffSwerveModule {
 
     public double getRightNextVoltage() {
         return _swerveControlLoop.getU(1);
-    }
-
-    public enum ModuleID {
-        FrontRight(0),
-        FrontLeft(1),
-        BottomRight(2),
-        BottomLeft(3);
-
-        private int _value;
-
-        ModuleID(int value) {
-            _value = value;
-        }
-
-        public int getValue() {
-            return _value;
-        }
     }
 
     public static LinearSystem<N3, N2, N2> createDifferentialSwerveModule(
