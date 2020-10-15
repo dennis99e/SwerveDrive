@@ -24,6 +24,8 @@ public class DriveTrain extends OutliersSubsystem {
         logMetrics(
                 "Left Voltage",
                 "Right Voltage",
+                "Wanted Left Voltage",
+                "Wanted Right Voltage",
                 "Wheel Angular Velocity",
                 "Wheel Predicted Angular Velocity",
                 "Wheel Reference Angular Velocity",

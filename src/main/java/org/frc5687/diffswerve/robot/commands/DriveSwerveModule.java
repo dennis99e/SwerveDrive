@@ -29,7 +29,7 @@ public class DriveSwerveModule extends OutliersCommand {
                 _driveTrain.getFrontRightWantedVoltages()[1]);
         //        _driveTrain.setFrontRightVoltage(1,1);
         //        _driveTrain.setFrontRightVelocity(100);
-        //        _driveTrain.setFrontRightSpeeds(0.1,0.1);
+        //        _driveTrain.setFrontRightSpeeds(0.15, 0.15);
     }
 
     @Override

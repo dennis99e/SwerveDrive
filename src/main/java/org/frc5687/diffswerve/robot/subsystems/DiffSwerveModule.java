@@ -92,6 +92,10 @@ public class DiffSwerveModule {
         _leftFalcon.config_kF(0, Constants.DriveTrain.VELOCITY_KF, 200);
         _rightFalcon.configClosedloopRamp(0);
         _leftFalcon.configClosedloopRamp(0);
+        _leftFalcon.configVoltageCompSaturation(12.0, 200);
+        _rightFalcon.configVoltageCompSaturation(12.0, 200);
+        _leftFalcon.enableVoltageCompensation(true);
+        _rightFalcon.enableVoltageCompensation(true);
         _swerveControlLoop.reset(VecBuilder.fill(0, 0, 0));
     }
 
@@ -182,7 +186,7 @@ public class DiffSwerveModule {
     }
 
     public double getPredictedAzimuthAngularVelocity() {
-        return _swerveControlLoop.getObserver().getXhat(1);
+        return _swerveControlLoop.getObserver().getXhat(0);
     }
 
     public double getPredictedWheelAngularVelocity() {
