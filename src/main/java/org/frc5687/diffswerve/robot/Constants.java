@@ -40,12 +40,12 @@ public class Constants {
         public static final double INERTIA_WHEEL = 0.00012;
         public static final double INERTIA_STEER = 0.00012;
         public static final double Q_AZIMUTH_ANG_VELOCITY = 0.01;
-        public static final double Q_AZIMUTH = 0.1;
-        public static final double Q_WHEEL_ANG_VELOCITY = 0.8;
+        public static final double Q_AZIMUTH = 0.4;
+        public static final double Q_WHEEL_ANG_VELOCITY = 1;
         public static final double MODEL_AZIMUTH_ANGLE_NOISE = 2; // degrees
-        public static final double MODEL_AZIMUTH_ANG_VELOCITY_NOISE = 0.01; // RPM
-        public static final double MODEL_WHEEL_ANG_VELOCITY_NOISE = 0.01; // RPM
-        public static final double SENSOR_AZIMUTH_ANGLE_NOISE = 0.00001; // degrees
-        public static final double SENSOR_WHEEL_ANG_VELOCITY_NOISE = 0.0001; // degrees
+        public static final double MODEL_AZIMUTH_ANG_VELOCITY_NOISE = 10; // RPM
+        public static final double MODEL_WHEEL_ANG_VELOCITY_NOISE = 10; // RPM
+        public static final double SENSOR_AZIMUTH_ANGLE_NOISE = 0.0001; // degrees
+        public static final double SENSOR_WHEEL_ANG_VELOCITY_NOISE = 5; // degrees
     }
 }
