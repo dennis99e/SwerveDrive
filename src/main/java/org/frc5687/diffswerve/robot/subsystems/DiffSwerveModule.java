@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.controller.LinearQuadraticRegulator;
 import edu.wpi.first.wpilibj.estimator.KalmanFilter;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.system.LinearSystem;
 import edu.wpi.first.wpilibj.system.LinearSystemLoop;
 import edu.wpi.first.wpilibj.system.plant.DCMotor;
@@ -180,6 +179,10 @@ public class DiffSwerveModule {
                                 Units.rotationsPerMinuteToRadiansPerSecond(
                                         SENSOR_WHEEL_ANG_VELOCITY_NOISE));
         return R.getData();
+    }
+
+    public double getPredictedAzimuthAngularVelocity() {
+        return _swerveControlLoop.getObserver().getXhat(1);
     }
 
     public double getPredictedWheelAngularVelocity() {

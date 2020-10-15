@@ -21,13 +21,14 @@ public class DriveTrain extends OutliersSubsystem {
                         FR_LEFT_FALCON,
                         FR_RIGHT_FALCON,
                         RobotMap.DIO.ENCODER_FR);
-        //        logMetrics(
-        //                "Left Voltage",
-        //                "Right Voltage",
-        //                "Wheel Angular Velocity",
-        //                "Wheel Predicted Angular Velocity",
-        //                "Wheel Reference Angular Velocity");
-        //        enableMetrics();
+        logMetrics(
+                "Left Voltage",
+                "Right Voltage",
+                "Wheel Angular Velocity",
+                "Wheel Predicted Angular Velocity",
+                "Wheel Reference Angular Velocity",
+                "Azimuth Predicted Angular Velocity");
+        enableMetrics();
     }
 
     @Override
@@ -47,6 +48,9 @@ public class DriveTrain extends OutliersSubsystem {
         metric("Wheel Angular Velocity", _frontRight.getWheelAngularVelocity());
         metric("Wheel Predicted Angular Velocity", _frontRight.getPredictedWheelAngularVelocity());
         metric("Wheel Reference Angular Velocity", _frontRight.getReferenceWheelAngularVelocity());
+        metric(
+                "Azimuth Predicted Angular Velocity",
+                _frontRight.getPredictedAzimuthAngularVelocity());
         SmartDashboard.setDefaultNumberArray("Q mat", _frontRight.getQMatrix());
         SmartDashboard.setDefaultNumberArray("R mat", _frontRight.getRMatrix());
     }
