@@ -3,6 +3,7 @@ package org.frc5687.diffswerve.robot.subsystems;
 
 import static org.frc5687.diffswerve.robot.RobotMap.CAN.TALONFX.*;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpiutil.math.Matrix;
 import edu.wpi.first.wpiutil.math.numbers.*;
 import org.frc5687.diffswerve.robot.Constants;
@@ -16,13 +17,13 @@ public class DriveTrain extends OutliersSubsystem {
         _frontRight =
                 new DiffSwerveModule(
                         Constants.DriveTrain.FRONT_RIGHT_POSITION, FR_LEFT_FALCON, FR_RIGHT_FALCON);
-        logMetrics(
-                "Left Voltage",
-                "Right Voltage",
-                "Wheel Angular Velocity",
-                "Wheel Predicted Angular Velocity",
-                "Wheel Reference Angular Velocity");
-        enableMetrics();
+        //        logMetrics(
+        //                "Left Voltage",
+        //                "Right Voltage",
+        //                "Wheel Angular Velocity",
+        //                "Wheel Predicted Angular Velocity",
+        //                "Wheel Reference Angular Velocity");
+        //        enableMetrics();
     }
 
     @Override
@@ -41,6 +42,8 @@ public class DriveTrain extends OutliersSubsystem {
         metric("Wheel Angular Velocity", _frontRight.getWheelAngularVelocity());
         metric("Wheel Predicted Angular Velocity", _frontRight.getPredictedWheelAngularVelocity());
         metric("Wheel Reference Angular Velocity", _frontRight.getReferenceWheelAngularVelocity());
+        SmartDashboard.setDefaultNumberArray("Q mat", _frontRight.getQMatrix());
+        SmartDashboard.setDefaultNumberArray("R mat", _frontRight.getRMatrix());
     }
 
     public void setFrontRightReference(Matrix<N3, N1> reference) {

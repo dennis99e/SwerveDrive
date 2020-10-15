@@ -156,6 +156,28 @@ public class DiffSwerveModule {
         _swerveControlLoop.predict(0.020);
     }
 
+    public double[] getQMatrix() {
+        Matrix<N3, N1> Q =
+                Matrix.mat(Nat.N3(), Nat.N1())
+                        .fill(
+                                Units.degreesToRadians(MODEL_AZIMUTH_ANGLE_NOISE),
+                                Units.rotationsPerMinuteToRadiansPerSecond(
+                                        MODEL_AZIMUTH_ANG_VELOCITY_NOISE),
+                                Units.rotationsPerMinuteToRadiansPerSecond(
+                                        MODEL_WHEEL_ANG_VELOCITY_NOISE));
+        return Q.getData();
+    }
+
+    public double[] getRMatrix() {
+        Matrix<N2, N1> R =
+                Matrix.mat(Nat.N2(), Nat.N1())
+                        .fill(
+                                Units.degreesToRadians(SENSOR_AZIMUTH_ANGLE_NOISE),
+                                Units.rotationsPerMinuteToRadiansPerSecond(
+                                        SENSOR_WHEEL_ANG_VELOCITY_NOISE));
+        return R.getData();
+    }
+
     public double getPredictedWheelAngularVelocity() {
         return _swerveControlLoop.getXHat(2);
     }
