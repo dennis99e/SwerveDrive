@@ -61,16 +61,16 @@ public class DiffSwerveModule {
                                         Units.degreesToRadians(SENSOR_AZIMUTH_ANGLE_NOISE),
                                         Units.rotationsPerMinuteToRadiansPerSecond(
                                                 SENSOR_WHEEL_ANG_VELOCITY_NOISE)),
-                        0.020);
+                        0.005);
         _swerveController =
                 new LinearQuadraticRegulator<>(
                         _swerveModuleModel,
                         VecBuilder.fill(Q_AZIMUTH, Q_AZIMUTH_ANG_VELOCITY, Q_WHEEL_ANG_VELOCITY),
                         VecBuilder.fill(12.0, 12.0),
-                        0.020);
+                        0.005);
         _swerveControlLoop =
                 new LinearSystemLoop<>(
-                        _swerveModuleModel, _swerveController, _swerveObserver, 12.0, 0.020);
+                        _swerveModuleModel, _swerveController, _swerveObserver, 12.0, 0.005);
 
         _rightFalcon.setInverted(Constants.DriveTrain.RIGHT_INVERTED);
         _leftFalcon.setInverted(Constants.DriveTrain.LEFT_INVERTED);
@@ -95,6 +95,8 @@ public class DiffSwerveModule {
         _rightFalcon.configVoltageCompSaturation(12.0, 200);
         _leftFalcon.enableVoltageCompensation(true);
         _rightFalcon.enableVoltageCompensation(true);
+        //        _leftFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms, 200);
+        //        _rightFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms, 200);
         _swerveControlLoop.reset(VecBuilder.fill(0, 0, 0));
     }
 

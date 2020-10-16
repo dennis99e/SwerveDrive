@@ -1,5 +1,7 @@
+/* (C)2020 */
 package org.frc5687.diffswerve.robot.commands;
 
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import org.frc5687.diffswerve.robot.util.ILoggingSource;
@@ -8,8 +10,14 @@ import org.frc5687.diffswerve.robot.util.RioLogger;
 
 public abstract class OutliersCommand extends CommandBase implements ILoggingSource {
     private MetricTracker _metricTracker;
+    private Notifier _controlLoop;
 
     public OutliersCommand() {
+        try {
+            _controlLoop = new Notifier(this::execute);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public OutliersCommand(double timeout) {
@@ -62,6 +70,10 @@ public abstract class OutliersCommand extends CommandBase implements ILoggingSou
         _metricTracker.pause();
     }
 
+    protected void startPeriodic(double kDt) {
+        _controlLoop.startPeriodic(kDt);
+    }
+
     @Override
     public void initialize() {
         super.initialize();
@@ -78,7 +90,6 @@ public abstract class OutliersCommand extends CommandBase implements ILoggingSou
         }
     }
 
-
     private long _start;
 
     @Override
@@ -86,19 +97,19 @@ public abstract class OutliersCommand extends CommandBase implements ILoggingSou
         if (_metricTracker != null && _metricTracker.isPaused()) {
             _metricTracker.resume();
         }
-
     }
 
     protected void enableMetrics() {
-        if (_metricTracker!=null) { _metricTracker.enable(); }
+        if (_metricTracker != null) {
+            _metricTracker.enable();
+        }
     }
 
     protected void disableMetrics() {
-        if (_metricTracker!=null) { _metricTracker.disable(); }
+        if (_metricTracker != null) {
+            _metricTracker.disable();
+        }
     }
 
-
-    protected void innerExecute() {
-
-    }
+    protected void innerExecute() {}
 }
