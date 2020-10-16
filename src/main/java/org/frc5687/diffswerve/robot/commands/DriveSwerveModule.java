@@ -18,6 +18,7 @@ public class DriveSwerveModule extends OutliersCommand {
     public void initialize() {
         super.initialize();
         _driveTrain.setFrontRightReference(Matrix.mat(Nat.N3(), Nat.N1()).fill(0, 0, 0));
+        startPeriodic(0.005);
     }
 
     @Override
