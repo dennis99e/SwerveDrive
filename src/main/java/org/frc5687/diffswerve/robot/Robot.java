@@ -1,11 +1,8 @@
 /* (C)2020 */
 package org.frc5687.diffswerve.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import java.io.BufferedReader;
@@ -113,11 +110,8 @@ public class Robot extends OutliersRobot implements ILoggingSource {
 
         // Example of starting a new row of metrics for all instrumented objects.
         // MetricTracker.newMetricRowAll();
-        _prevTime = _time;
-        _time = _timer.get();
-        SmartDashboard.putNumber("Loop takes", _time - _prevTime);
         MetricTracker.newMetricRowAll();
-        _robotContainer.periodic();
+        //        _robotContainer.periodic();
         CommandScheduler.getInstance().run();
         update();
         updateDashboard();

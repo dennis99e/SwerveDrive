@@ -14,6 +14,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     public DriveTrain(OutliersContainer container) {
         super(container);
+        startNotifier(0.1);
         _frontRight =
                 new DiffSwerveModule(
                         FRONT_RIGHT_POSITION,
@@ -34,6 +35,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void periodic() {
+        super.periodic();
         _frontRight.periodic();
     }
 
