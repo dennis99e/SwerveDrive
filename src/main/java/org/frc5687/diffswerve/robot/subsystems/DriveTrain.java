@@ -14,7 +14,6 @@ public class DriveTrain extends OutliersSubsystem {
 
     public DriveTrain(OutliersContainer container) {
         super(container);
-        startNotifier(0.1);
         _frontRight =
                 new DiffSwerveModule(
                         FRONT_RIGHT_POSITION,
@@ -31,13 +30,15 @@ public class DriveTrain extends OutliersSubsystem {
                 "Wheel Reference Angular Velocity",
                 "Azimuth Predicted Angular Velocity");
         enableMetrics();
+        startNotifier(0.005);
+    }
+
+    public void update() {
+        _frontRight.periodic();
     }
 
     @Override
-    public void periodic() {
-        super.periodic();
-        _frontRight.periodic();
-    }
+    public void periodic() {}
 
     @Override
     public void updateDashboard() {

@@ -11,19 +11,17 @@ import org.frc5687.diffswerve.robot.util.RioLogger;
 
 public abstract class OutliersSubsystem extends SubsystemBase implements ILoggingSource {
     private MetricTracker _metricTracker;
-    private Notifier _controlLoop;
+    private final Notifier _controlLoop = new Notifier(this::update);
 
     public OutliersSubsystem(OutliersContainer container) {
         container.registerSubSystem(this);
-        _controlLoop = new Notifier(this::periodic);
     }
 
     public void startNotifier(double kDt) {
         _controlLoop.startPeriodic(kDt);
     }
 
-    @Override
-    public void periodic() {}
+    public void update() {}
 
     @Override
     public void error(String message) {
