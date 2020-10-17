@@ -24,11 +24,11 @@ public class DriveSwerveModule extends OutliersCommand {
     @Override
     public void execute() {
         super.execute();
-        _driveTrain.setFrontRightReference(Matrix.mat(Nat.N3(), Nat.N1()).fill(0, 0, 10));
-        //        _driveTrain.setFrontRightVoltage(
-        //                _driveTrain.getFrontRightWantedVoltages()[0],
-        //                _driveTrain.getFrontRightWantedVoltages()[1]);
-        _driveTrain.setFrontRightVoltage(1, 1);
+        _driveTrain.setFrontRightReference(Matrix.mat(Nat.N3(), Nat.N1()).fill(0, 0, 100));
+        _driveTrain.setFrontRightVoltage(
+                _driveTrain.getFrontRightWantedVoltages()[0],
+                _driveTrain.getFrontRightWantedVoltages()[1]);
+        //        _driveTrain.setFrontRightVoltage(3, 3);
         //        _driveTrain.setFrontRightVelocity(100);
         //        _driveTrain.setFrontRightSpeeds(0.15, 0.15);
     }

@@ -27,8 +27,8 @@ public class DriveTrain extends OutliersSubsystem {
                 "Wanted Right Voltage",
                 "Wheel Angular Velocity",
                 "Wheel Predicted Angular Velocity",
-                "Wheel Reference Angular Velocity",
-                "Azimuth Predicted Angular Velocity");
+                "Wheel Reference Angular Velocity");
+        //                        "Azimuth Predicted Angular Velocity");
         enableMetrics();
         startNotifier(0.005);
     }
@@ -42,19 +42,21 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
-        metric("Right RPM", _frontRight.getRightFalconRPM());
-        metric("Left RPM", _frontRight.getLeftFalconRPM());
+        //        metric("Right RPM", _frontRight.getRightFalconRPM());
+        //        metric("Left RPM", _frontRight.getLeftFalconRPM());
         metric("Encoder Angle", _frontRight.getModuleAngle());
         metric("Wanted Left Voltage", _frontRight.getLeftNextVoltage());
         metric("Wanted Right Voltage", _frontRight.getRightNextVoltage());
         metric("Left Voltage", _frontRight.getLeftVoltage());
         metric("Right Voltage", _frontRight.getRightVoltage());
+
         metric("Wheel Angular Velocity", _frontRight.getWheelAngularVelocity());
         metric("Wheel Predicted Angular Velocity", _frontRight.getPredictedWheelAngularVelocity());
         metric("Wheel Reference Angular Velocity", _frontRight.getReferenceWheelAngularVelocity());
         metric(
                 "Azimuth Predicted Angular Velocity",
                 _frontRight.getPredictedAzimuthAngularVelocity());
+        metric("Predicted Azimuth Angle", _frontRight.getPredictedAzimuthAngle());
     }
 
     public void setFrontRightReference(Matrix<N3, N1> reference) {

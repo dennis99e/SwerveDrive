@@ -37,15 +37,15 @@ public class Constants {
         public static final double GEAR_RATIO_STEER = 1.0; // 4.0;
 
         // Create Parameters for DiffSwerve State Space
-        public static final double INERTIA_WHEEL = 0.015;
-        public static final double INERTIA_STEER = 0.015;
-        public static final double Q_AZIMUTH_ANG_VELOCITY = 0.01;
-        public static final double Q_AZIMUTH = 0.4;
+        public static final double INERTIA_WHEEL = 0.007;
+        public static final double INERTIA_STEER = 0.007;
+        public static final double Q_AZIMUTH_ANG_VELOCITY = 1;
+        public static final double Q_AZIMUTH = 0.1;
         public static final double Q_WHEEL_ANG_VELOCITY = 1;
         public static final double MODEL_AZIMUTH_ANGLE_NOISE = 2; // degrees
-        public static final double MODEL_AZIMUTH_ANG_VELOCITY_NOISE = 10; // RPM
-        public static final double MODEL_WHEEL_ANG_VELOCITY_NOISE = 10; // RPM
-        public static final double SENSOR_AZIMUTH_ANGLE_NOISE = 0.0001; // degrees
-        public static final double SENSOR_WHEEL_ANG_VELOCITY_NOISE = 5; // degrees
+        public static final double MODEL_AZIMUTH_ANG_VELOCITY_NOISE = 200; // RPM
+        public static final double MODEL_WHEEL_ANG_VELOCITY_NOISE = 200; // RPM
+        public static final double SENSOR_AZIMUTH_ANGLE_NOISE = 0.01; // degrees
+        public static final double SENSOR_WHEEL_ANG_VELOCITY_NOISE = 10; // degrees
     }
 }

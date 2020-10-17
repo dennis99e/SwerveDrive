@@ -6,11 +6,13 @@ import static org.frc5687.diffswerve.robot.Constants.DifferentialSwerveModule.*;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.controller.LinearQuadraticRegulator;
 import edu.wpi.first.wpilibj.estimator.KalmanFilter;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.system.LinearSystem;
 import edu.wpi.first.wpilibj.system.LinearSystemLoop;
 import edu.wpi.first.wpilibj.system.plant.DCMotor;
@@ -66,7 +68,7 @@ public class DiffSwerveModule {
                 new LinearQuadraticRegulator<>(
                         _swerveModuleModel,
                         VecBuilder.fill(Q_AZIMUTH, Q_AZIMUTH_ANG_VELOCITY, Q_WHEEL_ANG_VELOCITY),
-                        VecBuilder.fill(12.0, 12.0),
+                        VecBuilder.fill(1 / 12.0, 1 / 12.0),
                         0.005);
         _swerveControlLoop =
                 new LinearSystemLoop<>(
@@ -95,8 +97,8 @@ public class DiffSwerveModule {
         _rightFalcon.configVoltageCompSaturation(12.0, 200);
         _leftFalcon.enableVoltageCompensation(true);
         _rightFalcon.enableVoltageCompensation(true);
-        //        _leftFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms, 200);
-        //        _rightFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms, 200);
+        _leftFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms, 200);
+        _rightFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms, 200);
         _swerveControlLoop.reset(VecBuilder.fill(0, 0, 0));
     }
 
@@ -161,37 +163,20 @@ public class DiffSwerveModule {
     public void periodic() {
         _swerveControlLoop.setNextR(_reference);
         _swerveControlLoop.correct(VecBuilder.fill(getModuleAngle(), getWheelAngularVelocity()));
-        _swerveControlLoop.predict(0.020);
-    }
-
-    public double[] getQMatrix() {
-        Matrix<N3, N1> Q =
-                Matrix.mat(Nat.N3(), Nat.N1())
-                        .fill(
-                                Units.degreesToRadians(MODEL_AZIMUTH_ANGLE_NOISE),
-                                Units.rotationsPerMinuteToRadiansPerSecond(
-                                        MODEL_AZIMUTH_ANG_VELOCITY_NOISE),
-                                Units.rotationsPerMinuteToRadiansPerSecond(
-                                        MODEL_WHEEL_ANG_VELOCITY_NOISE));
-        return Q.getData();
-    }
-
-    public double[] getRMatrix() {
-        Matrix<N2, N1> R =
-                Matrix.mat(Nat.N2(), Nat.N1())
-                        .fill(
-                                Units.degreesToRadians(SENSOR_AZIMUTH_ANGLE_NOISE),
-                                Units.rotationsPerMinuteToRadiansPerSecond(
-                                        SENSOR_WHEEL_ANG_VELOCITY_NOISE));
-        return R.getData();
+        _swerveControlLoop.predict(0.005);
+        SmartDashboard.putNumberArray("K", _swerveControlLoop.getController().getK().getData());
     }
 
     public double getPredictedAzimuthAngularVelocity() {
-        return _swerveControlLoop.getObserver().getXhat(0);
+        return _swerveControlLoop.getObserver().getXhat(1);
     }
 
     public double getPredictedWheelAngularVelocity() {
         return _swerveControlLoop.getXHat(2);
+    }
+
+    public double getPredictedAzimuthAngle() {
+        return _swerveControlLoop.getXHat(0);
     }
 
     public double getReferenceWheelAngularVelocity() {
