@@ -52,5 +52,9 @@ public class RobotMap {
      */
     public static class DIO {
         public static final int ENCODER_FR = 0;
+        public static final int ENCODER_A = 1;
+        public static final int ENCODER_B = 2;
+
+
     }
 }

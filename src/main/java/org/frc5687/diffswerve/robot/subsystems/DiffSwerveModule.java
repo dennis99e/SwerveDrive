@@ -6,6 +6,7 @@ import static org.frc5687.diffswerve.robot.Constants.DifferentialSwerveModule.*;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.controller.LinearQuadraticRegulator;
 import edu.wpi.first.wpilibj.estimator.KalmanFilter;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -22,6 +23,7 @@ public class DiffSwerveModule {
     private TalonFX _rightFalcon; // TODO: correct names when model is finished.
     private TalonFX _leftFalcon; // TODO: correct names when model is finished.
     private DutyCycleEncoder _lampreyEncoder;
+    private Encoder _wheelEncoder;
     private Translation2d _positionVector;
     private LinearSystem<N3, N2, N2> _swerveModuleModel;
     private KalmanFilter<N3, N2, N2> _swerveObserver;
@@ -30,8 +32,10 @@ public class DiffSwerveModule {
     private Matrix<N3, N1> _reference; // same thing as a set point.
 
     public DiffSwerveModule(
-            Translation2d positionVector, int leftMotorID, int rightMotorID, int encoderDIO) {
+            Translation2d positionVector, int leftMotorID, int rightMotorID, int encoderDIO, int encoderDIOA, int encoderDIOb) {
         _lampreyEncoder = new DutyCycleEncoder(encoderDIO);
+        _wheelEncoder = new Encoder(encoderDIOA,encoderDIOb);
+        _wheelEncoder.setDistancePerPulse(2048);
         _reference = Matrix.mat(Nat.N3(), Nat.N1()).fill(0, 0, 0);
         _positionVector = positionVector;
         _leftFalcon = new TalonFX(leftMotorID);
@@ -134,6 +138,9 @@ public class DiffSwerveModule {
     public double getModuleAngle() {
         return -(_lampreyEncoder.getDistance() - 0.178); // * (2.0 * Math.PI);
         //        return 0; // _lampreyEncoder.getDistance()*(2.0*Math.PI); //TODO: Gear Ratio.
+    }
+    public double getWheelVelocity() {
+        return _wheelEncoder.getRate();
     }
 
     public double getWheelAngularVelocity() {
