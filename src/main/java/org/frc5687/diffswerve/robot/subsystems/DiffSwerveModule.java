@@ -69,7 +69,7 @@ public class DiffSwerveModule {
                 new LinearQuadraticRegulator<>(
                         _swerveModuleModel,
                         VecBuilder.fill(Q_AZIMUTH, Q_AZIMUTH_ANG_VELOCITY, Q_WHEEL_ANG_VELOCITY),
-                        VecBuilder.fill(1 / 12.0, 1 / 12.0),
+                        VecBuilder.fill(1.8 / 12.0, 1.8 / 12.0),
                         0.005);
         _swerveControlLoop =
                 new LinearSystemLoop<>(
@@ -100,6 +100,7 @@ public class DiffSwerveModule {
         _rightFalcon.enableVoltageCompensation(true);
         _leftFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms, 200);
         _rightFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms, 200);
+        _lampreyEncoder.setDistancePerRotation(2.0 * Math.PI);
         _swerveControlLoop.reset(VecBuilder.fill(0, 0, 0));
     }
 
@@ -112,24 +113,26 @@ public class DiffSwerveModule {
     }
 
     public void setRightFalconVoltage(double voltage) {
-        Helpers.limit(voltage, -1.0, 1.0);
+        Helpers.limit(voltage, -4.5, 4.5);
         _rightFalcon.set(TalonFXControlMode.PercentOutput, voltage / 12.0);
     }
 
     public void setLeftFalconVoltage(double voltage) {
-        Helpers.limit(voltage, -1.0, 1.0);
+        Helpers.limit(voltage, -4.5, 4.5);
         _leftFalcon.set(TalonFXControlMode.PercentOutput, voltage / 12.0);
     }
 
     public void setVelocityRPM(double RPM) {
         _rightFalcon.set(
-                ControlMode.Velocity, (RPM * Constants.DriveTrain.TICKS_TO_ROTATIONS / 600 / 1));
+                ControlMode.Velocity,
+                (RPM * Constants.DriveTrain.TICKS_TO_ROTATIONS / 600 / GEAR_RATIO_WHEEL));
         _leftFalcon.set(
-                ControlMode.Velocity, (RPM * Constants.DriveTrain.TICKS_TO_ROTATIONS / 600 / 1));
+                ControlMode.Velocity,
+                (RPM * Constants.DriveTrain.TICKS_TO_ROTATIONS / 600 / GEAR_RATIO_WHEEL));
     }
 
     public double getModuleAngle() {
-        return _lampreyEncoder.getDistance(); // * (2.0 * Math.PI);
+        return -(_lampreyEncoder.getDistance() - 0.178); // * (2.0 * Math.PI);
         //        return 0; // _lampreyEncoder.getDistance()*(2.0*Math.PI); //TODO: Gear Ratio.
     }
 
@@ -208,7 +211,7 @@ public class DiffSwerveModule {
         var A =
                 Matrix.mat(Nat.N3(), Nat.N3())
                         .fill(0.0, 1.0, 0.0, 0.0, Gs * Cs, 0.0, 0.0, 0.0, Gw * Cw);
-        var B = Matrix.mat(Nat.N3(), Nat.N2()).fill(0.0, 0.0, Vs, Vs, Vw, -Vw);
+        var B = Matrix.mat(Nat.N3(), Nat.N2()).fill(0.0, 0.0, Vs, -Vs, Vw, Vw);
         var C = Matrix.mat(Nat.N2(), Nat.N3()).fill(1.0, 0.0, 0.0, 0.0, 0.0, 1.0);
         var D =
                 Matrix.mat(Nat.N2(), Nat.N2())

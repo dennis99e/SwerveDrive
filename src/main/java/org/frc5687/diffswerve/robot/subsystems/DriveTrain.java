@@ -7,6 +7,7 @@ import static org.frc5687.diffswerve.robot.RobotMap.CAN.TALONFX.*;
 import edu.wpi.first.wpiutil.math.Matrix;
 import edu.wpi.first.wpiutil.math.numbers.*;
 import org.frc5687.diffswerve.robot.RobotMap;
+import org.frc5687.diffswerve.robot.util.Helpers;
 import org.frc5687.diffswerve.robot.util.OutliersContainer;
 
 public class DriveTrain extends OutliersSubsystem {
@@ -69,7 +70,9 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     public double[] getFrontRightWantedVoltages() {
-        return new double[] {_frontRight.getLeftNextVoltage(), _frontRight.getRightNextVoltage()};
+        double lim1 = Helpers.limit(_frontRight.getLeftNextVoltage(), -4.5, 4.5);
+        double lim2 = Helpers.limit(_frontRight.getRightNextVoltage(), -4.5, 4.5);
+        return new double[] {lim1, lim2};
     }
 
     public void setFrontRightVoltage(double voltageLeft, double voltageRight) {
