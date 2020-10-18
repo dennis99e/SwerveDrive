@@ -9,6 +9,8 @@ import org.frc5687.diffswerve.robot.util.*;
 
 public class RobotContainer extends OutliersContainer {
 
+    private OI _oi;
+
     private DriveTrain _driveTrain;
 
     public RobotContainer(Robot robot, IdentityMode identityMode) {
@@ -16,7 +18,10 @@ public class RobotContainer extends OutliersContainer {
     }
 
     public void init() {
+        _oi = new OI();
         _driveTrain = new DriveTrain(this);
+
+        _oi.initializeButtons(_driveTrain);
         setDefaultCommand(_driveTrain, new DriveSwerveModule(_driveTrain));
     }
 
