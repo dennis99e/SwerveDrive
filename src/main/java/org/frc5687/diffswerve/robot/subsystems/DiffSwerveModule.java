@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpiutil.math.*;
 import edu.wpi.first.wpiutil.math.numbers.*;
 import org.frc5687.diffswerve.robot.Constants;
+import org.frc5687.diffswerve.robot.util.Helpers;
 
 public class DiffSwerveModule {
     private TalonFX _rightFalcon; // TODO: correct names when model is finished.
@@ -111,10 +112,12 @@ public class DiffSwerveModule {
     }
 
     public void setRightFalconVoltage(double voltage) {
+        Helpers.limit(voltage, -1.0, 1.0);
         _rightFalcon.set(TalonFXControlMode.PercentOutput, voltage / 12.0);
     }
 
     public void setLeftFalconVoltage(double voltage) {
+        Helpers.limit(voltage, -1.0, 1.0);
         _leftFalcon.set(TalonFXControlMode.PercentOutput, voltage / 12.0);
     }
 
@@ -205,7 +208,7 @@ public class DiffSwerveModule {
         var A =
                 Matrix.mat(Nat.N3(), Nat.N3())
                         .fill(0.0, 1.0, 0.0, 0.0, Gs * Cs, 0.0, 0.0, 0.0, Gw * Cw);
-        var B = Matrix.mat(Nat.N3(), Nat.N2()).fill(0.0, 0.0, Vs, -Vs, Vw, Vw);
+        var B = Matrix.mat(Nat.N3(), Nat.N2()).fill(0.0, 0.0, Vs, Vs, Vw, -Vw);
         var C = Matrix.mat(Nat.N2(), Nat.N3()).fill(1.0, 0.0, 0.0, 0.0, 0.0, 1.0);
         var D =
                 Matrix.mat(Nat.N2(), Nat.N2())
