@@ -13,11 +13,11 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.system.LinearSystem;
 import edu.wpi.first.wpilibj.system.LinearSystemLoop;
 import edu.wpi.first.wpilibj.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpiutil.math.*;
 import edu.wpi.first.wpiutil.math.numbers.*;
 import org.frc5687.diffswerve.robot.Constants;
-import org.frc5687.diffswerve.robot.util.Helpers;
 
 public class DiffSwerveModule {
     private final TalonFX _rightFalcon; // TODO: correct names when model is finished.
@@ -28,6 +28,12 @@ public class DiffSwerveModule {
 
     private final Translation2d _positionVector;
     private Matrix<N3, N1> _reference; // same thing as a set point.
+
+    // attempt for angle only right now.
+    private final TrapezoidProfile.Constraints _trapConstrains =
+            new TrapezoidProfile.Constraints(
+                    Units.degreesToRadians(100), Units.degreesToRadians(120));
+    private TrapezoidProfile.State _lastProfiledReference = new TrapezoidProfile.State();
 
     private final LinearSystemLoop<N3, N2, N2> _swerveControlLoop;
 
@@ -42,7 +48,7 @@ public class DiffSwerveModule {
             int encoderDIOb) {
 
         _lampreyEncoder = new DutyCycleEncoder(encoderDIO);
-        _lampreyEncoder.setDistancePerRotation(2.0 * Math.PI);
+        _lampreyEncoder.setDistancePerRotation(Math.PI);
 
         _wheelEncoder = new Encoder(encoderDIOA, encoderDIOb); // In use for testing purposes.
         _wheelEncoder.setDistancePerPulse((2.0 * Math.PI) / 2048); // In use for testing purposes.
@@ -117,10 +123,18 @@ public class DiffSwerveModule {
         _leftFalcon.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, 200);
 
         _swerveControlLoop.reset(VecBuilder.fill(0, 0, 0));
+        _lastProfiledReference =
+                new TrapezoidProfile.State(getModuleAngle(), getAzimuthAngularVelocity());
     }
 
     public void periodic() {
-        _swerveControlLoop.setNextR(_reference);
+        TrapezoidProfile.State goal = new TrapezoidProfile.State(_reference.get(0, 0), 0);
+        _lastProfiledReference =
+                (new TrapezoidProfile(_trapConstrains, goal, _lastProfiledReference))
+                        .calculate(_kDt);
+
+        _swerveControlLoop.setNextR(
+                _lastProfiledReference.position, _lastProfiledReference.velocity);
         _swerveControlLoop.correct(VecBuilder.fill(getModuleAngle(), getWheelAngularVelocity()));
         _swerveControlLoop.predict(_kDt);
     }
@@ -134,12 +148,10 @@ public class DiffSwerveModule {
     }
 
     public void setRightFalconVoltage(double voltage) {
-        Helpers.limit(voltage, -4.5, 4.5);
         _rightFalcon.set(TalonFXControlMode.PercentOutput, voltage / 12.0);
     }
 
     public void setLeftFalconVoltage(double voltage) {
-        Helpers.limit(voltage, -4.5, 4.5);
         _leftFalcon.set(TalonFXControlMode.PercentOutput, voltage / 12.0);
     }
 
@@ -166,6 +178,13 @@ public class DiffSwerveModule {
                         getLeftFalconRPM() * Constants.DifferentialSwerveModule.GEAR_RATIO_WHEEL
                                 + getRightFalconRPM()
                                         * Constants.DifferentialSwerveModule.GEAR_RATIO_WHEEL)
+                / 2.0;
+    }
+
+    public double getAzimuthAngularVelocity() {
+        return Units.rotationsPerMinuteToRadiansPerSecond(
+                        getLeftFalconRPM() * GEAR_RATIO_STEER
+                                - getRightFalconRPM() * GEAR_RATIO_STEER)
                 / 2.0;
     }
 
