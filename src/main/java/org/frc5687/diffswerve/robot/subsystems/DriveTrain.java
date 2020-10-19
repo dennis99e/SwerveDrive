@@ -75,8 +75,8 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     public double[] getFrontRightWantedVoltages() {
-        double lim1 = Helpers.limit(_frontRight.getLeftNextVoltage(), -4.5, 4.5);
-        double lim2 = Helpers.limit(_frontRight.getRightNextVoltage(), -4.5, 4.5);
+        double lim1 = Helpers.limit(_frontRight.getLeftNextVoltage(), -12, 12);
+        double lim2 = Helpers.limit(_frontRight.getRightNextVoltage(), -12, 12);
         return new double[] {lim1, lim2};
     }
 
