@@ -40,9 +40,9 @@ public class Constants {
         // Create Parameters for DiffSwerve State Space
         public static final double INERTIA_WHEEL = 0.007;
         public static final double INERTIA_STEER = 0.007;
-        public static final double Q_AZIMUTH_ANG_VELOCITY = 5.0;
-        public static final double Q_AZIMUTH = 0.008;
-        public static final double Q_WHEEL_ANG_VELOCITY = 5;
+        public static final double Q_AZIMUTH_ANG_VELOCITY = 0.2;
+        public static final double Q_AZIMUTH = 0.01;
+        public static final double Q_WHEEL_ANG_VELOCITY = 4;
         public static final double MODEL_AZIMUTH_ANGLE_NOISE = 4.0; // degrees
         public static final double MODEL_AZIMUTH_ANG_VELOCITY_NOISE = 30.0; // RPM
         public static final double MODEL_WHEEL_ANG_VELOCITY_NOISE = 30.0; // RPM
