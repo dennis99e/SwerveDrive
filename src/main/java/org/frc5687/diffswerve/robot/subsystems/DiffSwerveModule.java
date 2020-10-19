@@ -20,16 +20,18 @@ import org.frc5687.diffswerve.robot.Constants;
 import org.frc5687.diffswerve.robot.util.Helpers;
 
 public class DiffSwerveModule {
-    private TalonFX _rightFalcon; // TODO: correct names when model is finished.
-    private TalonFX _leftFalcon; // TODO: correct names when model is finished.
-    private DutyCycleEncoder _lampreyEncoder;
-    private Encoder _wheelEncoder;
-    private Translation2d _positionVector;
-    private LinearSystem<N3, N2, N2> _swerveModuleModel;
-    private KalmanFilter<N3, N2, N2> _swerveObserver;
-    private LinearQuadraticRegulator<N3, N2, N2> _swerveController;
-    private LinearSystemLoop<N3, N2, N2> _swerveControlLoop;
+    private final TalonFX _rightFalcon; // TODO: correct names when model is finished.
+    private final TalonFX _leftFalcon; // TODO: correct names when model is finished.
+
+    private final DutyCycleEncoder _lampreyEncoder;
+    private final Encoder _wheelEncoder;
+
+    private final Translation2d _positionVector;
     private Matrix<N3, N1> _reference; // same thing as a set point.
+
+    private final LinearSystemLoop<N3, N2, N2> _swerveControlLoop;
+
+    private final double _kDt = 0.005;
 
     public DiffSwerveModule(
             Translation2d positionVector,
@@ -38,25 +40,34 @@ public class DiffSwerveModule {
             int encoderDIO,
             int encoderDIOA,
             int encoderDIOb) {
+
         _lampreyEncoder = new DutyCycleEncoder(encoderDIO);
-        _wheelEncoder = new Encoder(encoderDIOA, encoderDIOb);
-        _wheelEncoder.setDistancePerPulse((2.0 * Math.PI) / 2048);
+        _lampreyEncoder.setDistancePerRotation(2.0 * Math.PI);
+
+        _wheelEncoder = new Encoder(encoderDIOA, encoderDIOb); // In use for testing purposes.
+        _wheelEncoder.setDistancePerPulse((2.0 * Math.PI) / 2048); // In use for testing purposes.
+
         _reference = Matrix.mat(Nat.N3(), Nat.N1()).fill(0, 0, 0);
         _positionVector = positionVector;
+
         _leftFalcon = new TalonFX(leftMotorID);
         _rightFalcon = new TalonFX(rightMotorID);
-        _swerveModuleModel =
+
+        // Creates a Linear System of our Differential Swerve Module.
+        LinearSystem<N3, N2, N2> swerveModuleModel =
                 createDifferentialSwerveModule(
                         DCMotor.getFalcon500(2),
                         INERTIA_STEER,
                         INERTIA_WHEEL,
                         GEAR_RATIO_STEER,
                         GEAR_RATIO_WHEEL);
-        _swerveObserver =
+
+        // Creates a Kalman Filter as our Observer for our module.
+        KalmanFilter<N3, N2, N2> swerveObserver =
                 new KalmanFilter<>(
                         Nat.N3(),
                         Nat.N2(),
-                        _swerveModuleModel,
+                        swerveModuleModel,
                         Matrix.mat(Nat.N3(), Nat.N1())
                                 .fill(
                                         Units.degreesToRadians(MODEL_AZIMUTH_ANGLE_NOISE),
@@ -69,16 +80,20 @@ public class DiffSwerveModule {
                                         Units.degreesToRadians(SENSOR_AZIMUTH_ANGLE_NOISE),
                                         Units.rotationsPerMinuteToRadiansPerSecond(
                                                 SENSOR_WHEEL_ANG_VELOCITY_NOISE)),
-                        0.005);
-        _swerveController =
+                        _kDt);
+        // Creates an LQR controller for our Swerve Module.
+        LinearQuadraticRegulator<N3, N2, N2> swerveController =
                 new LinearQuadraticRegulator<>(
-                        _swerveModuleModel,
+                        swerveModuleModel,
                         VecBuilder.fill(Q_AZIMUTH, Q_AZIMUTH_ANG_VELOCITY, Q_WHEEL_ANG_VELOCITY),
                         VecBuilder.fill(1.3 / 12.0, 1.3 / 12.0),
-                        0.005);
+                        _kDt);
+
+        // Creates a LinearSystemLoop that contains the Model, Controller, Observer, Max Volts,
+        // Update Rate.
         _swerveControlLoop =
                 new LinearSystemLoop<>(
-                        _swerveModuleModel, _swerveController, _swerveObserver, 12.0, 0.005);
+                        swerveModuleModel, swerveController, swerveObserver, 12.0, _kDt);
 
         _rightFalcon.setInverted(Constants.DriveTrain.RIGHT_INVERTED);
         _leftFalcon.setInverted(Constants.DriveTrain.LEFT_INVERTED);
@@ -91,26 +106,23 @@ public class DiffSwerveModule {
         _leftFalcon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 200);
         _rightFalcon.configForwardSoftLimitEnable(false);
         _leftFalcon.configForwardSoftLimitEnable(false);
-        _rightFalcon.config_kP(0, Constants.DriveTrain.VELOCITY_KP, 200);
-        _rightFalcon.config_kI(0, Constants.DriveTrain.VELOCITY_KI, 200);
-        _rightFalcon.config_kD(0, Constants.DriveTrain.VELOCITY_KD, 200);
-        _rightFalcon.config_kF(0, Constants.DriveTrain.VELOCITY_KF, 200);
-        _leftFalcon.config_kP(0, Constants.DriveTrain.VELOCITY_KP, 200);
-        _leftFalcon.config_kI(0, Constants.DriveTrain.VELOCITY_KI, 200);
-        _leftFalcon.config_kD(0, Constants.DriveTrain.VELOCITY_KD, 200);
-        _leftFalcon.config_kF(0, Constants.DriveTrain.VELOCITY_KF, 200);
-        _rightFalcon.configClosedloopRamp(0);
-        _leftFalcon.configClosedloopRamp(0);
+
         _leftFalcon.configVoltageCompSaturation(12.0, 200);
         _rightFalcon.configVoltageCompSaturation(12.0, 200);
         _leftFalcon.enableVoltageCompensation(true);
         _rightFalcon.enableVoltageCompensation(true);
-        _leftFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms, 200);
-        _rightFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms, 200);
-        _lampreyEncoder.setDistancePerRotation(2.0 * Math.PI);
+
+        _leftFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_5Ms, 200);
+        _rightFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_5Ms, 200);
         _rightFalcon.setStatusFramePeriod(StatusFrame.Status_1_General, 5, 200);
         _leftFalcon.setStatusFramePeriod(StatusFrame.Status_1_General, 5, 200);
         _swerveControlLoop.reset(VecBuilder.fill(0, 0, 0));
+    }
+
+    public void periodic() {
+        _swerveControlLoop.setNextR(_reference);
+        _swerveControlLoop.correct(VecBuilder.fill(getModuleAngle(), getWheelVelocity()));
+        _swerveControlLoop.predict(_kDt);
     }
 
     public void setRightFalcon(double speed) {
@@ -177,12 +189,6 @@ public class DiffSwerveModule {
 
     public double getRightVoltage() {
         return _rightFalcon.getMotorOutputVoltage();
-    }
-
-    public void periodic() {
-        _swerveControlLoop.setNextR(_reference);
-        _swerveControlLoop.correct(VecBuilder.fill(getModuleAngle(), getWheelVelocity()));
-        _swerveControlLoop.predict(0.005);
     }
 
     public double getPredictedAzimuthAngularVelocity() {

@@ -43,9 +43,9 @@ public class Constants {
         public static final double Q_AZIMUTH_ANG_VELOCITY = 4;
         public static final double Q_AZIMUTH = 0.05;
         public static final double Q_WHEEL_ANG_VELOCITY = 4;
-        public static final double MODEL_AZIMUTH_ANGLE_NOISE = 2; // degrees
-        public static final double MODEL_AZIMUTH_ANG_VELOCITY_NOISE = 300; // RPM
-        public static final double MODEL_WHEEL_ANG_VELOCITY_NOISE = 300; // RPM
+        public static final double MODEL_AZIMUTH_ANGLE_NOISE = 1; // degrees
+        public static final double MODEL_AZIMUTH_ANG_VELOCITY_NOISE = 30; // RPM
+        public static final double MODEL_WHEEL_ANG_VELOCITY_NOISE = 30; // RPM
         public static final double SENSOR_AZIMUTH_ANGLE_NOISE = 0.01; // degrees
         public static final double SENSOR_WHEEL_ANG_VELOCITY_NOISE = 5; // degrees
     }
