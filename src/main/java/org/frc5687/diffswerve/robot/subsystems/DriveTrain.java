@@ -36,7 +36,7 @@ public class DriveTrain extends OutliersSubsystem {
                 "Wheel Reference Angular Velocity");
         //                        "Azimuth Predicted Angular Velocity");
         enableMetrics();
-        startNotifier(0.005);
+        startNotifier(0.020);
     }
 
     public void update() {

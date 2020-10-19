@@ -23,7 +23,7 @@ public class Constants {
         public static final boolean RIGHT_INVERTED = false;
         public static final boolean LEFT_INVERTED = false;
         public static final double TICKS_TO_ROTATIONS = 2048.0;
-        public static final double GEAR_RATIO = 1.0;
+        public static final double GEAR_RATIO = 1.75;
 
         public static final double VELOCITY_KP = 0.25;
         public static final double VELOCITY_KI = 0.0001;

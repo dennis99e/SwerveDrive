@@ -31,7 +31,7 @@ public class DiffSwerveModule {
 
     private final LinearSystemLoop<N3, N2, N2> _swerveControlLoop;
 
-    private final double _kDt = 0.005;
+    private final double _kDt = 0.020;
 
     public DiffSwerveModule(
             Translation2d positionVector,
@@ -52,6 +52,22 @@ public class DiffSwerveModule {
 
         _leftFalcon = new TalonFX(leftMotorID);
         _rightFalcon = new TalonFX(rightMotorID);
+        _rightFalcon.setInverted(Constants.DriveTrain.RIGHT_INVERTED);
+        _leftFalcon.setInverted(Constants.DriveTrain.LEFT_INVERTED);
+        _rightFalcon.setSensorPhase(false);
+        _leftFalcon.setSensorPhase(false);
+        _rightFalcon.setNeutralMode(NeutralMode.Brake);
+        _leftFalcon.setNeutralMode(NeutralMode.Brake);
+
+        _rightFalcon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 200);
+        _leftFalcon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 200);
+        _rightFalcon.configForwardSoftLimitEnable(false);
+        _leftFalcon.configForwardSoftLimitEnable(false);
+
+        _leftFalcon.configVoltageCompSaturation(12.0, 200);
+        _rightFalcon.configVoltageCompSaturation(12.0, 200);
+        _leftFalcon.enableVoltageCompensation(true);
+        _rightFalcon.enableVoltageCompensation(true);
 
         // Creates a Linear System of our Differential Swerve Module.
         LinearSystem<N3, N2, N2> swerveModuleModel =
@@ -86,7 +102,7 @@ public class DiffSwerveModule {
                 new LinearQuadraticRegulator<>(
                         swerveModuleModel,
                         VecBuilder.fill(Q_AZIMUTH, Q_AZIMUTH_ANG_VELOCITY, Q_WHEEL_ANG_VELOCITY),
-                        VecBuilder.fill(1.3 / 12.0, 1.3 / 12.0),
+                        VecBuilder.fill(12.0, 12.0),
                         _kDt);
 
         // Creates a LinearSystemLoop that contains the Model, Controller, Observer, Max Volts,
@@ -95,33 +111,17 @@ public class DiffSwerveModule {
                 new LinearSystemLoop<>(
                         swerveModuleModel, swerveController, swerveObserver, 12.0, _kDt);
 
-        _rightFalcon.setInverted(Constants.DriveTrain.RIGHT_INVERTED);
-        _leftFalcon.setInverted(Constants.DriveTrain.LEFT_INVERTED);
-        _rightFalcon.setSensorPhase(false);
-        _leftFalcon.setSensorPhase(false);
-        _rightFalcon.setNeutralMode(NeutralMode.Brake);
-        _leftFalcon.setNeutralMode(NeutralMode.Brake);
-
-        _rightFalcon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 200);
-        _leftFalcon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 200);
-        _rightFalcon.configForwardSoftLimitEnable(false);
-        _leftFalcon.configForwardSoftLimitEnable(false);
-
-        _leftFalcon.configVoltageCompSaturation(12.0, 200);
-        _rightFalcon.configVoltageCompSaturation(12.0, 200);
-        _leftFalcon.enableVoltageCompensation(true);
-        _rightFalcon.enableVoltageCompensation(true);
-
-        _leftFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_5Ms, 200);
-        _rightFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_5Ms, 200);
         _rightFalcon.setStatusFramePeriod(StatusFrame.Status_1_General, 5, 200);
         _leftFalcon.setStatusFramePeriod(StatusFrame.Status_1_General, 5, 200);
+        _rightFalcon.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, 200);
+        _leftFalcon.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, 200);
+
         _swerveControlLoop.reset(VecBuilder.fill(0, 0, 0));
     }
 
     public void periodic() {
         _swerveControlLoop.setNextR(_reference);
-        _swerveControlLoop.correct(VecBuilder.fill(getModuleAngle(), getWheelVelocity()));
+        _swerveControlLoop.correct(VecBuilder.fill(getModuleAngle(), getWheelAngularVelocity()));
         _swerveControlLoop.predict(_kDt);
     }
 
@@ -172,14 +172,14 @@ public class DiffSwerveModule {
     public double getRightFalconRPM() {
         return _rightFalcon.getSelectedSensorVelocity()
                 / Constants.DriveTrain.TICKS_TO_ROTATIONS
-                * 30.0
+                * 120.0
                 * Constants.DriveTrain.GEAR_RATIO;
     }
 
     public double getLeftFalconRPM() {
         return _leftFalcon.getSelectedSensorVelocity()
                 / Constants.DriveTrain.TICKS_TO_ROTATIONS
-                * 30.0
+                * 120.0
                 * Constants.DriveTrain.GEAR_RATIO;
     }
 
