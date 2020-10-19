@@ -23,19 +23,19 @@ public class DriveTrain extends OutliersSubsystem {
                         RobotMap.DIO.ENCODER_FR,
                         RobotMap.DIO.ENCODER_A,
                         RobotMap.DIO.ENCODER_B);
-        logMetrics(
-                "Left Voltage",
-                "Right Voltage",
-                "Module Angle",
-                "Reference Module Angle",
-                "Predicted Module Angle",
-                //                "Wanted Left Voltage",
-                //                "Wanted Right Voltage",
-                "Wheel Angular Velocity",
-                "Wheel Predicted Angular Velocity",
-                "Wheel Reference Angular Velocity");
-        //                        "Azimuth Predicted Angular Velocity");
-        enableMetrics();
+        //        logMetrics(
+        //                "Left Voltage",
+        //                "Right Voltage",
+        //                "Module Angle",
+        //                "Reference Module Angle",
+        //                "Predicted Module Angle",
+        //                //                "Wanted Left Voltage",
+        //                //                "Wanted Right Voltage",
+        //                "Wheel Angular Velocity",
+        //                "Wheel Predicted Angular Velocity",
+        //                "Wheel Reference Angular Velocity");
+        //        //                        "Azimuth Predicted Angular Velocity");
+        //        enableMetrics();
         startNotifier(0.005);
     }
 
@@ -59,8 +59,8 @@ public class DriveTrain extends OutliersSubsystem {
         metric("Left Voltage", _frontRight.getLeftVoltage());
         metric("Right Voltage", _frontRight.getRightVoltage());
 
-        metric("Wheel Angular Velocity", _frontRight.getWheelVelocity());
-        //        metric("Wheel Angular Velocity", _frontRight.getWheelAngularVelocity());
+        metric("Wheel Angular Velocity Enc", _frontRight.getWheelVelocity());
+        metric("Wheel Angular Velocity", _frontRight.getWheelAngularVelocity());
         metric("Wheel Predicted Angular Velocity", _frontRight.getPredictedWheelAngularVelocity());
         metric("Wheel Reference Angular Velocity", _frontRight.getReferenceWheelAngularVelocity());
     }
