@@ -1,11 +1,13 @@
 /* (C)2020 */
-package org.frc5687.diffswerve.robot.util;
+package org.frc5687.lib;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
+import java.nio.file.Paths;
 import java.util.function.Consumer;
+import org.frc5687.diffswerve.robot.util.OutliersProxy;
 
 public class T265Camera extends OutliersProxy {
 
@@ -21,8 +23,15 @@ public class T265Camera extends OutliersProxy {
     static {
         try {
             // TODO: find path
-            System.load("/usr/local/frc/lib/librealsense2.so.2.34.0");
-            //            System.load("/home/admin/librealsense2.so.2.34.0");
+            //            System.loadLibrary("rs");
+            //            System.loadLibrary("outliernative");
+            //            DriverStation.reportError("loaded Library", false);
+            //            System.load("/usr/local/frc/lib/librs.so");
+            //            System.load("/home/admin/librs.so");
+            System.load(
+                    Paths.get(System.getProperty("user.home"), "liboutliernative.so")
+                            .toAbsolutePath()
+                            .toString());
 
             Runtime.getRuntime().addShutdownHook(new Thread(() -> T265Camera.cleanup()));
         } catch (UnsatisfiedLinkError e) {
@@ -36,9 +45,10 @@ public class T265Camera extends OutliersProxy {
 
     public T265Camera(Pose2d robotOffset, double odometryCovariance, String relocMapPath) {
         if (_linkError != null) {
-            error("erroris" + _linkError);
+            error("error is " + _linkError);
             throw _linkError;
         }
+
         _nativeCameraObjectPointer = newCamera(relocMapPath);
         setOdometryInfo(
                 (float) robotOffset.getTranslation().getX(),
