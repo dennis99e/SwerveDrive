@@ -19,7 +19,7 @@ public class DriveTrain extends OutliersSubsystem {
                         FRONT_RIGHT_POSITION,
                         FR_LEFT_FALCON,
                         FR_RIGHT_FALCON,
-                        RobotMap.DIO.ENCODER_FR);
+                        RobotMap.Analog.ENCODER_FR);
         logMetrics(
                 "Left Voltage",
                 "Right Voltage",
@@ -34,7 +34,7 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     public void update() {
-        _frontRight.periodic();
+        // _frontRight.periodic();
     }
 
     @Override
