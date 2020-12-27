@@ -5,8 +5,8 @@ import static org.frc5687.diffswerve.robot.Constants.DifferentialSwerveModule.*;
 
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.AnalogEncoder;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.controller.LinearQuadraticRegulator;
 import edu.wpi.first.wpilibj.estimator.KalmanFilter;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -21,13 +21,14 @@ import edu.wpi.first.wpiutil.math.numbers.*;
 import org.frc5687.diffswerve.robot.Constants;
 
 public class DiffSwerveModule {
-    private final TalonFX _rightFalcon; // TODO: correct names when model is finished.
-    private final TalonFX _leftFalcon; // TODO: correct names when model is finished.
-
-    private final DutyCycleEncoder _lampreyEncoder;
-    private final Encoder _wheelEncoder;
-
-    private final Translation2d _positionVector;
+    private TalonFX _rightFalcon; // TODO: correct names when model is finished.
+    private TalonFX _leftFalcon; // TODO: correct names when model is finished.
+    private AnalogEncoder _lampreyEncoder;
+    private Translation2d _positionVector;
+    private LinearSystem<N3, N2, N2> _swerveModuleModel;
+    private KalmanFilter<N3, N2, N2> _swerveObserver;
+    private LinearQuadraticRegulator<N3, N2, N2> _swerveController;
+    private LinearSystemLoop<N3, N2, N2> _swerveControlLoop;
     private Matrix<N3, N1> _reference; // same thing as a set point.
 
     // attempt for angle only right now.
@@ -36,24 +37,14 @@ public class DiffSwerveModule {
                     Units.degreesToRadians(1000), Units.degreesToRadians(1520));
     private TrapezoidProfile.State _lastProfiledReference;
 
-    private final LinearSystemLoop<N3, N2, N2> _swerveControlLoop;
-
     private final double _kDt = 0.005;
 
     public DiffSwerveModule(
             Translation2d positionVector,
             int leftMotorID,
             int rightMotorID,
-            int encoderDIO,
-            int encoderDIOA,
-            int encoderDIOb) {
-
-        _lampreyEncoder = new DutyCycleEncoder(encoderDIO);
-        _lampreyEncoder.setDistancePerRotation(Math.PI);
-
-        _wheelEncoder = new Encoder(encoderDIOA, encoderDIOb); // In use for testing purposes.
-        _wheelEncoder.setDistancePerPulse((2.0 * Math.PI) / 2048); // In use for testing purposes.
-
+            AnalogInput encoderNum) {
+        _lampreyEncoder = new AnalogEncoder(encoderNum);
         _reference = Matrix.mat(Nat.N3(), Nat.N1()).fill(0, 0, 0);
         _positionVector = positionVector;
 
@@ -122,7 +113,26 @@ public class DiffSwerveModule {
         _leftFalcon.setStatusFramePeriod(StatusFrame.Status_1_General, 5, 200);
         _rightFalcon.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, 200);
         _leftFalcon.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, 200);
-
+        _rightFalcon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 200);
+        _leftFalcon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 200);
+        _rightFalcon.configForwardSoftLimitEnable(false);
+        _leftFalcon.configForwardSoftLimitEnable(false);
+        _rightFalcon.config_kP(0, Constants.DriveTrain.VELOCITY_KP, 200);
+        _rightFalcon.config_kI(0, Constants.DriveTrain.VELOCITY_KI, 200);
+        _rightFalcon.config_kD(0, Constants.DriveTrain.VELOCITY_KD, 200);
+        _rightFalcon.config_kF(0, Constants.DriveTrain.VELOCITY_KF, 200);
+        _leftFalcon.config_kP(0, Constants.DriveTrain.VELOCITY_KP, 200);
+        _leftFalcon.config_kI(0, Constants.DriveTrain.VELOCITY_KI, 200);
+        _leftFalcon.config_kD(0, Constants.DriveTrain.VELOCITY_KD, 200);
+        _leftFalcon.config_kF(0, Constants.DriveTrain.VELOCITY_KF, 200);
+        _rightFalcon.configClosedloopRamp(0);
+        _leftFalcon.configClosedloopRamp(0);
+        _leftFalcon.configVoltageCompSaturation(12.0, 200);
+        _rightFalcon.configVoltageCompSaturation(12.0, 200);
+        _leftFalcon.enableVoltageCompensation(true);
+        _rightFalcon.enableVoltageCompensation(true);
+        _leftFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms, 200);
+        _rightFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms, 200);
         _swerveControlLoop.reset(VecBuilder.fill(0, 0, 0));
         _lastProfiledReference =
                 new TrapezoidProfile.State(getModuleAngle(), getAzimuthAngularVelocity());
@@ -168,12 +178,8 @@ public class DiffSwerveModule {
     }
 
     public double getModuleAngle() {
-        return -(_lampreyEncoder.getDistance() - 0.178); // * (2.0 * Math.PI);
+        return _lampreyEncoder.get(); // * (2.0 * Math.PI);
         //        return 0; // _lampreyEncoder.getDistance()*(2.0*Math.PI); //TODO: Gear Ratio.
-    }
-
-    public double getWheelVelocity() {
-        return _wheelEncoder.getRate();
     }
 
     public double getWheelAngularVelocity() {
