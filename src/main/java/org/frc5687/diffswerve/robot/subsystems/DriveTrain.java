@@ -35,7 +35,7 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     public void update() {
-        // _frontRight.periodic();
+        _frontRight.periodic();
     }
 
     @Override
@@ -43,8 +43,8 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
-        //        metric("Right RPM", _frontRight.getRightFalconRPM());
-        //        metric("Left RPM", _frontRight.getLeftFalconRPM());
+        metric("Right RPM", _frontRight.getRightFalconRPM());
+        metric("Left RPM", _frontRight.getLeftFalconRPM());
         metric("Module Angle", _frontRight.getModuleAngle());
         metric("Predicted Angle", _frontRight.getPredictedAzimuthAngle());
         metric("Reference Module Angle", _frontRight.getReferenceModuleAngle());

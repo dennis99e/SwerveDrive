@@ -25,9 +25,6 @@ public class DiffSwerveModule {
     private TalonFX _leftFalcon; // TODO: correct names when model is finished.
     private AnalogEncoder _lampreyEncoder;
     private Translation2d _positionVector;
-    private LinearSystem<N3, N2, N2> _swerveModuleModel;
-    private KalmanFilter<N3, N2, N2> _swerveObserver;
-    private LinearQuadraticRegulator<N3, N2, N2> _swerveController;
     private LinearSystemLoop<N3, N2, N2> _swerveControlLoop;
     private Matrix<N3, N1> _reference; // same thing as a set point.
 
@@ -38,6 +35,7 @@ public class DiffSwerveModule {
     private TrapezoidProfile.State _lastProfiledReference;
 
     private final double _kDt = 0.005;
+    private final int _kTimeout = 200; // milliseconds
 
     public DiffSwerveModule(
             Translation2d positionVector,
@@ -45,6 +43,7 @@ public class DiffSwerveModule {
             int rightMotorID,
             AnalogInput encoderNum) {
         _lampreyEncoder = new AnalogEncoder(encoderNum);
+        _lampreyEncoder.setDistancePerRotation(110.77);
         _reference = Matrix.mat(Nat.N3(), Nat.N1()).fill(0, 0, 0);
         _positionVector = positionVector;
 
@@ -57,13 +56,13 @@ public class DiffSwerveModule {
         _rightFalcon.setNeutralMode(NeutralMode.Brake);
         _leftFalcon.setNeutralMode(NeutralMode.Brake);
 
-        _rightFalcon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 200);
-        _leftFalcon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 200);
+        _rightFalcon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, _kTimeout);
+        _leftFalcon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, _kTimeout);
         _rightFalcon.configForwardSoftLimitEnable(false);
         _leftFalcon.configForwardSoftLimitEnable(false);
 
-        _leftFalcon.configVoltageCompSaturation(12.0, 200);
-        _rightFalcon.configVoltageCompSaturation(12.0, 200);
+        _leftFalcon.configVoltageCompSaturation(12.0, _kTimeout);
+        _rightFalcon.configVoltageCompSaturation(12.0, _kTimeout);
         _leftFalcon.enableVoltageCompensation(true);
         _rightFalcon.enableVoltageCompensation(true);
 
@@ -76,7 +75,7 @@ public class DiffSwerveModule {
                         GEAR_RATIO_STEER,
                         GEAR_RATIO_WHEEL);
 
-        // Creates a Kalman Filter as our Observer for our module.
+        // Creates a Kalman Filter as our Observer for our module. Works since system is linear.
         KalmanFilter<N3, N2, N2> swerveObserver =
                 new KalmanFilter<>(
                         Nat.N3(),
@@ -99,8 +98,10 @@ public class DiffSwerveModule {
         LinearQuadraticRegulator<N3, N2, N2> swerveController =
                 new LinearQuadraticRegulator<>(
                         swerveModuleModel,
+                        // Q Vector/Matrix Maximum error tolerance
                         VecBuilder.fill(Q_AZIMUTH, Q_AZIMUTH_ANG_VELOCITY, Q_WHEEL_ANG_VELOCITY),
-                        VecBuilder.fill(5.0 / 12.0, 5.0 / 12.0),
+                        // R Vector/Matrix Maximum control effort.
+                        VecBuilder.fill(CONTROL_EFFORT, CONTROL_EFFORT),
                         _kDt);
 
         // Creates a LinearSystemLoop that contains the Model, Controller, Observer, Max Volts,
@@ -109,36 +110,37 @@ public class DiffSwerveModule {
                 new LinearSystemLoop<>(
                         swerveModuleModel, swerveController, swerveObserver, 12.0, _kDt);
 
-        _rightFalcon.setStatusFramePeriod(StatusFrame.Status_1_General, 5, 200);
-        _leftFalcon.setStatusFramePeriod(StatusFrame.Status_1_General, 5, 200);
-        _rightFalcon.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, 200);
-        _leftFalcon.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, 200);
-        _rightFalcon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 200);
-        _leftFalcon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 200);
+        _rightFalcon.setStatusFramePeriod(StatusFrame.Status_1_General, 5, _kTimeout);
+        _leftFalcon.setStatusFramePeriod(StatusFrame.Status_1_General, 5, _kTimeout);
+        _rightFalcon.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, _kTimeout);
+        _leftFalcon.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, _kTimeout);
+        _rightFalcon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, _kTimeout);
+        _leftFalcon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, _kTimeout);
         _rightFalcon.configForwardSoftLimitEnable(false);
         _leftFalcon.configForwardSoftLimitEnable(false);
-        _rightFalcon.config_kP(0, Constants.DriveTrain.VELOCITY_KP, 200);
-        _rightFalcon.config_kI(0, Constants.DriveTrain.VELOCITY_KI, 200);
-        _rightFalcon.config_kD(0, Constants.DriveTrain.VELOCITY_KD, 200);
-        _rightFalcon.config_kF(0, Constants.DriveTrain.VELOCITY_KF, 200);
-        _leftFalcon.config_kP(0, Constants.DriveTrain.VELOCITY_KP, 200);
-        _leftFalcon.config_kI(0, Constants.DriveTrain.VELOCITY_KI, 200);
-        _leftFalcon.config_kD(0, Constants.DriveTrain.VELOCITY_KD, 200);
-        _leftFalcon.config_kF(0, Constants.DriveTrain.VELOCITY_KF, 200);
+        _rightFalcon.config_kP(0, Constants.DriveTrain.VELOCITY_KP, _kTimeout);
+        _rightFalcon.config_kI(0, Constants.DriveTrain.VELOCITY_KI, _kTimeout);
+        _rightFalcon.config_kD(0, Constants.DriveTrain.VELOCITY_KD, _kTimeout);
+        _rightFalcon.config_kF(0, Constants.DriveTrain.VELOCITY_KF, _kTimeout);
+        _leftFalcon.config_kP(0, Constants.DriveTrain.VELOCITY_KP, _kTimeout);
+        _leftFalcon.config_kI(0, Constants.DriveTrain.VELOCITY_KI, _kTimeout);
+        _leftFalcon.config_kD(0, Constants.DriveTrain.VELOCITY_KD, _kTimeout);
+        _leftFalcon.config_kF(0, Constants.DriveTrain.VELOCITY_KF, _kTimeout);
         _rightFalcon.configClosedloopRamp(0);
         _leftFalcon.configClosedloopRamp(0);
-        _leftFalcon.configVoltageCompSaturation(12.0, 200);
-        _rightFalcon.configVoltageCompSaturation(12.0, 200);
+        _leftFalcon.configVoltageCompSaturation(12.0, _kTimeout);
+        _rightFalcon.configVoltageCompSaturation(12.0, _kTimeout);
         _leftFalcon.enableVoltageCompensation(true);
         _rightFalcon.enableVoltageCompensation(true);
-        _leftFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms, 200);
-        _rightFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms, 200);
+        _leftFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms, _kTimeout);
+        _rightFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms, _kTimeout);
         _swerveControlLoop.reset(VecBuilder.fill(0, 0, 0));
         _lastProfiledReference =
                 new TrapezoidProfile.State(getModuleAngle(), getAzimuthAngularVelocity());
     }
 
     public void periodic() {
+        // The velocity 0 might cause issues in the future should test.
         TrapezoidProfile.State goal = new TrapezoidProfile.State(_reference.get(0, 0), 0);
         SmartDashboard.putNumberArray("ref", _reference.getData());
         _lastProfiledReference =
@@ -178,37 +180,36 @@ public class DiffSwerveModule {
     }
 
     public double getModuleAngle() {
-        return _lampreyEncoder.get(); // * (2.0 * Math.PI);
-        //        return 0; // _lampreyEncoder.getDistance()*(2.0*Math.PI); //TODO: Gear Ratio.
+        return Units.degreesToRadians(
+                _lampreyEncoder.getDistance()); // TODO: voltage of analog to radians or degrees.
     }
 
     public double getWheelAngularVelocity() {
         return Units.rotationsPerMinuteToRadiansPerSecond(
-                        getLeftFalconRPM() * Constants.DifferentialSwerveModule.GEAR_RATIO_WHEEL
-                                + getRightFalconRPM()
-                                        * Constants.DifferentialSwerveModule.GEAR_RATIO_WHEEL)
+                        getLeftFalconRPM() / Constants.DifferentialSwerveModule.GEAR_RATIO_WHEEL
+                                - getRightFalconRPM()
+                                        / Constants.DifferentialSwerveModule.GEAR_RATIO_WHEEL)
                 / 2.0;
     }
 
+    // Might be fine, should test with lamprey encoder not integrated one.
     public double getAzimuthAngularVelocity() {
         return Units.rotationsPerMinuteToRadiansPerSecond(
-                        getLeftFalconRPM() * GEAR_RATIO_STEER
-                                - getRightFalconRPM() * GEAR_RATIO_STEER)
+                        getLeftFalconRPM() / GEAR_RATIO_STEER
+                                + getRightFalconRPM() / GEAR_RATIO_STEER)
                 / 2.0;
     }
 
     public double getRightFalconRPM() {
         return _rightFalcon.getSelectedSensorVelocity()
                 / Constants.DriveTrain.TICKS_TO_ROTATIONS
-                * 200.0
-                * 1;
+                * FALCON_RATE;
     }
 
     public double getLeftFalconRPM() {
         return _leftFalcon.getSelectedSensorVelocity()
                 / Constants.DriveTrain.TICKS_TO_ROTATIONS
-                * 200.0
-                * 1;
+                * FALCON_RATE;
     }
 
     public double getLeftVoltage() {
@@ -261,7 +262,8 @@ public class DiffSwerveModule {
         var A =
                 Matrix.mat(Nat.N3(), Nat.N3())
                         .fill(0.0, 1.0, 0.0, 0.0, Gs * Cs, 0.0, 0.0, 0.0, Gw * Cw);
-        var B = Matrix.mat(Nat.N3(), Nat.N2()).fill(0.0, 0.0, Vs, -Vs, Vw, Vw);
+        // var B = Matrix.mat(Nat.N3(), Nat.N2()).fill(0.0, 0.0, Vs, -Vs, Vw, Vw);
+        var B = Matrix.mat(Nat.N3(), Nat.N2()).fill(0.0, 0.0, Vs, Vs, Vw, -Vw);
         var C = Matrix.mat(Nat.N2(), Nat.N3()).fill(1.0, 0.0, 0.0, 0.0, 0.0, 1.0);
         var D =
                 Matrix.mat(Nat.N2(), Nat.N2())

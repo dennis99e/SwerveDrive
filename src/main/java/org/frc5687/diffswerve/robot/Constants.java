@@ -23,7 +23,6 @@ public class Constants {
         public static final boolean RIGHT_INVERTED = false;
         public static final boolean LEFT_INVERTED = false;
         public static final double TICKS_TO_ROTATIONS = 2048.0;
-        public static final double GEAR_RATIO = 1.75;
 
         public static final double VELOCITY_KP = 0.25;
         public static final double VELOCITY_KI = 0.0001;
@@ -34,19 +33,21 @@ public class Constants {
 
     public static class DifferentialSwerveModule {
 
-        public static final double GEAR_RATIO_WHEEL = 1.75; // 6.48;
-        public static final double GEAR_RATIO_STEER = 3.0; // 4.0;
+        public static final double GEAR_RATIO_WHEEL = 6.46875;
+        public static final double GEAR_RATIO_STEER = 11.5;
 
         // Create Parameters for DiffSwerve State Space
         public static final double INERTIA_WHEEL = 0.007;
         public static final double INERTIA_STEER = 0.007;
-        public static final double Q_AZIMUTH_ANG_VELOCITY = 0.2;
-        public static final double Q_AZIMUTH = 0.01;
-        public static final double Q_WHEEL_ANG_VELOCITY = 4;
-        public static final double MODEL_AZIMUTH_ANGLE_NOISE = 4.0; // degrees
-        public static final double MODEL_AZIMUTH_ANG_VELOCITY_NOISE = 30.0; // RPM
-        public static final double MODEL_WHEEL_ANG_VELOCITY_NOISE = 30.0; // RPM
-        public static final double SENSOR_AZIMUTH_ANGLE_NOISE = 0.01; // degrees
-        public static final double SENSOR_WHEEL_ANG_VELOCITY_NOISE = 0.5; // degrees
+        public static final double Q_AZIMUTH_ANG_VELOCITY = 0.5;
+        public static final double Q_AZIMUTH = 0.05;
+        public static final double Q_WHEEL_ANG_VELOCITY = 2;
+        public static final double MODEL_AZIMUTH_ANGLE_NOISE = 3.0; // degrees
+        public static final double MODEL_AZIMUTH_ANG_VELOCITY_NOISE = 400.0; // RPM
+        public static final double MODEL_WHEEL_ANG_VELOCITY_NOISE = 400.0; // RPM
+        public static final double SENSOR_AZIMUTH_ANGLE_NOISE = 0.02; // degrees
+        public static final double SENSOR_WHEEL_ANG_VELOCITY_NOISE = 114.592; // degrees
+        public static final double CONTROL_EFFORT = 12.0;
+        public static final double FALCON_RATE = 600.0;
     }
 }
