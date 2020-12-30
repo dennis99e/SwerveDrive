@@ -4,6 +4,7 @@ package org.frc5687.diffswerve.robot.subsystems;
 import static org.frc5687.diffswerve.robot.Constants.DriveTrain.*;
 import static org.frc5687.diffswerve.robot.RobotMap.CAN.TALONFX.*;
 
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpiutil.math.Matrix;
 import edu.wpi.first.wpiutil.math.numbers.*;
 import org.frc5687.diffswerve.robot.RobotMap;
@@ -61,6 +62,11 @@ public class DriveTrain extends OutliersSubsystem {
 
     public void setFrontRightReference(Matrix<N3, N1> reference) {
         _frontRight.setReference(reference);
+    }
+
+    public void setFrontRightModuleState(SwerveModuleState state) {
+        _frontRight.setModuleState(state);
+        setFrontRightVoltage(getFrontRightWantedVoltages()[0], getFrontRightWantedVoltages()[1]);
     }
 
     public void setFrontRightSpeeds(double speedR, double speedL) {

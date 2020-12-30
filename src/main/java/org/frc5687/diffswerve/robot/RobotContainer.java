@@ -23,7 +23,7 @@ public class RobotContainer extends OutliersContainer {
         _driveTrain = new DriveTrain(this);
 
         _oi.initializeButtons(_driveTrain);
-        setDefaultCommand(_driveTrain, new DriveSwerveModule(_driveTrain));
+        setDefaultCommand(_driveTrain, new DriveSwerveModule(_driveTrain, _oi));
     }
 
     public void periodic() {}

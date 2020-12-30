@@ -42,14 +42,14 @@ public class OI extends OutliersProxy {
                 new SetModuleReference(driveTrain, VecBuilder.fill(-2.0, 0, 100)));
     }
 
-    public double getDriveSpeed() {
+    public double getDriveY() {
         double speed = -getSpeedFromAxis(_driverGamepad, Gamepad.Axes.LEFT_Y.getNumber());
         speed = applyDeadband(speed, Constants.DriveTrain.DEADBAND);
         return speed;
     }
 
-    public double getDriveRotation() {
-        double speed = getSpeedFromAxis(_driverGamepad, Gamepad.Axes.RIGHT_X.getNumber());
+    public double getDriveX() {
+        double speed = getSpeedFromAxis(_driverGamepad, Gamepad.Axes.LEFT_X.getNumber());
         speed = applyDeadband(speed, Constants.DriveTrain.DEADBAND);
         return speed;
     }

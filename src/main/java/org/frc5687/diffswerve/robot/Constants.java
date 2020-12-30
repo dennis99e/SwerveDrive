@@ -35,20 +35,21 @@ public class Constants {
 
         public static final double GEAR_RATIO_WHEEL = 6.46875;
         public static final double GEAR_RATIO_STEER = 11.5;
+        public static final double FALCON_RATE = 600.0;
+        public static final double WHEEL_RADIUS = 0.0508; // Meters
+        public static final double MAX_RADS = 90.0; // rad per sec
 
         // Create Parameters for DiffSwerve State Space
         public static final double INERTIA_WHEEL = 0.007;
         public static final double INERTIA_STEER = 0.007;
-        public static final double Q_AZIMUTH_ANG_VELOCITY = 0.7; // radians per sec
-        public static final double Q_AZIMUTH = 0.04; // radians
-        public static final double Q_WHEEL_ANG_VELOCITY = 4; // radians per sec
+        public static final double Q_AZIMUTH_ANG_VELOCITY = 0.5; // radians per sec
+        public static final double Q_AZIMUTH = 0.02; // radians
+        public static final double Q_WHEEL_ANG_VELOCITY = 3; // radians per sec
         public static final double MODEL_AZIMUTH_ANGLE_NOISE = 3.0; // degrees
         public static final double MODEL_AZIMUTH_ANG_VELOCITY_NOISE = 400.0; // RPM
         public static final double MODEL_WHEEL_ANG_VELOCITY_NOISE = 400.0; // RPM
         public static final double SENSOR_AZIMUTH_ANGLE_NOISE = 0.02; // degrees
         public static final double SENSOR_WHEEL_ANG_VELOCITY_NOISE = 114.592; // degrees
         public static final double CONTROL_EFFORT = 12.0;
-        public static final double FALCON_RATE = 600.0;
-        public static final double WHEEL_RADIUS = 0.0254; // Meters
     }
 }

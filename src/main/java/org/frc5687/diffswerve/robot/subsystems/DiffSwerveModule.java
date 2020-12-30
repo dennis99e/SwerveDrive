@@ -9,7 +9,9 @@ import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.controller.LinearQuadraticRegulator;
 import edu.wpi.first.wpilibj.estimator.KalmanFilter;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.system.LinearSystem;
 import edu.wpi.first.wpilibj.system.LinearSystemLoop;
@@ -209,6 +211,10 @@ public class DiffSwerveModule {
                 / 2.0;
     }
 
+    public double getWheelVelocity() {
+        return getWheelAngularVelocity() * WHEEL_RADIUS; // Meters per sec.
+    }
+
     // Might be fine, should test with lamprey encoder not integrated one.
     public double getAzimuthAngularVelocity() {
         return Units.rotationsPerMinuteToRadiansPerSecond(
@@ -268,6 +274,16 @@ public class DiffSwerveModule {
 
     public double getReferenceModuleAngle() {
         return _swerveControlLoop.getNextR(0);
+    }
+
+    public SwerveModuleState getState() {
+        return new SwerveModuleState(getWheelVelocity(), new Rotation2d(getModuleAngle()));
+    }
+
+    public void setModuleState(SwerveModuleState state) {
+        setReference(
+                VecBuilder.fill(
+                        state.angle.getRadians(), 0, state.speedMetersPerSecond / WHEEL_RADIUS));
     }
 
     public static LinearSystem<N3, N2, N2> createDifferentialSwerveModule(
