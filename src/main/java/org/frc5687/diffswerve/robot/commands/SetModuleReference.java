@@ -30,6 +30,11 @@ public class SetModuleReference extends OutliersCommand {
                 _driveTrain.getFrontRightWantedVoltages()[1]);
     }
 
+    //    @Override
+    //    public boolean isFinished() {
+    //        return Math.abs(_driveTrain.getFRModuleAngle() - _reference.get(0, 0)) < 0.1;
+    //    }
+
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);

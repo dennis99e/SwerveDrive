@@ -1,5 +1,8 @@
 /* (C)2020 */
 package org.frc5687.diffswerve.robot.util;
+
+import edu.wpi.first.wpilibj.util.Units;
+
 /** Created by Ben Bernard on 6/4/2018. */
 public class Helpers {
 
@@ -79,5 +82,16 @@ public class Helpers {
         double capped = Math.max(Math.min(factor, 1), 0);
 
         return capped * input * input * input + (1 - capped) * input;
+    }
+
+    public static double boundHalfAngle(double angle, boolean radians) {
+        angle = radians ? angle : Units.degreesToRadians(angle);
+        while (angle >= Math.PI) {
+            angle -= 2.0 * Math.PI;
+        }
+        while (angle < -Math.PI) {
+            angle += 2.0 * Math.PI;
+        }
+        return radians ? angle : Units.radiansToDegrees(angle);
     }
 }

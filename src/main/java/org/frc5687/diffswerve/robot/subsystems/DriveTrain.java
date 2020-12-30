@@ -82,4 +82,8 @@ public class DriveTrain extends OutliersSubsystem {
     public void setFrontRightVelocity(double RPM) {
         _frontRight.setVelocityRPM(RPM);
     }
+
+    public double getFRModuleAngle() {
+        return _frontRight.getModuleAngle();
+    }
 }

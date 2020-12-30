@@ -35,11 +35,11 @@ public class OI extends OutliersProxy {
     }
 
     public void initializeButtons(DriveTrain driveTrain) {
-        _driverAButton.whenPressed(new SetModuleReference(driveTrain, VecBuilder.fill(3, 0, 100)));
+        _driverAButton.whenPressed(new SetModuleReference(driveTrain, VecBuilder.fill(0, 0, 100)));
         _driverBButton.whenPressed(
                 new SetModuleReference(driveTrain, VecBuilder.fill(1.0, 0, 100)));
         _driverYButton.whenPressed(
-                new SetModuleReference(driveTrain, VecBuilder.fill(5.0, 0, 100)));
+                new SetModuleReference(driveTrain, VecBuilder.fill(-2.0, 0, 100)));
     }
 
     public double getDriveSpeed() {

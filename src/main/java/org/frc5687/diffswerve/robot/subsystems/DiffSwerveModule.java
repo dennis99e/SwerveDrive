@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpiutil.math.*;
 import edu.wpi.first.wpiutil.math.numbers.*;
 import org.frc5687.diffswerve.robot.Constants;
+import org.frc5687.diffswerve.robot.util.Helpers;
 
 public class DiffSwerveModule {
     private TalonFX _rightFalcon; // TODO: correct names when model is finished.
@@ -27,11 +28,13 @@ public class DiffSwerveModule {
     private Translation2d _positionVector;
     private LinearSystemLoop<N3, N2, N2> _swerveControlLoop;
     private Matrix<N3, N1> _reference; // same thing as a set point.
+    private Matrix<N3, N1> _prevReference;
+    private double _vel;
 
     // attempt for angle only right now.
-    private final TrapezoidProfile.Constraints _trapConstrains =
+    private final TrapezoidProfile.Constraints _trapConstraints =
             new TrapezoidProfile.Constraints(
-                    Units.degreesToRadians(1000), Units.degreesToRadians(1520));
+                    Units.degreesToRadians(4000), Units.degreesToRadians(5320));
     private TrapezoidProfile.State _lastProfiledReference;
 
     private final double _kDt = 0.005;
@@ -45,6 +48,7 @@ public class DiffSwerveModule {
         _lampreyEncoder = new AnalogEncoder(encoderNum);
         _lampreyEncoder.setDistancePerRotation(110.77);
         _reference = Matrix.mat(Nat.N3(), Nat.N1()).fill(0, 0, 0);
+        _prevReference = Matrix.mat(Nat.N3(), Nat.N1()).fill(0, 0, 0);
         _positionVector = positionVector;
 
         _leftFalcon = new TalonFX(leftMotorID);
@@ -135,21 +139,33 @@ public class DiffSwerveModule {
         _leftFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms, _kTimeout);
         _rightFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms, _kTimeout);
         _swerveControlLoop.reset(VecBuilder.fill(0, 0, 0));
+        _vel = 0;
         _lastProfiledReference =
                 new TrapezoidProfile.State(getModuleAngle(), getAzimuthAngularVelocity());
     }
 
     public void periodic() {
         // The velocity 0 might cause issues in the future should test.
+
         TrapezoidProfile.State goal = new TrapezoidProfile.State(_reference.get(0, 0), 0);
         SmartDashboard.putNumberArray("ref", _reference.getData());
+        SmartDashboard.putNumber("vel", _vel);
+        if (Math.abs(_vel - _reference.get(2, 0)) >= 3
+                && _reference.get(2, 0) > _prevReference.get(2, 0)) {
+            _vel += _reference.get(2, 0) * 0.01;
+        } else if (Math.abs(_vel - _reference.get(2, 0)) >= 3
+                && _reference.get(2, 0) < _prevReference.get(2, 0)) {
+            _vel -= _reference.get(2, 0) * 0.01;
+        } else {
+            _vel = _reference.get(2, 0);
+        }
+
         _lastProfiledReference =
-                (new TrapezoidProfile(_trapConstrains, goal, _lastProfiledReference))
+                (new TrapezoidProfile(_trapConstraints, goal, _lastProfiledReference))
                         .calculate(_kDt);
         _swerveControlLoop.setNextR(
-                _lastProfiledReference.position,
-                _lastProfiledReference.velocity,
-                _reference.get(2, 0));
+                _lastProfiledReference.position, _lastProfiledReference.velocity, _vel);
+
         _swerveControlLoop.correct(VecBuilder.fill(getModuleAngle(), getWheelAngularVelocity()));
         _swerveControlLoop.predict(_kDt);
     }
@@ -180,8 +196,9 @@ public class DiffSwerveModule {
     }
 
     public double getModuleAngle() {
-        return Units.degreesToRadians(
-                _lampreyEncoder.getDistance()); // TODO: voltage of analog to radians or degrees.
+        return Helpers.boundHalfAngle(
+                Units.degreesToRadians(_lampreyEncoder.getDistance()),
+                true); // TODO: voltage of analog to radians or degrees.
     }
 
     public double getWheelAngularVelocity() {
@@ -237,6 +254,7 @@ public class DiffSwerveModule {
     }
 
     public void setReference(Matrix<N3, N1> reference) {
+        _prevReference = reference;
         _reference = reference;
     }
 
