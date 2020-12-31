@@ -22,6 +22,7 @@ import edu.wpi.first.wpiutil.math.*;
 import edu.wpi.first.wpiutil.math.numbers.*;
 import org.frc5687.diffswerve.robot.Constants;
 import org.frc5687.diffswerve.robot.util.Helpers;
+import org.frc5687.diffswerve.robot.util.Vector2d;
 
 public class DiffSwerveModule {
     private TalonFX _rightFalcon; // TODO: correct names when model is finished.
@@ -284,6 +285,20 @@ public class DiffSwerveModule {
         setReference(
                 VecBuilder.fill(
                         state.angle.getRadians(), 0, state.speedMetersPerSecond / WHEEL_RADIUS));
+    }
+
+    public void setIdealVector(Vector2d drive) {
+        double power = drive.getMagnitude();
+        if (power < Constants.EPSILON) {
+            setModuleState(new SwerveModuleState(0.0, new Rotation2d(getModuleAngle())));
+            return;
+        }
+        if (Math.abs(Helpers.boundHalfAngle(drive.getAngle() - getModuleAngle(), true))
+                > Math.PI / 2.0) {
+            drive = drive.scale(-1);
+            power *= -1;
+        }
+        setModuleState(new SwerveModuleState(power, new Rotation2d(drive.getAngle())));
     }
 
     public static LinearSystem<N3, N2, N2> createDifferentialSwerveModule(

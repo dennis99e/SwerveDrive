@@ -1,39 +1,31 @@
 /* (C)2020 */
 package org.frc5687.diffswerve.robot.commands;
 
-import edu.wpi.first.wpiutil.math.Matrix;
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpiutil.math.numbers.*;
 import org.frc5687.diffswerve.robot.subsystems.DriveTrain;
 
 public class SetModuleReference extends OutliersCommand {
 
     private DriveTrain _driveTrain;
-    private Matrix<N3, N1> _reference;
+    private SwerveModuleState _state;
 
-    public SetModuleReference(DriveTrain driveTrain, Matrix<N3, N1> reference) {
+    public SetModuleReference(DriveTrain driveTrain, SwerveModuleState state) {
         _driveTrain = driveTrain;
-        _reference = reference;
+        _state = state;
     }
 
     @Override
     public void initialize() {
         super.initialize();
-        _driveTrain.setFrontRightReference(_reference);
+        //        _driveTrain.setFrontRightModuleState(_state);
         startPeriodic(0.05);
     }
 
     @Override
     public void execute() {
         super.execute();
-        _driveTrain.setFrontRightVoltage(
-                _driveTrain.getFrontRightWantedVoltages()[0],
-                _driveTrain.getFrontRightWantedVoltages()[1]);
     }
-
-    //    @Override
-    //    public boolean isFinished() {
-    //        return Math.abs(_driveTrain.getFRModuleAngle() - _reference.get(0, 0)) < 0.1;
-    //    }
 
     @Override
     public void end(boolean interrupted) {

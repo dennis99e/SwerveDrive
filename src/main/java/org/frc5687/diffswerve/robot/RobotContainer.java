@@ -2,7 +2,6 @@
 package org.frc5687.diffswerve.robot;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpiutil.math.VecBuilder;
 import org.frc5687.diffswerve.robot.commands.*;
 import org.frc5687.diffswerve.robot.commands.OutliersCommand;
 import org.frc5687.diffswerve.robot.subsystems.*;
@@ -32,7 +31,7 @@ public class RobotContainer extends OutliersContainer {
 
     @Override
     public void disabledInit() {
-        _driveTrain.setFrontRightReference(VecBuilder.fill(0, 0, _driveTrain.getFRModuleAngle()));
+        _driveTrain.setBottomLeftModuleVector(new Vector2d(0, 0));
     }
 
     @Override

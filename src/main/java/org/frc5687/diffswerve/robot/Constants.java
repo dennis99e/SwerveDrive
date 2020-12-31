@@ -8,6 +8,7 @@ public class Constants {
     public static final int TICKS_PER_UPDATE = 1;
     public static final double METRIC_FLUSH_PERIOD = 1.0;
     public static final double UPDATE_PERIOD = 0.02;
+    public static final double EPSILON = 0.001;
 
     public static class DriveTrain {
         public static final double WIDTH = 20.0; // TODO: Figure out which units to use.
@@ -23,6 +24,7 @@ public class Constants {
         public static final boolean RIGHT_INVERTED = false;
         public static final boolean LEFT_INVERTED = false;
         public static final double TICKS_TO_ROTATIONS = 2048.0;
+        public static final double FR = FRONT_RIGHT_POSITION.getNorm();
 
         public static final double VELOCITY_KP = 0.25;
         public static final double VELOCITY_KI = 0.0001;

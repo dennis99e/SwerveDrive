@@ -47,16 +47,13 @@ public class RobotMap {
      * for Analog only one device can connect to each port, so the numbers should be unique.
      */
     public static class Analog {
-        public static AnalogInput ENCODER_FR = new AnalogInput(0);
+        public static final AnalogInput ENCODER_FR = new AnalogInput(0);
+        public static final AnalogInput ENCODER_BL = new AnalogInput(3);
     }
 
     /**
      * There should be an entry here for each DIO port, preferrably in numerical order. Note that
      * for DIO only one device can connect to each port, so the numbers should be unique.
      */
-    public static class DIO {
-        public static final int ENCODER_FR = 0;
-        public static final int ENCODER_A = 1;
-        public static final int ENCODER_B = 2;
-    }
+    public static class DIO {}
 }

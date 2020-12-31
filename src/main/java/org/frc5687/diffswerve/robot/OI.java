@@ -6,8 +6,6 @@ import static org.frc5687.diffswerve.robot.util.Helpers.applyDeadband;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpiutil.math.VecBuilder;
-import org.frc5687.diffswerve.robot.commands.SetModuleReference;
 import org.frc5687.diffswerve.robot.subsystems.DriveTrain;
 import org.frc5687.diffswerve.robot.util.Gamepad;
 import org.frc5687.diffswerve.robot.util.OutliersProxy;
@@ -35,11 +33,9 @@ public class OI extends OutliersProxy {
     }
 
     public void initializeButtons(DriveTrain driveTrain) {
-        _driverAButton.whenPressed(new SetModuleReference(driveTrain, VecBuilder.fill(0, 0, 100)));
-        _driverBButton.whenPressed(
-                new SetModuleReference(driveTrain, VecBuilder.fill(1.0, 0, 100)));
-        _driverYButton.whenPressed(
-                new SetModuleReference(driveTrain, VecBuilder.fill(-2.0, 0, 100)));
+        //        _driverAButton.whenPressed(null);
+        //        _driverBButton.whenPressed(null);
+        //        _driverXButton.whenPressed(null);
     }
 
     public double getDriveY() {
