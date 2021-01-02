@@ -336,6 +336,7 @@ public class DiffSwerveModule {
         }
         if (Math.abs(Helpers.boundHalfAngle(drive.getAngle() - getModuleAngle(), true))
                 > Math.PI / 2.0) {
+            drive = drive.scale(-1);
             power *= -1;
         }
         setModuleState(new SwerveModuleState(power, new Rotation2d(drive.getAngle())));
