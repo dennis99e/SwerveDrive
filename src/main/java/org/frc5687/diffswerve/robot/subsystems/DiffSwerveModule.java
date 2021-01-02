@@ -1,4 +1,4 @@
-/* (C)2020 */
+/* (C)2020-2021 */
 package org.frc5687.diffswerve.robot.subsystems;
 
 import static org.frc5687.diffswerve.robot.Constants.DifferentialSwerveModule.*;
@@ -7,12 +7,12 @@ import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.controller.ControllerUtil;
 import edu.wpi.first.wpilibj.controller.LinearQuadraticRegulator;
 import edu.wpi.first.wpilibj.estimator.KalmanFilter;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.system.LinearSystem;
 import edu.wpi.first.wpilibj.system.LinearSystemLoop;
 import edu.wpi.first.wpilibj.system.plant.DCMotor;
@@ -33,12 +33,15 @@ public class DiffSwerveModule {
     private Matrix<N3, N1> _reference; // same thing as a set point.
     private Matrix<N3, N1> _prevReference;
     private double _vel;
+    private double _angle;
+    private double _prevAngle;
+    private Matrix<N2, N1> _u;
 
     // attempt for angle only right now.
-    private final TrapezoidProfile.Constraints _trapConstraints =
-            new TrapezoidProfile.Constraints(
-                    Units.degreesToRadians(4000), Units.degreesToRadians(5320));
-    private TrapezoidProfile.State _lastProfiledReference;
+    //    private final TrapezoidProfile.Constraints _trapConstraints =
+    //            new TrapezoidProfile.Constraints(
+    //                    Units.degreesToRadians(4000), Units.degreesToRadians(5320));
+    //    private TrapezoidProfile.State _lastProfiledReference;
 
     private final double _kDt = 0.005;
     private final int _kTimeout = 200; // milliseconds
@@ -142,17 +145,29 @@ public class DiffSwerveModule {
         _leftFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms, _kTimeout);
         _rightFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms, _kTimeout);
         _swerveControlLoop.reset(VecBuilder.fill(0, 0, 0));
+        _angle = Helpers.boundHalfAngle(_lampreyEncoder.getDistance(), true);
+        _prevAngle = _angle;
         _vel = 0;
-        _lastProfiledReference =
-                new TrapezoidProfile.State(getModuleAngle(), getAzimuthAngularVelocity());
+        _u = VecBuilder.fill(0, 0);
+        //        _lastProfiledReference =
+        //                new TrapezoidProfile.State(getModuleAngle(), getAzimuthAngularVelocity());
+    }
+
+    private Matrix<N3, N1> wrapAngle(
+            Matrix<N3, N1> reference, Matrix<N3, N1> xHat, double minAngle, double maxAngle) {
+        double positionError =
+                ControllerUtil.getModulusError(
+                        reference.get(0, 0), xHat.get(0, 0), minAngle, maxAngle);
+        Matrix<N3, N1> error = reference.minus(xHat);
+        Matrix<N3, N1> wrappedError =
+                VecBuilder.fill(positionError, error.get(1, 0), error.get(2, 0));
+        return wrappedError;
     }
 
     public void periodic() {
         // The velocity 0 might cause issues in the future should test.
 
         TrapezoidProfile.State goal = new TrapezoidProfile.State(_reference.get(0, 0), 0);
-        SmartDashboard.putNumberArray("ref", _reference.getData());
-        SmartDashboard.putNumber("vel", _vel);
         if (Math.abs(_vel - _reference.get(2, 0)) >= 3
                 && _reference.get(2, 0) > _prevReference.get(2, 0)) {
             _vel += _reference.get(2, 0) * 0.01;
@@ -163,14 +178,31 @@ public class DiffSwerveModule {
             _vel = _reference.get(2, 0);
         }
 
-        _lastProfiledReference =
-                (new TrapezoidProfile(_trapConstraints, goal, _lastProfiledReference))
-                        .calculate(_kDt);
-        _swerveControlLoop.setNextR(
-                _lastProfiledReference.position, _lastProfiledReference.velocity, _vel);
+        //        _lastProfiledReference =
+        //                (new TrapezoidProfile(_trapConstraints, goal, _lastProfiledReference))
+        //                        .calculate(_kDt);
+        //        _swerveControlLoop.setNextR(
+        //                _lastProfiledReference.position, _lastProfiledReference.velocity, _vel);
+        _swerveControlLoop.setNextR(_reference);
 
         _swerveControlLoop.correct(VecBuilder.fill(getModuleAngle(), getWheelAngularVelocity()));
-        _swerveControlLoop.predict(_kDt);
+        predict();
+        //        _swerveControlLoop.predict(_kDt);
+    }
+
+    public void predict() {
+        _u =
+                _swerveControlLoop.clampInput(
+                        _swerveControlLoop
+                                .getController()
+                                .getK()
+                                .times(
+                                        wrapAngle(
+                                                _swerveControlLoop.getNextR(),
+                                                _swerveControlLoop.getXHat(),
+                                                -Math.PI,
+                                                Math.PI)));
+        _swerveControlLoop.getObserver().predict(_u, _kDt);
     }
 
     public void setRightFalcon(double speed) {
@@ -199,9 +231,16 @@ public class DiffSwerveModule {
     }
 
     public double getModuleAngle() {
-        return Helpers.boundHalfAngle(
-                Units.degreesToRadians(_lampreyEncoder.getDistance()),
-                true); // TODO: voltage of analog to radians or degrees.
+        _prevAngle = _angle;
+        _angle =
+                Helpers.boundHalfAngle(
+                        Units.degreesToRadians(_lampreyEncoder.getDistance()),
+                        true); // TODO: voltage of analog to radians or degrees.
+        return _angle;
+    }
+
+    public boolean isClockwise() {
+        return _angle > _prevAngle;
     }
 
     public double getWheelAngularVelocity() {
@@ -266,11 +305,13 @@ public class DiffSwerveModule {
     }
 
     public double getLeftNextVoltage() {
-        return _swerveControlLoop.getU(0);
+        return _u.get(0, 0);
+        //        return _swerveControlLoop.getU(0);
     }
 
     public double getRightNextVoltage() {
-        return _swerveControlLoop.getU(1);
+        return _u.get(1, 0);
+        //        return _swerveControlLoop.getU(1);
     }
 
     public double getReferenceModuleAngle() {
@@ -295,7 +336,6 @@ public class DiffSwerveModule {
         }
         if (Math.abs(Helpers.boundHalfAngle(drive.getAngle() - getModuleAngle(), true))
                 > Math.PI / 2.0) {
-            drive = drive.scale(-1);
             power *= -1;
         }
         setModuleState(new SwerveModuleState(power, new Rotation2d(drive.getAngle())));

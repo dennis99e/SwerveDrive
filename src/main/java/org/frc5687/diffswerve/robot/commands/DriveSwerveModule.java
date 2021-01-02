@@ -1,4 +1,4 @@
-/* (C)2020 */
+/* (C)2020-2021 */
 package org.frc5687.diffswerve.robot.commands;
 
 import org.frc5687.diffswerve.robot.OI;
@@ -19,6 +19,7 @@ public class DriveSwerveModule extends OutliersCommand {
     @Override
     public void initialize() {
         super.initialize();
+        startPeriodic(0.005);
     }
 
     @Override
