@@ -1,4 +1,4 @@
-/* (C)2020 */
+/* (C)2020-2021 */
 package org.frc5687.diffswerve.robot;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -9,6 +9,8 @@ import org.frc5687.diffswerve.robot.util.*;
 
 public class RobotContainer extends OutliersContainer {
 
+    private OI _oi;
+
     private DriveTrain _driveTrain;
 
     public RobotContainer(Robot robot, IdentityMode identityMode) {
@@ -16,22 +18,24 @@ public class RobotContainer extends OutliersContainer {
     }
 
     public void init() {
+        _oi = new OI();
         _driveTrain = new DriveTrain(this);
-        setDefaultCommand(_driveTrain, new DriveSwerveModule(_driveTrain));
+
+        _oi.initializeButtons(_driveTrain);
+        setDefaultCommand(_driveTrain, new DriveSwerveModule(_driveTrain, _oi));
     }
 
     public void periodic() {}
 
     public void disabledPeriodic() {}
-    ;
 
     @Override
-    public void disabledInit() {}
-    ;
+    public void disabledInit() {
+        _driveTrain.setBottomLeftModuleVector(new Vector2d(0, 0));
+    }
 
     @Override
     public void teleopInit() {}
-    ;
 
     @Override
     public void autonomousInit() {}
