@@ -28,7 +28,10 @@ public class DriveSwerveModule extends OutliersCommand {
         double stickY = _oi.getDriveY();
         double stickX = _oi.getDriveX();
         Vector2d drive = new Vector2d(stickX, stickY);
+        metric("Drive Magnitude", drive.getMagnitude());
+        metric("Drive Angle", drive.getAngle());
         _driveTrain.setBottomLeftModuleVector(drive);
+        _driveTrain.setFrontRightModuleVector(drive);
     }
 
     @Override

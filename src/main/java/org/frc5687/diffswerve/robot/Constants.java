@@ -23,8 +23,6 @@ public class Constants {
                 new Translation2d(-WIDTH / 2.0, -LENGTH / 2.0);
         public static final boolean RIGHT_INVERTED = false;
         public static final boolean LEFT_INVERTED = false;
-        public static final double TICKS_TO_ROTATIONS = 2048.0;
-        public static final double FR = FRONT_RIGHT_POSITION.getNorm();
 
         public static final double VELOCITY_KP = 0.25;
         public static final double VELOCITY_KI = 0.0001;
@@ -39,7 +37,9 @@ public class Constants {
         public static final double GEAR_RATIO_STEER = 11.5;
         public static final double FALCON_RATE = 600.0;
         public static final double WHEEL_RADIUS = 0.0508; // Meters
-        public static final double MAX_RADS = 90.0; // rad per sec
+        public static final double MAX_MPS = 5.1816;
+        public static final double TICKS_TO_ROTATIONS = 2048.0;
+        public static final double VOLTS_TO_ROTATIONS = 3.3;
 
         // Create Parameters for DiffSwerve State Space
         public static final double INERTIA_WHEEL = 0.007;
@@ -47,7 +47,7 @@ public class Constants {
         public static final double Q_AZIMUTH_ANG_VELOCITY = 0.5; // radians per sec
         public static final double Q_AZIMUTH = 0.02; // radians
         public static final double Q_WHEEL_ANG_VELOCITY = 3; // radians per sec
-        public static final double MODEL_AZIMUTH_ANGLE_NOISE = 3.0; // degrees
+        public static final double MODEL_AZIMUTH_ANGLE_NOISE = 1.718873; // degrees
         public static final double MODEL_AZIMUTH_ANG_VELOCITY_NOISE = 400.0; // RPM
         public static final double MODEL_WHEEL_ANG_VELOCITY_NOISE = 400.0; // RPM
         public static final double SENSOR_AZIMUTH_ANGLE_NOISE = 0.02; // degrees

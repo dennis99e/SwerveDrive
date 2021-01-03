@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.system.LinearSystem;
 import edu.wpi.first.wpilibj.system.LinearSystemLoop;
 import edu.wpi.first.wpilibj.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpiutil.math.*;
 import edu.wpi.first.wpiutil.math.numbers.*;
@@ -25,23 +24,16 @@ import org.frc5687.diffswerve.robot.util.Helpers;
 import org.frc5687.diffswerve.robot.util.Vector2d;
 
 public class DiffSwerveModule {
-    private TalonFX _rightFalcon; // TODO: correct names when model is finished.
-    private TalonFX _leftFalcon; // TODO: correct names when model is finished.
-    private AnalogEncoder _lampreyEncoder;
-    private Translation2d _positionVector;
-    private LinearSystemLoop<N3, N2, N2> _swerveControlLoop;
+    private final TalonFX _rightFalcon;
+    private final TalonFX _leftFalcon;
+    private final AnalogEncoder _lampreyEncoder;
+    private final Translation2d _positionVector;
+    private final LinearSystemLoop<N3, N2, N2> _swerveControlLoop;
     private Matrix<N3, N1> _reference; // same thing as a set point.
     private Matrix<N3, N1> _prevReference;
-    private double _vel;
-    private double _angle;
-    private double _prevAngle;
     private Matrix<N2, N1> _u;
-
-    // attempt for angle only right now.
-    //    private final TrapezoidProfile.Constraints _trapConstraints =
-    //            new TrapezoidProfile.Constraints(
-    //                    Units.degreesToRadians(4000), Units.degreesToRadians(5320));
-    //    private TrapezoidProfile.State _lastProfiledReference;
+    private double _vel;
+    private double _positionError;
 
     private final double _kDt = 0.005;
     private final int _kTimeout = 200; // milliseconds
@@ -52,7 +44,7 @@ public class DiffSwerveModule {
             int rightMotorID,
             AnalogInput encoderNum) {
         _lampreyEncoder = new AnalogEncoder(encoderNum);
-        _lampreyEncoder.setDistancePerRotation(110.77);
+        _lampreyEncoder.setDistancePerRotation(2.0 * Math.PI / VOLTS_TO_ROTATIONS);
         _reference = Matrix.mat(Nat.N3(), Nat.N1()).fill(0, 0, 0);
         _prevReference = Matrix.mat(Nat.N3(), Nat.N1()).fill(0, 0, 0);
         _positionVector = positionVector;
@@ -145,29 +137,33 @@ public class DiffSwerveModule {
         _leftFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms, _kTimeout);
         _rightFalcon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms, _kTimeout);
         _swerveControlLoop.reset(VecBuilder.fill(0, 0, 0));
-        _angle = Helpers.boundHalfAngle(_lampreyEncoder.getDistance(), true);
-        _prevAngle = _angle;
-        _vel = 0;
         _u = VecBuilder.fill(0, 0);
-        //        _lastProfiledReference =
-        //                new TrapezoidProfile.State(getModuleAngle(), getAzimuthAngularVelocity());
+        _positionError = 0;
+        _vel = 0;
     }
 
+    /**
+     * wraps angle so that absolute encoder can be continues. (i.e) No issues when switching between
+     * -PI and PI as they are the same point but different values.
+     *
+     * @param reference is the Matrix that contains the reference wanted such as [Math.PI, 0, 100].
+     * @param xHat is the predicted states of our system. [Azimuth Angle, Azimuth Angular Velocity,
+     *     Wheel Angular Velocity].
+     * @param minAngle is the minimum angle in our case -PI.
+     * @param maxAngle is the maximum angle in our case PI.
+     */
     private Matrix<N3, N1> wrapAngle(
             Matrix<N3, N1> reference, Matrix<N3, N1> xHat, double minAngle, double maxAngle) {
-        double positionError =
+
+        _positionError =
                 ControllerUtil.getModulusError(
-                        reference.get(0, 0), xHat.get(0, 0), minAngle, maxAngle);
+                        reference.get(0, 0), getModuleAngle(), minAngle, maxAngle);
         Matrix<N3, N1> error = reference.minus(xHat);
-        Matrix<N3, N1> wrappedError =
-                VecBuilder.fill(positionError, error.get(1, 0), error.get(2, 0));
-        return wrappedError;
+        double angVelError = reference.get(1, 0) - getAzimuthAngularVelocity();
+        return VecBuilder.fill(_positionError, angVelError, error.get(2, 0));
     }
 
     public void periodic() {
-        // The velocity 0 might cause issues in the future should test.
-
-        TrapezoidProfile.State goal = new TrapezoidProfile.State(_reference.get(0, 0), 0);
         if (Math.abs(_vel - _reference.get(2, 0)) >= 3
                 && _reference.get(2, 0) > _prevReference.get(2, 0)) {
             _vel += _reference.get(2, 0) * 0.01;
@@ -177,19 +173,14 @@ public class DiffSwerveModule {
         } else {
             _vel = _reference.get(2, 0);
         }
-
-        //        _lastProfiledReference =
-        //                (new TrapezoidProfile(_trapConstraints, goal, _lastProfiledReference))
-        //                        .calculate(_kDt);
-        //        _swerveControlLoop.setNextR(
-        //                _lastProfiledReference.position, _lastProfiledReference.velocity, _vel);
         _swerveControlLoop.setNextR(_reference);
 
         _swerveControlLoop.correct(VecBuilder.fill(getModuleAngle(), getWheelAngularVelocity()));
         predict();
-        //        _swerveControlLoop.predict(_kDt);
     }
 
+    // use custom predict() function for as absolute encoder azimuth angle and the angular velocity
+    // of the module need to be continuous.
     public void predict() {
         _u =
                 _swerveControlLoop.clampInput(
@@ -222,25 +213,12 @@ public class DiffSwerveModule {
     }
 
     public void setVelocityRPM(double RPM) {
-        _rightFalcon.set(
-                ControlMode.Velocity,
-                (RPM * Constants.DriveTrain.TICKS_TO_ROTATIONS / 600 / GEAR_RATIO_WHEEL));
-        _leftFalcon.set(
-                ControlMode.Velocity,
-                (RPM * Constants.DriveTrain.TICKS_TO_ROTATIONS / 600 / GEAR_RATIO_WHEEL));
+        _rightFalcon.set(ControlMode.Velocity, (RPM * TICKS_TO_ROTATIONS / 600 / GEAR_RATIO_WHEEL));
+        _leftFalcon.set(ControlMode.Velocity, (RPM * TICKS_TO_ROTATIONS / 600 / GEAR_RATIO_WHEEL));
     }
 
     public double getModuleAngle() {
-        _prevAngle = _angle;
-        _angle =
-                Helpers.boundHalfAngle(
-                        Units.degreesToRadians(_lampreyEncoder.getDistance()),
-                        true); // TODO: voltage of analog to radians or degrees.
-        return _angle;
-    }
-
-    public boolean isClockwise() {
-        return _angle > _prevAngle;
+        return Helpers.boundHalfAngle(_lampreyEncoder.getDistance(), true);
     }
 
     public double getWheelAngularVelocity() {
@@ -251,11 +229,14 @@ public class DiffSwerveModule {
                 / 2.0;
     }
 
+    public double getPositionError() {
+        return _positionError;
+    }
+
     public double getWheelVelocity() {
         return getWheelAngularVelocity() * WHEEL_RADIUS; // Meters per sec.
     }
 
-    // Might be fine, should test with lamprey encoder not integrated one.
     public double getAzimuthAngularVelocity() {
         return Units.rotationsPerMinuteToRadiansPerSecond(
                         getLeftFalconRPM() / GEAR_RATIO_STEER
@@ -264,15 +245,11 @@ public class DiffSwerveModule {
     }
 
     public double getRightFalconRPM() {
-        return _rightFalcon.getSelectedSensorVelocity()
-                / Constants.DriveTrain.TICKS_TO_ROTATIONS
-                * FALCON_RATE;
+        return _rightFalcon.getSelectedSensorVelocity() / TICKS_TO_ROTATIONS * FALCON_RATE;
     }
 
     public double getLeftFalconRPM() {
-        return _leftFalcon.getSelectedSensorVelocity()
-                / Constants.DriveTrain.TICKS_TO_ROTATIONS
-                * FALCON_RATE;
+        return _leftFalcon.getSelectedSensorVelocity() / TICKS_TO_ROTATIONS * FALCON_RATE;
     }
 
     public double getLeftVoltage() {
@@ -306,12 +283,10 @@ public class DiffSwerveModule {
 
     public double getLeftNextVoltage() {
         return _u.get(0, 0);
-        //        return _swerveControlLoop.getU(0);
     }
 
     public double getRightNextVoltage() {
         return _u.get(1, 0);
-        //        return _swerveControlLoop.getU(1);
     }
 
     public double getReferenceModuleAngle() {
@@ -328,8 +303,13 @@ public class DiffSwerveModule {
                         state.angle.getRadians(), 0, state.speedMetersPerSecond / WHEEL_RADIUS));
     }
 
+    /**
+     * Sets the vector to the shortest path
+     *
+     * @param drive is a vector that specifies the magnitude and angle.
+     */
     public void setIdealVector(Vector2d drive) {
-        double power = drive.getMagnitude();
+        double power = Helpers.limit(drive.getMagnitude(), -1, 1);
         if (power < Constants.EPSILON) {
             setModuleState(new SwerveModuleState(0.0, new Rotation2d(getModuleAngle())));
             return;
@@ -339,9 +319,19 @@ public class DiffSwerveModule {
             drive = drive.scale(-1);
             power *= -1;
         }
-        setModuleState(new SwerveModuleState(power, new Rotation2d(drive.getAngle())));
+        setModuleState(new SwerveModuleState(power * MAX_MPS, new Rotation2d(drive.getAngle())));
     }
 
+    /**
+     * Creates a StateSpace model of a differential swerve module.
+     *
+     * @param motor is the motor used.
+     * @param Js is the Inertia of the steer component.
+     * @param Jw is the Moment of Inertia of the wheel component.
+     * @param Gs is the Gear Ratio of the steer.
+     * @param Gw is the Gear Ratio of the wheel.
+     * @return LinearSystem of state space model.
+     */
     public static LinearSystem<N3, N2, N2> createDifferentialSwerveModule(
             DCMotor motor, double Js, double Jw, double Gs, double Gw) {
         var Cs = -((Gs * motor.m_KtNMPerAmp) / (motor.m_KvRadPerSecPerVolt * motor.m_rOhms * Js));

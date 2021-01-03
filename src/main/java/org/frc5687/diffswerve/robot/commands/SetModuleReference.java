@@ -13,13 +13,12 @@ public class SetModuleReference extends OutliersCommand {
     public SetModuleReference(DriveTrain driveTrain, SwerveModuleState state) {
         _driveTrain = driveTrain;
         _state = state;
+        startPeriodic(0.05);
     }
 
     @Override
     public void initialize() {
         super.initialize();
-        //        _driveTrain.setFrontRightModuleState(_state);
-        startPeriodic(0.05);
     }
 
     @Override
