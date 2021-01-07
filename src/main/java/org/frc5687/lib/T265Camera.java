@@ -1,73 +1,139 @@
-/* (C)2020 */
+/* (C)2020-2021 */
 package org.frc5687.lib;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Transform2d;
+import edu.wpi.first.wpilibj.geometry.Twist2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import java.nio.file.Paths;
 import java.util.function.Consumer;
 import org.frc5687.diffswerve.robot.util.OutliersProxy;
 
+/**
+ * Provides a convenient Java interface to the Intel RealSense T265 V-SLAM camera. Only the subset
+ * of the librealsense that is useful to robot tracking is exposed in this class.
+ *
+ * <p>We employ JNI to call librealsense. There <i>are</i> Java bindings for librealsense, but they
+ * are not complete and do not support our usecase.
+ *
+ * <p>This class works entirely in 2d, even though the tracking camera supports giving us a third
+ * dimension (Z).
+ *
+ * <p>The coordinate system is as follows: + X == Camera forwards + Y == Camera Left (left is from
+ * the perspective of a viewer standing behind the camera)
+ *
+ * <p>All distance units are meters. All time units are seconds.
+ */
 public class T265Camera extends OutliersProxy {
-
-    private static UnsatisfiedLinkError _linkError;
-
-    private long _nativeCameraObjectPointer = 0;
-    private boolean _isStarted = false;
-    private Pose2d _robotOffset;
-    private Pose2d _origin = new Pose2d();
-    private Pose2d _lastReceivedPose = new Pose2d();
-    private Consumer<CameraUpdate> _poseConsumer = null;
+    private static UnsatisfiedLinkError mLinkError = null;
 
     static {
         try {
-            // TODO: find path
-            //            System.loadLibrary("rs");
-            //            System.loadLibrary("outliernative");
-            //            DriverStation.reportError("loaded Library", false);
-            //            System.load("/usr/local/frc/lib/librs.so");
-            //            System.load("/home/admin/librs.so");
             System.load(
                     Paths.get(System.getProperty("user.home"), "liboutliernative.so")
                             .toAbsolutePath()
                             .toString());
 
+            // Cleanup is quite tricky for us, because the native code has no idea when Java
+            // will be done. (This is why smart pointers don't really make sense in the native
+            // code.)
+            // Even worse, trying to cleanup with atexit in the native code is too late and
+            // results in unfinished callbacks blocking. As a result a shutdown hook is our
+            // best option.
             Runtime.getRuntime().addShutdownHook(new Thread(() -> T265Camera.cleanup()));
         } catch (UnsatisfiedLinkError e) {
-            _linkError = e;
+            mLinkError = e;
         }
     }
 
-    public T265Camera(Pose2d robotOffset, double odometryCovariance) {
+    public static enum PoseConfidence {
+        Failed,
+        Low,
+        Medium,
+        High,
+    }
+
+    public static class CameraUpdate {
+        /** The robot's pose in meters. */
+        public final Pose2d pose;
+        /** The robot's velocity in meters/sec and radians/sec. */
+        public final ChassisSpeeds velocity;
+
+        public final PoseConfidence confidence;
+
+        public CameraUpdate(Pose2d pose, ChassisSpeeds velocity, PoseConfidence confidence) {
+            this.pose = pose;
+            this.velocity = velocity;
+            this.confidence = confidence;
+        }
+    }
+
+    private long mNativeCameraObjectPointer = 0;
+    private boolean mIsStarted = false;
+    private Transform2d mRobotOffset;
+    private Pose2d mOrigin = new Pose2d();
+    private Pose2d mLastReceivedPose = new Pose2d();
+    private Consumer<CameraUpdate> mPoseConsumer = null;
+
+    /**
+     * This method constructs a T265 camera and sets it up with the right info. {@link
+     * T265Camera#start start} will not be called, you must call it yourself.
+     *
+     * @param robotOffset Offset of the center of the robot from the center of the camera.
+     * @param odometryCovariance Covariance of the odometry input when doing sensor fusion (you
+     *     probably want to tune this).
+     */
+    public T265Camera(Transform2d robotOffset, double odometryCovariance) {
         this(robotOffset, odometryCovariance, "");
     }
 
-    public T265Camera(Pose2d robotOffset, double odometryCovariance, String relocMapPath) {
-        if (_linkError != null) {
-            error("error is " + _linkError);
-            throw _linkError;
+    /**
+     * This method constructs a T265 camera and sets it up with the right info. {@link
+     * T265Camera#start start} will not be called, you must call it yourself.
+     *
+     * @param robotOffsetMeters Offset of the center of the robot from the center of the camera.
+     *     Units are meters.
+     * @param odometryCovariance Covariance of the odometry input when doing sensor fusion (you
+     *     probably want to tune this)
+     * @param relocMapPath path (including filename) to a relocalization map to load.
+     */
+    public T265Camera(
+            Transform2d robotOffsetMeters, double odometryCovariance, String relocMapPath) {
+        if (mLinkError != null) {
+            throw mLinkError;
         }
 
-        _nativeCameraObjectPointer = newCamera(relocMapPath);
+        mNativeCameraObjectPointer = newCamera(relocMapPath);
         setOdometryInfo(
-                (float) robotOffset.getTranslation().getX(),
-                (float) robotOffset.getTranslation().getY(),
-                (float) robotOffset.getRotation().getRadians(),
+                (float) robotOffsetMeters.getTranslation().getX(),
+                (float) robotOffsetMeters.getTranslation().getY(),
+                (float) robotOffsetMeters.getRotation().getRadians(),
                 odometryCovariance);
-        _robotOffset = robotOffset;
+        mRobotOffset = robotOffsetMeters;
     }
 
+    /**
+     * This allows the user-provided pose receive callback to receive data. This will also reset the
+     * camera's pose to (0, 0) at 0 degrees.
+     *
+     * <p>This will not restart the camera following exportRelocalizationMap. You will have to call
+     * {@link T265Camera#free()} and make a new {@link T265Camera}. This is related to what appears
+     * to be a bug in librealsense.
+     *
+     * @param poseConsumer A method to be called every time we receive a pose from <i>from a
+     *     different thread</i>! You must synchronize memory access across threads!
+     *     <p>Received poses are in meters.
+     */
     public synchronized void start(Consumer<CameraUpdate> poseConsumer) {
-        if (_isStarted) {
-            throw new RuntimeException("T265 Camera is running already!");
-        }
-        _poseConsumer = poseConsumer;
-        _isStarted = true;
+        if (mIsStarted) throw new RuntimeException("T265 camera is already started");
+        mPoseConsumer = poseConsumer;
+        mIsStarted = true;
     }
 
+    /** This allows the callback to receivez data, but it does not internally stop the camera. */
     public synchronized void stop() {
-        _isStarted = false;
+        mIsStarted = false;
     }
 
     /**
@@ -82,16 +148,24 @@ public class T265Camera extends OutliersProxy {
     /**
      * Sends robot velocity as computed from wheel encoders.
      *
-     * @param velocityXMetersPerSecond The robot-relative velocity along the X axis in meters/sec.
-     * @param velocityYMetersPerSecond The robot-relative velocity along the Y axis in meters/sec.
+     * @param velocity The robot's translational velocity in meters/sec.
      */
-    public void sendOdometry(double velocityXMetersPerSecond, double velocityYMetersPerSecond) {
+    public void sendOdometry(Twist2d velocity) {
+        Pose2d transVel = new Pose2d().exp(velocity);
         // Only 1 odometry sensor is supported for now (index 0)
-        sendOdometryRaw(0, (float) velocityXMetersPerSecond, (float) velocityYMetersPerSecond);
+        sendOdometryRaw(
+                0,
+                (float) transVel.getTranslation().getX(),
+                (float) transVel.getTranslation().getY());
     }
 
+    /**
+     * This zeroes the camera pose to the provided new pose.
+     *
+     * @param newPose The pose the camera should be zeroed to.
+     */
     public synchronized void setPose(Pose2d newPose) {
-        _origin = newPose;
+        mOrigin = newPose;
     }
 
     /**
@@ -112,45 +186,23 @@ public class T265Camera extends OutliersProxy {
 
     private static native void cleanup();
 
-    public static enum PoseConfidence {
-        Failed,
-        Low,
-        Medium,
-        High,
-    }
-
-    public static class CameraUpdate {
-        public final Pose2d pose;
-
-        public final ChassisSpeeds velocity;
-        public final PoseConfidence confidence;
-
-        public CameraUpdate(Pose2d pose, ChassisSpeeds velocity, PoseConfidence confidence) {
-            this.pose = pose;
-            this.velocity = velocity;
-            this.confidence = confidence;
-        }
-    }
-
     private synchronized void consumePoseUpdate(
-            float x, float y, float radians, float vx, float vy, float omega, int confOrdinal) {
+            float x, float y, float radians, float dx, float dy, float dtheta, int confOrdinal) {
         // First we apply an offset to go from the camera coordinate system to the
         // robot coordinate system with an origin at the center of the robot. This
         // is not a directional transformation.
         // Then we transform the pose our camera is giving us so that it reports is
         // the robot's pose, not the camera's. This is a directional transformation.
-        Transform2d transform =
-                new Transform2d(_robotOffset.getTranslation(), _robotOffset.getRotation());
         final Pose2d currentPose =
                 new Pose2d(
-                                x - _robotOffset.getTranslation().getX(),
-                                y - _robotOffset.getTranslation().getY(),
+                                x - mRobotOffset.getTranslation().getX(),
+                                y - mRobotOffset.getTranslation().getY(),
                                 new Rotation2d(radians))
-                        .transformBy(transform);
+                        .transformBy(mRobotOffset);
 
-        _lastReceivedPose = currentPose;
+        mLastReceivedPose = currentPose;
 
-        if (!_isStarted) return;
+        if (!mIsStarted) return;
 
         // See
         // https://github.com/IntelRealSense/librealsense/blob/7f2ba0de8769620fd672f7b44101f0758e7e2fb3/include/librealsense2/h/rs_types.h#L115
@@ -176,11 +228,12 @@ public class T265Camera extends OutliersProxy {
                                 + "\" passed from native code");
         }
 
-        Transform2d current =
-                new Transform2d(currentPose.getTranslation(), currentPose.getRotation());
-        final Pose2d transformedPose = _origin.transformBy(current);
-        _poseConsumer.accept(
-                new CameraUpdate(transformedPose, new ChassisSpeeds(vx, vy, omega), confidence));
+        final Pose2d transformedPose =
+                mOrigin.transformBy(
+                        new Transform2d(currentPose.getTranslation(), currentPose.getRotation()));
+
+        mPoseConsumer.accept(
+                new CameraUpdate(transformedPose, new ChassisSpeeds(dx, dy, dtheta), confidence));
     }
 
     /** Thrown if something goes wrong in the native code */

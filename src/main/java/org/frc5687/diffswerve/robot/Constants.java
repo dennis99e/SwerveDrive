@@ -1,4 +1,4 @@
-/* (C)2020 */
+/* (C)2020-2021 */
 package org.frc5687.diffswerve.robot;
 
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -34,7 +34,7 @@ public class Constants {
     public static class DifferentialSwerveModule {
 
         public static final double GEAR_RATIO_WHEEL = 1.0; // 6.48;
-        public static final double GEAR_RATIO_STEER = 1.0; //v4.0;
+        public static final double GEAR_RATIO_STEER = 1.0; // v4.0;
 
         // Create Parameters for DiffSwerve State Space
         public static final double INERTIA_WHEEL = 0.015;

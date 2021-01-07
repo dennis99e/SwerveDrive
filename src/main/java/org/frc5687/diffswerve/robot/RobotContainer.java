@@ -1,14 +1,13 @@
-/* (C)2020 */
+/* (C)2020-2021 */
 package org.frc5687.diffswerve.robot;
 
-import com.spartronics4915.lib.hardware.sensors.T265Camera;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.frc5687.diffswerve.robot.commands.OutliersCommand;
 import org.frc5687.diffswerve.robot.subsystems.*;
 import org.frc5687.diffswerve.robot.util.*;
+import org.frc5687.lib.T265Camera;
 
 public class RobotContainer extends OutliersContainer {
 
@@ -25,7 +24,7 @@ public class RobotContainer extends OutliersContainer {
         T265Camera slamra = null;
         while (++retryCount <= 1 && slamra == null) {
             try {
-                slamra = new T265Camera(new Pose2d(0, 0, new Rotation2d()), 0.5);
+                slamra = new T265Camera(new Transform2d(), 0.5);
                 SmartDashboard.putString("RobotContainer/vslamStatus", "OK");
             } catch (T265Camera.CameraJNIException | UnsatisfiedLinkError e) {
                 slamra = null;
@@ -34,6 +33,10 @@ public class RobotContainer extends OutliersContainer {
                 SmartDashboard.putString("RobotContainer/vslamStatus", "BAD!");
             }
         }
+        slamra.start(
+                (T265Camera.CameraUpdate update) -> {
+                    metric("X pos", update.pose.getX());
+                });
     }
 
     public void periodic() {}
