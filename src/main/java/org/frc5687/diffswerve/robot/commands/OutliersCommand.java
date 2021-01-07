@@ -1,4 +1,4 @@
-/* (C)2020 */
+/* (C)2020-2021 */
 package org.frc5687.diffswerve.robot.commands;
 
 import edu.wpi.first.wpilibj.Notifier;
@@ -12,13 +12,7 @@ public abstract class OutliersCommand extends CommandBase implements ILoggingSou
     private MetricTracker _metricTracker;
     private Notifier _controlLoop;
 
-    public OutliersCommand() {
-        try {
-            _controlLoop = new Notifier(this::execute);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    public OutliersCommand() {}
 
     public OutliersCommand(double timeout) {
         super.withTimeout(timeout);
@@ -71,6 +65,11 @@ public abstract class OutliersCommand extends CommandBase implements ILoggingSou
     }
 
     protected void startPeriodic(double kDt) {
+        try {
+            _controlLoop = new Notifier(this::execute);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         _controlLoop.startPeriodic(kDt);
     }
 
@@ -89,8 +88,6 @@ public abstract class OutliersCommand extends CommandBase implements ILoggingSou
             _metricTracker.pause();
         }
     }
-
-    private long _start;
 
     @Override
     public void execute() {

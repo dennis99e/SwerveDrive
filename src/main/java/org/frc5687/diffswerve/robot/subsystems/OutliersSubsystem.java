@@ -1,4 +1,4 @@
-/* (C)2020 */
+/* (C)2020-2021 */
 package org.frc5687.diffswerve.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Notifier;
@@ -15,14 +15,14 @@ public abstract class OutliersSubsystem extends SubsystemBase implements ILoggin
 
     public OutliersSubsystem(OutliersContainer container) {
         container.registerSubSystem(this);
+    }
+
+    public void startNotifier(double kDt) {
         try {
             _controlLoop = new Notifier(this::update);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public void startNotifier(double kDt) {
         _controlLoop.startPeriodic(kDt);
     }
 
