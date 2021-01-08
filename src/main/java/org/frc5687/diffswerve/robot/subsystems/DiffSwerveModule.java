@@ -120,14 +120,6 @@ public class DiffSwerveModule {
         _leftFalcon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, _kTimeout);
         _rightFalcon.configForwardSoftLimitEnable(false);
         _leftFalcon.configForwardSoftLimitEnable(false);
-        _rightFalcon.config_kP(0, Constants.DriveTrain.VELOCITY_KP, _kTimeout);
-        _rightFalcon.config_kI(0, Constants.DriveTrain.VELOCITY_KI, _kTimeout);
-        _rightFalcon.config_kD(0, Constants.DriveTrain.VELOCITY_KD, _kTimeout);
-        _rightFalcon.config_kF(0, Constants.DriveTrain.VELOCITY_KF, _kTimeout);
-        _leftFalcon.config_kP(0, Constants.DriveTrain.VELOCITY_KP, _kTimeout);
-        _leftFalcon.config_kI(0, Constants.DriveTrain.VELOCITY_KI, _kTimeout);
-        _leftFalcon.config_kD(0, Constants.DriveTrain.VELOCITY_KD, _kTimeout);
-        _leftFalcon.config_kF(0, Constants.DriveTrain.VELOCITY_KF, _kTimeout);
         _rightFalcon.configClosedloopRamp(0);
         _leftFalcon.configClosedloopRamp(0);
         _leftFalcon.configVoltageCompSaturation(12.0, _kTimeout);
