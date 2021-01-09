@@ -8,8 +8,12 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import org.frc5687.diffswerve.robot.Constants;
 import org.frc5687.diffswerve.robot.RobotMap;
+import org.frc5687.diffswerve.robot.util.GlowWorm;
 import org.frc5687.diffswerve.robot.util.Helpers;
 import org.frc5687.diffswerve.robot.util.OutliersContainer;
 import org.frc5687.diffswerve.robot.util.Vector2d;
@@ -26,11 +30,13 @@ public class DriveTrain extends OutliersSubsystem {
 
     private final AHRS _imu;
     private final T265Camera _slamCamera;
+    private final GlowWorm _vision;
 
     public DriveTrain(OutliersContainer container, AHRS imu, T265Camera slamCamera) {
         super(container);
         _imu = imu;
         _slamCamera = slamCamera;
+        _vision = new GlowWorm("glowworm"); //TODO: change name of camera
 
         _frontRight =
                 new DiffSwerveModule(
@@ -74,12 +80,12 @@ public class DriveTrain extends OutliersSubsystem {
     public void updateOdometry() {
         _poseEstimator.update(
                 getHeading(), null, _frontRight.getState(), _backLeft.getState(), null);
-        if (hasTarget) {
+        if (_vision.hasTarget()) {
             _poseEstimator.setVisionMeasurementStdDevs(
                     VISION_MEASUREMENT_STD_DEVS); // TODO change when have camera and slam
             _poseEstimator.addVisionMeasurement(
-                    new Pose2d(0, 0, new Rotation2d(0)),
-                    System.currentTimeMillis() - 0.3); // 0.3 is camera latency need to be changed.
+                    _vision.getTargetPose(),
+                    System.currentTimeMillis() - _vision.getLatency()); // 0.3 is camera latency need to be changed.
         } else {
             _poseEstimator.setVisionMeasurementStdDevs(
                     VISION_MEASUREMENT_STD_DEVS); // TODO change when have camera and slam
@@ -113,26 +119,17 @@ public class DriveTrain extends OutliersSubsystem {
 
     public void setFrontRightModuleVector(Vector2d vec) {
         _frontRight.setIdealVector(vec);
-        _frontRight.setLeftFalconVoltage(getFrontRightWantedVoltages()[0]);
-        _frontRight.setRightFalconVoltage(getFrontRightWantedVoltages()[1]);
     }
 
     public void setBackLeftModuleVector(Vector2d vec) {
         _backLeft.setIdealVector(vec);
-        _backLeft.setLeftFalconVoltage(getBackLeftWantedVoltages()[0]);
-        _backLeft.setRightFalconVoltage(getBackLeftWantedVoltages()[1]);
+    }
+    public void setFrontRightModuleState(SwerveModuleState state) {
+        _frontRight.setModuleState(state);
     }
 
-    public double[] getFrontRightWantedVoltages() {
-        double lim1 = Helpers.limit(_frontRight.getLeftNextVoltage(), -12, 12);
-        double lim2 = Helpers.limit(_frontRight.getRightNextVoltage(), -12, 12);
-        return new double[] {lim1, lim2};
-    }
-
-    public double[] getBackLeftWantedVoltages() {
-        double lim1 = Helpers.limit(_backLeft.getLeftNextVoltage(), -12, 12);
-        double lim2 = Helpers.limit(_backLeft.getRightNextVoltage(), -12, 12);
-        return new double[] {lim1, lim2};
+    public void setBackLeftModuleState(SwerveModuleState state) {
+        _backLeft.setModuleState(state);
     }
 
     public double getFRModuleAngle() {
@@ -151,4 +148,14 @@ public class DriveTrain extends OutliersSubsystem {
     public Rotation2d getHeading() {
         return Rotation2d.fromDegrees(-getYaw());
     }
+
+    public void drive(double vx, double vy, double omega, boolean fieldRelative) {
+        SwerveModuleState[] swerveModuleStates =
+                _kinematics.toSwerveModuleStates(fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, omega, getHeading())
+                        : new ChassisSpeeds(vx, vy, omega));
+        SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, MAX_MPS);
+        setFrontRightModuleState(swerveModuleStates[1]);
+        setBackLeftModuleState(swerveModuleStates[2]);
+    }
+
 }

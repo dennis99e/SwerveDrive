@@ -49,6 +49,7 @@ public class Constants {
                 VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(20));
 
         public static final double DEADBAND = 0.1;
+        public static final double MAX_MPS = 5.1816;
     }
 
     public static class DifferentialSwerveModule {

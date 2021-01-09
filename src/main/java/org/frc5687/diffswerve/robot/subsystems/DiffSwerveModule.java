@@ -197,11 +197,13 @@ public class DiffSwerveModule {
     }
 
     public void setRightFalconVoltage(double voltage) {
-        _rightFalcon.set(TalonFXControlMode.PercentOutput, voltage / 12.0);
+        double limVoltage = Helpers.limit(voltage, -12.0, 12.0);
+        _rightFalcon.set(TalonFXControlMode.PercentOutput, limVoltage / 12.0);
     }
 
     public void setLeftFalconVoltage(double voltage) {
-        _leftFalcon.set(TalonFXControlMode.PercentOutput, voltage / 12.0);
+        double limVoltage = Helpers.limit(voltage, -12.0, 12.0);
+        _leftFalcon.set(TalonFXControlMode.PercentOutput, limVoltage / 12.0);
     }
 
     public void setVelocityRPM(double RPM) {
@@ -273,6 +275,12 @@ public class DiffSwerveModule {
         _reference = reference;
     }
 
+    /**
+     * gets the wanted voltage from our control law. u = K(r-x)
+     * our control law is slightly different as we need to be continuous.
+     * Check method predict() for calculations.
+     * @return left wanted voltage
+     */
     public double getLeftNextVoltage() {
         return _u.get(0, 0);
     }
@@ -289,10 +297,17 @@ public class DiffSwerveModule {
         return new SwerveModuleState(getWheelVelocity(), new Rotation2d(getModuleAngle()));
     }
 
+    /**
+     * Sets the state of the module and sends the voltages wanted to the motors.
+     *
+     * @param state is the desired swerve module state.
+     */
     public void setModuleState(SwerveModuleState state) {
         setReference(
                 VecBuilder.fill(
                         state.angle.getRadians(), 0, state.speedMetersPerSecond / WHEEL_RADIUS));
+        setLeftFalconVoltage(getLeftNextVoltage());
+        setRightFalconVoltage(getRightNextVoltage());
     }
 
     /**
@@ -318,7 +333,7 @@ public class DiffSwerveModule {
      * Creates a StateSpace model of a differential swerve module.
      *
      * @param motor is the motor used.
-     * @param Js is the Inertia of the steer component.
+     * @param Js is the Moment of Inertia of the steer component.
      * @param Jw is the Moment of Inertia of the wheel component.
      * @param Gs is the Gear Ratio of the steer.
      * @param Gw is the Gear Ratio of the wheel.
@@ -334,7 +349,6 @@ public class DiffSwerveModule {
         var A =
                 Matrix.mat(Nat.N3(), Nat.N3())
                         .fill(0.0, 1.0, 0.0, 0.0, Gs * Cs, 0.0, 0.0, 0.0, Gw * Cw);
-        // var B = Matrix.mat(Nat.N3(), Nat.N2()).fill(0.0, 0.0, Vs, -Vs, Vw, Vw);
         var B = Matrix.mat(Nat.N3(), Nat.N2()).fill(0.0, 0.0, Vs, Vs, Vw, -Vw);
         var C = Matrix.mat(Nat.N2(), Nat.N3()).fill(1.0, 0.0, 0.0, 0.0, 0.0, 1.0);
         var D =
