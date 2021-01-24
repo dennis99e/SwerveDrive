@@ -51,8 +51,8 @@ public class DiffSwerveModule {
 
         _leftFalcon = new TalonFX(leftMotorID);
         _rightFalcon = new TalonFX(rightMotorID);
-        _rightFalcon.setInverted(Constants.DriveTrain.RIGHT_INVERTED);
-        _leftFalcon.setInverted(Constants.DriveTrain.LEFT_INVERTED);
+        _rightFalcon.setInverted(false);
+        _leftFalcon.setInverted(false);
         _rightFalcon.setSensorPhase(false);
         _leftFalcon.setSensorPhase(false);
         _rightFalcon.setNeutralMode(NeutralMode.Brake);
@@ -173,7 +173,7 @@ public class DiffSwerveModule {
 
     // use custom predict() function for as absolute encoder azimuth angle and the angular velocity
     // of the module need to be continuous.
-    public void predict() {
+    private void predict() {
         _u =
                 _swerveControlLoop.clampInput(
                         _swerveControlLoop
@@ -213,6 +213,10 @@ public class DiffSwerveModule {
 
     public double getModuleAngle() {
         return Helpers.boundHalfAngle(_lampreyEncoder.getDistance(), true);
+    }
+
+    public double getLampreyVoltage() {
+        return _lampreyEncoder.get();
     }
 
     public double getWheelAngularVelocity() {
@@ -276,9 +280,9 @@ public class DiffSwerveModule {
     }
 
     /**
-     * gets the wanted voltage from our control law. u = K(r-x)
-     * our control law is slightly different as we need to be continuous.
-     * Check method predict() for calculations.
+     * gets the wanted voltage from our control law. u = K(r-x) our control law is slightly
+     * different as we need to be continuous. Check method predict() for calculations.
+     *
      * @return left wanted voltage
      */
     public double getLeftNextVoltage() {
@@ -295,6 +299,10 @@ public class DiffSwerveModule {
 
     public SwerveModuleState getState() {
         return new SwerveModuleState(getWheelVelocity(), new Rotation2d(getModuleAngle()));
+    }
+
+    public double[] getReference() {
+        return _reference.getData();
     }
 
     /**
@@ -339,7 +347,7 @@ public class DiffSwerveModule {
      * @param Gw is the Gear Ratio of the wheel.
      * @return LinearSystem of state space model.
      */
-    public static LinearSystem<N3, N2, N2> createDifferentialSwerveModule(
+    private static LinearSystem<N3, N2, N2> createDifferentialSwerveModule(
             DCMotor motor, double Js, double Jw, double Gs, double Gw) {
         var Cs = -((Gs * motor.KtNMPerAmp) / (motor.KvRadPerSecPerVolt * motor.rOhms * Js));
         var Cw = -((Gw * motor.KtNMPerAmp) / (motor.KvRadPerSecPerVolt * motor.rOhms * Jw));

@@ -24,15 +24,15 @@ public class Constants {
 
         public static final double T265_MEASUREMENT_COVARIANCE = 0.5;
 
-        public static final double WIDTH = 20.0; // TODO: Figure out which units to use.
-        public static final double LENGTH = 20.0; // TODO: Figure out which units to use.
-        public static final Translation2d FRONT_RIGHT_POSITION =
-                new Translation2d(WIDTH / 2.0, LENGTH / 2.0);
+        public static final double WIDTH = 0.31115; // TODO: Figure out which units to use.
+        public static final double LENGTH = 0.31115; // TODO: Figure out which units to use.
         public static final Translation2d FRONT_LEFT_POSITION =
-                new Translation2d(-WIDTH / 2.0, LENGTH / 2.0);
-        public static final Translation2d BACK_RIGHT_POSITION =
+                new Translation2d(WIDTH / 2.0, LENGTH / 2.0);
+        public static final Translation2d FRONT_RIGHT_POSITION =
                 new Translation2d(WIDTH / 2.0, -LENGTH / 2.0);
         public static final Translation2d BACK_LEFT_POSITION =
+                new Translation2d(-WIDTH / 2.0, LENGTH / 2.0);
+        public static final Translation2d BACK_RIGHT_POSITION =
                 new Translation2d(-WIDTH / 2.0, -LENGTH / 2.0);
         public static final boolean RIGHT_INVERTED = false;
         public static final boolean LEFT_INVERTED = false;
@@ -49,7 +49,16 @@ public class Constants {
                 VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(20));
 
         public static final double DEADBAND = 0.1;
-        public static final double MAX_MPS = 5.1816;
+        //        public static final double MAX_MPS = 5.1816;
+        public static final double MAX_MPS = 1.0;
+        public static final double MAX_ANG_VEL = Math.PI * 4.0;
+        public static final double MAX_MPSS = 0.1; // accel
+
+        public static final double kP = 1.5;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+        public static final double PROFILE_CONSTRAINT_VEL = 2.0 * Math.PI;
+        public static final double PROFILE_CONSTRAINT_ACCEL = Math.PI;
     }
 
     public static class DifferentialSwerveModule {

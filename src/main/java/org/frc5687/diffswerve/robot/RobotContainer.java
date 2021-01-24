@@ -46,6 +46,7 @@ public class RobotContainer extends OutliersContainer {
         _driveTrain = new DriveTrain(this, _imu, _slamCamera);
         _oi.initializeButtons(_driveTrain);
         setDefaultCommand(_driveTrain, new DriveSwerveModule(_driveTrain, _oi));
+        _imu.reset();
     }
 
     public void periodic() {}
@@ -53,9 +54,7 @@ public class RobotContainer extends OutliersContainer {
     public void disabledPeriodic() {}
 
     @Override
-    public void disabledInit() {
-        _driveTrain.setBackLeftModuleVector(new Vector2d(0, 0));
-    }
+    public void disabledInit() {}
 
     @Override
     public void teleopInit() {}

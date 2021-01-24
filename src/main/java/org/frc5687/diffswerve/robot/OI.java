@@ -4,8 +4,13 @@ package org.frc5687.diffswerve.robot;
 import static org.frc5687.diffswerve.robot.util.Helpers.applyDeadband;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import java.util.ArrayList;
+import org.frc5687.diffswerve.robot.commands.DriveTrajectory;
 import org.frc5687.diffswerve.robot.subsystems.DriveTrain;
 import org.frc5687.diffswerve.robot.util.Gamepad;
 import org.frc5687.diffswerve.robot.util.OutliersProxy;
@@ -33,6 +38,15 @@ public class OI extends OutliersProxy {
     }
 
     public void initializeButtons(DriveTrain driveTrain) {
+        var waypoints = new ArrayList<Translation2d>();
+        waypoints.add(new Translation2d(0, 0));
+        waypoints.add(new Translation2d(1, 0));
+        _driverAButton.whenPressed(
+                new DriveTrajectory(
+                        driveTrain,
+                        new Pose2d(0, 0, new Rotation2d(0)),
+                        waypoints,
+                        new Pose2d(2, 0, new Rotation2d(0))));
         //        _driverAButton.whenPressed(null);
         //        _driverBButton.whenPressed(null);
         //        _driverXButton.whenPressed(null);
@@ -46,6 +60,12 @@ public class OI extends OutliersProxy {
 
     public double getDriveX() {
         double speed = getSpeedFromAxis(_driverGamepad, Gamepad.Axes.LEFT_X.getNumber());
+        speed = applyDeadband(speed, Constants.DriveTrain.DEADBAND);
+        return speed;
+    }
+
+    public double getRotationX() {
+        double speed = getSpeedFromAxis(_driverGamepad, Gamepad.Axes.RIGHT_X.getNumber());
         speed = applyDeadband(speed, Constants.DriveTrain.DEADBAND);
         return speed;
     }

@@ -134,7 +134,7 @@ public class T265Camera extends OutliersProxy {
         mIsStarted = true;
     }
 
-    /** This allows the callback to receivez data, but it does not internally stop the camera. */
+    /** This allows the callback to receive data, but it does not internally stop the camera. */
     public synchronized void stop() {
         mIsStarted = false;
     }
