@@ -156,6 +156,8 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
+        //        metric ("Pose Estimation", _poseEstimator.getEstimatedPosition().toString());
+        //        metric("Odometry pose", _odomerty.getPoseMeters().toString());
         //        metric("Position Error", _backLeft.getPositionError());
         //        metric("Right RPM", _backLeft.getRightFalconRPM());
         //        metric("Left RPM", _backLeft.getLeftFalconRPM());
