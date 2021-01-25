@@ -338,6 +338,25 @@ public class DiffSwerveModule {
     }
 
     /**
+     * need to test same as above.
+     *
+     * @param state
+     */
+    public void setIdealState(SwerveModuleState state) {
+        double speed = state.speedMetersPerSecond;
+        double angle = state.angle.getRadians();
+        if (speed < Constants.EPSILON) {
+            setModuleState(new SwerveModuleState(0.0, new Rotation2d(getModuleAngle())));
+        }
+        if (Math.abs(Helpers.boundHalfAngle(state.angle.getRadians() - getModuleAngle(), true))
+                > Math.PI / 2.0) {
+            angle *= -1;
+            speed *= -1;
+        }
+        setModuleState(new SwerveModuleState(speed, new Rotation2d(angle)));
+    }
+
+    /**
      * Creates a StateSpace model of a differential swerve module.
      *
      * @param motor is the motor used.

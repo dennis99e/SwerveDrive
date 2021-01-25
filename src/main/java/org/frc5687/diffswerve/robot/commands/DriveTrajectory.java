@@ -22,12 +22,12 @@ public class DriveTrajectory extends OutliersCommand {
 
     public DriveTrajectory(
             DriveTrain driveTrain, Pose2d start, ArrayList<Translation2d> waypoints, Pose2d end) {
+        addRequirements(driveTrain);
         _driveTrain = driveTrain;
         _start = start;
         _waypoints = waypoints;
         _end = end;
         _timer = new Timer();
-        addRequirements(driveTrain);
     }
 
     @Override
