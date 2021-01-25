@@ -50,11 +50,11 @@ public class Constants {
 
         public static final double DEADBAND = 0.1;
         //        public static final double MAX_MPS = 5.1816;
-        public static final double MAX_MPS = 1.0;
+        public static final double MAX_MPS = 3.0;
         public static final double MAX_ANG_VEL = Math.PI * 4.0;
-        public static final double MAX_MPSS = 0.1; // accel
+        public static final double MAX_MPSS = 1.7; // accel
 
-        public static final double kP = 1.5;
+        public static final double kP = 2.5;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
         public static final double PROFILE_CONSTRAINT_VEL = 2.0 * Math.PI;

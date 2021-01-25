@@ -39,8 +39,8 @@ public class OI extends OutliersProxy {
 
     public void initializeButtons(DriveTrain driveTrain) {
         var waypoints = new ArrayList<Translation2d>();
-        waypoints.add(new Translation2d(0, 0));
-        waypoints.add(new Translation2d(1, 0));
+        waypoints.add(new Translation2d(1, -1));
+        //                waypoints.add(new Translation2d(2, 0));
         _driverAButton.whenPressed(
                 new DriveTrajectory(
                         driveTrain,
