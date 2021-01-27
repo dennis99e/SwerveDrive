@@ -20,14 +20,14 @@ public class DriveSwerveModule extends OutliersCommand {
     @Override
     public void initialize() {
         super.initialize();
-        startPeriodic(0.005);
+        //        startPeriodic(0.005);
     }
 
     @Override
     public void execute() {
         super.execute();
-        double stickY = _oi.getDriveY() * MAX_MPS;
-        double stickX = _oi.getDriveX() * MAX_MPS;
+        double stickX = _oi.getDriveY() * MAX_MPS;
+        double stickY = _oi.getDriveX() * MAX_MPS;
         double rot = _oi.getRotationX() * MAX_ANG_VEL;
         _driveTrain.drive(stickX, stickY, rot, true);
         //        Vector2d drive = new Vector2d(stickX, stickY);

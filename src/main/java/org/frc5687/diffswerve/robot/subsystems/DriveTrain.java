@@ -110,7 +110,7 @@ public class DriveTrain extends OutliersSubsystem {
         } catch (Exception e) {
             error(e.getMessage());
         }
-        _odomerty.resetPosition(new Pose2d(), getHeading());
+//        _odomerty.resetPosition(getPose(), getHeading());
     }
 
     // use for modules as controller is running at 200Hz.
@@ -295,5 +295,9 @@ public class DriveTrain extends OutliersSubsystem {
                     pose.set(update.pose);
                 });
         return pose.get();
+    }
+
+    public Pose2d getPose() {
+        return _odomerty.getPoseMeters();
     }
 }
