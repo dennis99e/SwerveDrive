@@ -8,13 +8,13 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import org.photonvision.PhotonCamera;
 
-public class GlowWorm {
+public class GloWorm {
 
     private final PhotonCamera _camera;
     private final NetworkTable _table;
     private final double[] _pose;
 
-    public GlowWorm(String camName) {
+    public GloWorm(String camName) {
         double[] defaultVal = {0, 0, 0};
         _camera = new PhotonCamera(camName);
         _table = NetworkTableInstance.getDefault().getTable("photonvision").getSubTable(camName);

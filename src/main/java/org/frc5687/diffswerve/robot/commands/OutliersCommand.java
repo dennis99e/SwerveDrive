@@ -84,6 +84,9 @@ public abstract class OutliersCommand extends CommandBase implements ILoggingSou
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
+        if (_controlLoop != null) {
+            _controlLoop.stop();
+        }
         if (_metricTracker != null) {
             _metricTracker.pause();
         }

@@ -5,6 +5,7 @@ import static org.frc5687.diffswerve.robot.Constants.DriveTrain.*;
 import static org.frc5687.diffswerve.robot.RobotMap.CAN.TALONFX.*;
 
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.HolonomicDriveController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
@@ -20,8 +21,9 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.trajectory.constraint.SwerveDriveKinematicsConstraint;
+import java.util.concurrent.atomic.AtomicReference;
 import org.frc5687.diffswerve.robot.RobotMap;
-import org.frc5687.diffswerve.robot.util.GlowWorm;
+import org.frc5687.diffswerve.robot.util.GloWorm;
 import org.frc5687.diffswerve.robot.util.OutliersContainer;
 import org.frc5687.diffswerve.robot.util.Vector2d;
 import org.frc5687.lib.T265Camera;
@@ -40,7 +42,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     private AHRS _imu;
     private T265Camera _slamCamera;
-    private GlowWorm _vision;
+    private GloWorm _vision;
 
     private HolonomicDriveController _controller;
 
@@ -49,7 +51,7 @@ public class DriveTrain extends OutliersSubsystem {
         try {
             _imu = imu;
             _slamCamera = slamCamera;
-            _vision = new GlowWorm("glowworm"); // TODO: change name of camera
+            _vision = new GloWorm("glowworm"); // TODO: change name of camera
 
             _frontRight =
                     new DiffSwerveModule(
@@ -121,13 +123,23 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void periodic() {
-        _odomerty.update(
+        //        _odomerty.update(
+        //                getHeading(),
+        //                _frontLeft.getState(),
+        //                _frontRight.getState(),
+        //                _backLeft.getState(),
+        //                _backRight.getState());
+        //        updateOdometry();
+        //        metric("estimated Pose", _poseEstimator.getEstimatedPosition().toString());
+        //        metric("slam pose", getSlamPose().toString());
+        //        SmartDashboard.putString("pose", _odomerty.getPoseMeters().toString());
+        _poseEstimator.update(
                 getHeading(),
                 _frontLeft.getState(),
                 _frontRight.getState(),
                 _backLeft.getState(),
                 _backRight.getState());
-        SmartDashboard.putString("pose", _odomerty.getPoseMeters().toString());
+        _poseEstimator.addVisionMeasurement(getSlamPose(), Timer.getFPGATimestamp());
     }
 
     public void updateOdometry() {
@@ -137,21 +149,23 @@ public class DriveTrain extends OutliersSubsystem {
                 _frontRight.getState(),
                 _backLeft.getState(),
                 _backRight.getState());
-        if (_vision.hasTarget()) {
-            _poseEstimator.setVisionMeasurementStdDevs(
-                    VISION_MEASUREMENT_STD_DEVS); // TODO change when have camera and slam
-            _poseEstimator.addVisionMeasurement(
-                    _vision.getTargetPose(), System.currentTimeMillis() - _vision.getLatency());
-        } else {
-            _poseEstimator.setVisionMeasurementStdDevs(
-                    VISION_MEASUREMENT_STD_DEVS); // TODO change when have camera and slam
-            _slamCamera.stop();
-            _slamCamera.start(
-                    (T265Camera.CameraUpdate update) -> {
-                        _poseEstimator.addVisionMeasurement(
-                                update.pose, System.currentTimeMillis());
-                    });
-        }
+        //        if (_vision.hasTarget()) {
+        //            //            _poseEstimator.setVisionMeasurementStdDevs(
+        //            //                    VISION_MEASUREMENT_STD_DEVS); // TODO change when have
+        // camera and
+        //            // slam
+        //            //            _poseEstimator.addVisionMeasurement(
+        //            //                    _vision.getTargetPose(), System.currentTimeMillis() -
+        //            // _vision.getLatency());
+        //        } else if (_slamCamera != null) {
+        //            //            _poseEstimator.setVisionMeasurementStdDevs(
+        //            //                    VISION_MEASUREMENT_STD_DEVS); // TODO change when have
+        // camera and
+        //            //            // slam
+        //            _poseEstimator.addVisionMeasurement(new Pose2d(), Timer.getFPGATimestamp());
+        //        }
+
+        //        metric("slam pose", getSlamPose().toString());
     }
 
     @Override
@@ -267,5 +281,19 @@ public class DriveTrain extends OutliersSubsystem {
         setFrontLeftModuleState(moduleStates[0]);
         setBackLeftModuleState(moduleStates[2]);
         setBackRightModuleState(moduleStates[3]);
+    }
+
+    public Pose2d getSlamPose() {
+        AtomicReference<Pose2d> pose = new AtomicReference<>(new Pose2d());
+        if (_slamCamera == null) {
+            return new Pose2d();
+        }
+        _slamCamera.stop();
+        _slamCamera.start(
+                (T265Camera.CameraUpdate update) -> {
+                    metric("slam pose", update.pose.toString());
+                    pose.set(update.pose);
+                });
+        return pose.get();
     }
 }
