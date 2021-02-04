@@ -1,32 +1,19 @@
 /* (C)2020-2021 */
 package org.frc5687.diffswerve.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.frc5687.diffswerve.robot.util.ILoggingSource;
-import org.frc5687.diffswerve.robot.util.MetricTracker;
 import org.frc5687.diffswerve.robot.util.OutliersContainer;
+import org.frc5687.diffswerve.robot.util.MetricTracker;
 import org.frc5687.diffswerve.robot.util.RioLogger;
 
 public abstract class OutliersSubsystem extends SubsystemBase implements ILoggingSource {
     private MetricTracker _metricTracker;
-    private Notifier _controlLoop;
 
     public OutliersSubsystem(OutliersContainer container) {
         container.registerSubSystem(this);
     }
-
-    public void startNotifier(double kDt) {
-        try {
-            _controlLoop = new Notifier(this::update);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        _controlLoop.startPeriodic(kDt);
-    }
-
-    public void update() {}
 
     @Override
     public void error(String message) {

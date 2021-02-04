@@ -12,275 +12,295 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Harry/.gradle/caches/modules-2/files-2.1/com.kauailabs.navx.frc/navx-java/3.1.400/3e28451a07aff388f6e3e77429e2ec61502b0201/navx-java-3.1.400.jar!/"/>
+          <root url="jar://C:/Users/dslob/.gradle/caches/modules-2/files-2.1/com.kauailabs.navx.frc/navx-java/3.1.413/26937992e7c7f05ce87e408a5e18d062942612fa/navx-java-3.1.413.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Harry/.gradle/caches/modules-2/files-2.1/com.kauailabs.navx.frc/navx-java/3.1.400/b7d2131e34c349231add5d9f3d95f084dcc3a667/navx-java-3.1.400-sources.jar!/"/>
+          <root url="jar://C:/Users/dslob/.gradle/caches/modules-2/files-2.1/com.kauailabs.navx.frc/navx-java/3.1.413/d2a7a214c1e66cc8fb8917add09a5b5f87c5839f/navx-java-3.1.413-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Harry/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibj/wpilibj-java/2020.3.2-265-g37643ab/d00e8f9862ed611289f37cfa1d5074b7cdf91312/wpilibj-java-2020.3.2-265-g37643ab.jar!/"/>
+          <root url="jar://C:/Users/dslob/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibj/wpilibj-java/2021.1.2-5-gfb99910/4a0eb4847666d65ca5ec9aaee6a03d1854a565dd/wpilibj-java-2021.1.2-5-gfb99910.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Harry/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibj/wpilibj-java/2020.3.2-265-g37643ab/1b2bba623ce72f05136f5f899b485c5a7956533a/wpilibj-java-2020.3.2-265-g37643ab-sources.jar!/"/>
+          <root url="jar://C:/Users/dslob/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibj/wpilibj-java/2021.1.2-5-gfb99910/de2b70310be3be23ac00465e29a43a9938b84b0e/wpilibj-java-2021.1.2-5-gfb99910-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Harry/.gradle/caches/modules-2/files-2.1/edu.wpi.first.ntcore/ntcore-java/2020.3.2-265-g37643ab/ea88dbb08cbe5d4661ccfb61f965f252ef60d600/ntcore-java-2020.3.2-265-g37643ab.jar!/"/>
+          <root url="jar://C:/Users/dslob/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpimath/wpimath-java/2021.1.2-5-gfb99910/212d3fd4b467312bf3d6d4763b2cde87ea08c3de/wpimath-java-2021.1.2-5-gfb99910.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Harry/.gradle/caches/modules-2/files-2.1/edu.wpi.first.ntcore/ntcore-java/2020.3.2-265-g37643ab/8a717948405048fff14efeaf6a2c39673796ba46/ntcore-java-2020.3.2-265-g37643ab-sources.jar!/"/>
+          <root url="jar://C:/Users/dslob/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpimath/wpimath-java/2021.1.2-5-gfb99910/50eadbe18e7ac331306876d77e7d965896cb8caf/wpimath-java-2021.1.2-5-gfb99910-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Harry/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpiutil/wpiutil-java/2020.3.2-265-g37643ab/98472a79053cf2061b8fa307abbf040bd2901e6c/wpiutil-java-2020.3.2-265-g37643ab.jar!/"/>
+          <root url="jar://C:/Users/dslob/.gradle/caches/modules-2/files-2.1/edu.wpi.first.ntcore/ntcore-java/2021.1.2-5-gfb99910/ea3e4159a4a74341f3c3ef3ab71d545231c877f9/ntcore-java-2021.1.2-5-gfb99910.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Harry/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpiutil/wpiutil-java/2020.3.2-265-g37643ab/ea3831af03c2e321d009cf987830ce11e1c59b04/wpiutil-java-2020.3.2-265-g37643ab-sources.jar!/"/>
+          <root url="jar://C:/Users/dslob/.gradle/caches/modules-2/files-2.1/edu.wpi.first.ntcore/ntcore-java/2021.1.2-5-gfb99910/86dee671f0bcff297cbcd03e981a6aaf79f92419/ntcore-java-2021.1.2-5-gfb99910-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/edu/wpi/first/thirdparty/frc2020/opencv/opencv-java/3.4.7-2/opencv-java-3.4.7-2.jar!/"/>
+          <root url="jar://C:/Users/dslob/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpiutil/wpiutil-java/2021.1.2-5-gfb99910/e854e12720ea8c1b82027b0c8470680593e9ee5f/wpiutil-java-2021.1.2-5-gfb99910.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/edu/wpi/first/thirdparty/frc2020/opencv/opencv-java/3.4.7-2/opencv-java-3.4.7-2-sources.jar!/"/>
+          <root url="jar://C:/Users/dslob/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpiutil/wpiutil-java/2021.1.2-5-gfb99910/741ee16b2575cee678da1443cdaa405abe6a9de/wpiutil-java-2021.1.2-5-gfb99910-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Harry/.gradle/caches/modules-2/files-2.1/edu.wpi.first.cscore/cscore-java/2020.3.2-265-g37643ab/4f09b57ce4514d269cb1d6bb572e8ceb7f2510ab/cscore-java-2020.3.2-265-g37643ab.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/edu/wpi/first/thirdparty/frc2021/opencv/opencv-java/3.4.7-5/opencv-java-3.4.7-5.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Harry/.gradle/caches/modules-2/files-2.1/edu.wpi.first.cscore/cscore-java/2020.3.2-265-g37643ab/de9598ead03a91f704dae74b311387baf96e41d9/cscore-java-2020.3.2-265-g37643ab-sources.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/edu/wpi/first/thirdparty/frc2021/opencv/opencv-java/3.4.7-5/opencv-java-3.4.7-5-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Harry/.gradle/caches/modules-2/files-2.1/edu.wpi.first.cameraserver/cameraserver-java/2020.3.2-265-g37643ab/9859ae50e2975dd9019b3a790d45d331e27e249a/cameraserver-java-2020.3.2-265-g37643ab.jar!/"/>
+          <root url="jar://C:/Users/dslob/.gradle/caches/modules-2/files-2.1/edu.wpi.first.cscore/cscore-java/2021.1.2-5-gfb99910/a5d3dabbcf796625cf263fef38a869d67e96d5ff/cscore-java-2021.1.2-5-gfb99910.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Harry/.gradle/caches/modules-2/files-2.1/edu.wpi.first.cameraserver/cameraserver-java/2020.3.2-265-g37643ab/2b6420d9f5df2d027d22de57250a88d87b47c064/cameraserver-java-2020.3.2-265-g37643ab-sources.jar!/"/>
+          <root url="jar://C:/Users/dslob/.gradle/caches/modules-2/files-2.1/edu.wpi.first.cscore/cscore-java/2021.1.2-5-gfb99910/db3f6b66fc70f134db47bf1ed813fbeb58b78f7f/cscore-java-2021.1.2-5-gfb99910-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Harry/.gradle/caches/modules-2/files-2.1/edu.wpi.first.hal/hal-java/2020.3.2-265-g37643ab/ed01c1134f083936e7962d17a989267de36b360b/hal-java-2020.3.2-265-g37643ab.jar!/"/>
+          <root url="jar://C:/Users/dslob/.gradle/caches/modules-2/files-2.1/edu.wpi.first.cameraserver/cameraserver-java/2021.1.2-5-gfb99910/1efd7d652ee970715f87c553c3a8ea326fed1223/cameraserver-java-2021.1.2-5-gfb99910.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Harry/.gradle/caches/modules-2/files-2.1/edu.wpi.first.hal/hal-java/2020.3.2-265-g37643ab/533cd219020fcba0a66c3d7b824b60457ece185d/hal-java-2020.3.2-265-g37643ab-sources.jar!/"/>
+          <root url="jar://C:/Users/dslob/.gradle/caches/modules-2/files-2.1/edu.wpi.first.cameraserver/cameraserver-java/2021.1.2-5-gfb99910/658223d2ff4378b040cf5fa3f2950acefdfccebc/cameraserver-java-2021.1.2-5-gfb99910-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-simple/0.38/ejml-simple-0.38.jar!/"/>
+          <root url="jar://C:/Users/dslob/.gradle/caches/modules-2/files-2.1/edu.wpi.first.hal/hal-java/2021.1.2-5-gfb99910/46ac4afe66a51f940ef0bf2a56d2f1cda36378ce/hal-java-2021.1.2-5-gfb99910.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-simple/0.38/ejml-simple-0.38-sources.jar!/"/>
+          <root url="jar://C:/Users/dslob/.gradle/caches/modules-2/files-2.1/edu.wpi.first.hal/hal-java/2021.1.2-5-gfb99910/819ff3165615271274a57b2f7e22bb3ccb41ad35/hal-java-2021.1.2-5-gfb99910-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/com/fasterxml/jackson/core/jackson-databind/2.10.0/jackson-databind-2.10.0.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/org/ejml/ejml-simple/0.38/ejml-simple-0.38.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/com/fasterxml/jackson/core/jackson-databind/2.10.0/jackson-databind-2.10.0-sources.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/org/ejml/ejml-simple/0.38/ejml-simple-0.38-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/com/fasterxml/jackson/core/jackson-annotations/2.10.0/jackson-annotations-2.10.0.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/com/fasterxml/jackson/core/jackson-databind/2.10.0/jackson-databind-2.10.0.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/com/fasterxml/jackson/core/jackson-annotations/2.10.0/jackson-annotations-2.10.0-sources.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/com/fasterxml/jackson/core/jackson-databind/2.10.0/jackson-databind-2.10.0-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/com/fasterxml/jackson/core/jackson-core/2.10.0/jackson-core-2.10.0.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/com/fasterxml/jackson/core/jackson-annotations/2.10.0/jackson-annotations-2.10.0.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/com/fasterxml/jackson/core/jackson-core/2.10.0/jackson-core-2.10.0-sources.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/com/fasterxml/jackson/core/jackson-annotations/2.10.0/jackson-annotations-2.10.0-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Harry/.gradle/caches/modules-2/files-2.1/com.ctre.phoenix/api-java/5.18.1/e4a8ccc80cc783d204d71c1f4d81e15ca20d5df4/api-java-5.18.1.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/com/fasterxml/jackson/core/jackson-core/2.10.0/jackson-core-2.10.0.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Harry/.gradle/caches/modules-2/files-2.1/com.ctre.phoenix/api-java/5.18.1/dc5500318fb46ebefc5c5f3543b4a913807c4bf8/api-java-5.18.1-sources.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/com/fasterxml/jackson/core/jackson-core/2.10.0/jackson-core-2.10.0-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Harry/.gradle/caches/modules-2/files-2.1/com.ctre.phoenix/wpiapi-java/5.18.1/aeadfc87951f9e9ec794deed52658b707ee8dbe9/wpiapi-java-5.18.1.jar!/"/>
+          <root url="jar://C:/Users/dslob/.gradle/caches/modules-2/files-2.1/com.ctre.phoenix/api-java/5.18.1/e4a8ccc80cc783d204d71c1f4d81e15ca20d5df4/api-java-5.18.1.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Harry/.gradle/caches/modules-2/files-2.1/com.ctre.phoenix/wpiapi-java/5.18.1/69d27ddab29f8c1b67073d723ba811d7b58f4108/wpiapi-java-5.18.1-sources.jar!/"/>
+          <root url="jar://C:/Users/dslob/.gradle/caches/modules-2/files-2.1/com.ctre.phoenix/api-java/5.18.1/dc5500318fb46ebefc5c5f3543b4a913807c4bf8/api-java-5.18.1-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Harry/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibNewCommands/wpilibNewCommands-java/2020.3.2-265-g37643ab/212e362b67e842c51743ed9f4f8e23562beb43d1/wpilibNewCommands-java-2020.3.2-265-g37643ab.jar!/"/>
+          <root url="jar://C:/Users/dslob/.gradle/caches/modules-2/files-2.1/com.ctre.phoenix/wpiapi-java/5.18.1/aeadfc87951f9e9ec794deed52658b707ee8dbe9/wpiapi-java-5.18.1.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Harry/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibNewCommands/wpilibNewCommands-java/2020.3.2-265-g37643ab/cb2aa8a5acd0cd96ed438820837ee9d041228c64/wpilibNewCommands-java-2020.3.2-265-g37643ab-sources.jar!/"/>
+          <root url="jar://C:/Users/dslob/.gradle/caches/modules-2/files-2.1/com.ctre.phoenix/wpiapi-java/5.18.1/69d27ddab29f8c1b67073d723ba811d7b58f4108/wpiapi-java-5.18.1-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Harry/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpimath/wpimath-java/2020.3.2-265-g37643ab/3d7ae90d5776f0da61ec59bf071288aca6c19e16/wpimath-java-2020.3.2-265-g37643ab.jar!/"/>
+          <root url="jar://C:/Users/dslob/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibNewCommands/wpilibNewCommands-java/2021.1.2-5-gfb99910/1e2a2bd7db9975a11d0f8910ae25150b48d51650/wpilibNewCommands-java-2021.1.2-5-gfb99910.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Harry/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpimath/wpimath-java/2020.3.2-265-g37643ab/11a92f7dfba9aae138737944d00e1cb23672f2d4/wpimath-java-2020.3.2-265-g37643ab-sources.jar!/"/>
+          <root url="jar://C:/Users/dslob/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibNewCommands/wpilibNewCommands-java/2021.1.2-5-gfb99910/fc3e58d4601f99eabe3e9c3a34f90886d0f64bd4/wpilibNewCommands-java-2021.1.2-5-gfb99910-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-fdense/0.38/ejml-fdense-0.38.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/org/ejml/ejml-fdense/0.38/ejml-fdense-0.38.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-fdense/0.38/ejml-fdense-0.38-sources.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/org/ejml/ejml-fdense/0.38/ejml-fdense-0.38-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-dsparse/0.38/ejml-dsparse-0.38.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/org/ejml/ejml-dsparse/0.38/ejml-dsparse-0.38.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-dsparse/0.38/ejml-dsparse-0.38-sources.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/org/ejml/ejml-dsparse/0.38/ejml-dsparse-0.38-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-ddense/0.38/ejml-ddense-0.38.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/org/ejml/ejml-ddense/0.38/ejml-ddense-0.38.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-ddense/0.38/ejml-ddense-0.38-sources.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/org/ejml/ejml-ddense/0.38/ejml-ddense-0.38-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-cdense/0.38/ejml-cdense-0.38.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/org/ejml/ejml-cdense/0.38/ejml-cdense-0.38.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-cdense/0.38/ejml-cdense-0.38-sources.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/org/ejml/ejml-cdense/0.38/ejml-cdense-0.38-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-zdense/0.38/ejml-zdense-0.38.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/org/ejml/ejml-zdense/0.38/ejml-zdense-0.38.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-zdense/0.38/ejml-zdense-0.38-sources.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/org/ejml/ejml-zdense/0.38/ejml-zdense-0.38-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-core/0.38/ejml-core-0.38.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/org/ejml/ejml-core/0.38/ejml-core-0.38.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-core/0.38/ejml-core-0.38-sources.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/org/ejml/ejml-core/0.38/ejml-core-0.38-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2-sources.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/dslob/.gradle/caches/modules-2/files-2.1/edu.wpi.first.thirdparty.frc2020.opencv/opencv-java/3.4.7-2/567376dfff9299972841aa5bf84116dacb931016/opencv-java-3.4.7-2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/dslob/.gradle/caches/modules-2/files-2.1/edu.wpi.first.thirdparty.frc2020.opencv/opencv-java/3.4.7-2/9b91344d286110ed348652e12d3b6bc2df38c748/opencv-java-3.4.7-2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/unresolved dependency - org.photonvision.lib PhotonLib-java 2020.0.11"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/junit/junit/4.12/junit-4.12.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/junit/junit/4.12/junit-4.12-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/junit/junit/4.12/junit-4.12.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/junit/junit/4.12/junit-4.12-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3-sources.jar!/"/>
+          <root url="jar://C:/Users/Public/wpilib/2021/maven/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>

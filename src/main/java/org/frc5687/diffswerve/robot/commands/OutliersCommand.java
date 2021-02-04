@@ -1,7 +1,6 @@
 /* (C)2020-2021 */
 package org.frc5687.diffswerve.robot.commands;
 
-import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import org.frc5687.diffswerve.robot.util.ILoggingSource;
@@ -10,7 +9,6 @@ import org.frc5687.diffswerve.robot.util.RioLogger;
 
 public abstract class OutliersCommand extends CommandBase implements ILoggingSource {
     private MetricTracker _metricTracker;
-    private Notifier _controlLoop;
 
     public OutliersCommand() {}
 
@@ -62,15 +60,6 @@ public abstract class OutliersCommand extends CommandBase implements ILoggingSou
     protected void logMetrics(String... metrics) {
         _metricTracker = MetricTracker.createMetricTracker(getClass().getSimpleName(), metrics);
         _metricTracker.pause();
-    }
-
-    protected void startPeriodic(double kDt) {
-        try {
-            _controlLoop = new Notifier(this::execute);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        _controlLoop.startPeriodic(kDt);
     }
 
     @Override

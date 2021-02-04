@@ -1,16 +1,16 @@
 /* (C)2020-2021 */
 package org.frc5687.diffswerve.robot.commands;
 
+import org.frc5687.diffswerve.robot.Constants;
 import org.frc5687.diffswerve.robot.OI;
 import org.frc5687.diffswerve.robot.subsystems.DriveTrain;
-import org.frc5687.diffswerve.robot.util.Vector2d;
 
-public class DriveSwerveModule extends OutliersCommand {
+public class Drive extends OutliersCommand {
 
     private DriveTrain _driveTrain;
     private OI _oi;
 
-    public DriveSwerveModule(DriveTrain driveTrain, OI oi) {
+    public Drive(DriveTrain driveTrain, OI oi) {
         _driveTrain = driveTrain;
         _oi = oi;
         addRequirements(_driveTrain);
@@ -19,19 +19,15 @@ public class DriveSwerveModule extends OutliersCommand {
     @Override
     public void initialize() {
         super.initialize();
-        startPeriodic(0.005);
     }
 
     @Override
     public void execute() {
         super.execute();
-        double stickY = _oi.getDriveY();
-        double stickX = _oi.getDriveX();
-        Vector2d drive = new Vector2d(stickX, stickY);
-        metric("Drive Magnitude", drive.getMagnitude());
-        metric("Drive Angle", drive.getAngle());
-        _driveTrain.setBottomLeftModuleVector(drive);
-        _driveTrain.setFrontRightModuleVector(drive);
+        double stickX = _oi.getDriveY() * Constants.DriveTrain.MAX_MPS;
+        double stickY = _oi.getDriveX() * Constants.DriveTrain.MAX_MPS;
+        double rot = _oi.getRotationX() * Constants.DriveTrain.MAX_ANG_VEL;
+        _driveTrain.drive(stickX, stickY, rot, false);
     }
 
     @Override

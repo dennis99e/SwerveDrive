@@ -1,10 +1,10 @@
+/* (C)2021 */
 package org.frc5687.diffswerve.robot.util;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.frc5687.diffswerve.robot.subsystems.OutliersSubsystem;
-
 import java.util.LinkedList;
 import java.util.List;
+import org.frc5687.diffswerve.robot.subsystems.OutliersSubsystem;
 
 public abstract class OutliersContainer implements ILoggingSource {
     private List<OutliersSubsystem> _subsystems = new LinkedList<OutliersSubsystem>();
@@ -70,14 +70,17 @@ public abstract class OutliersContainer implements ILoggingSource {
         _subsystems.forEach((ss) -> ss.updateDashboard());
     }
 
-    public void disabledPeriodic() { };
+    public void disabledPeriodic() {}
+    ;
 
-    public void disabledInit() { };
+    public void disabledInit() {}
+    ;
 
-    public void teleopInit() { };
+    public void teleopInit() {}
+    ;
 
-    public void autonomousInit() {};
-
+    public void autonomousInit() {}
+    ;
 
     public enum IdentityMode {
         competition(0),
@@ -98,5 +101,4 @@ public abstract class OutliersContainer implements ILoggingSource {
     public IdentityMode getIdentityMode() {
         return _identityMode;
     }
-
 }

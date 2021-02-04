@@ -2,7 +2,6 @@
 package org.frc5687.diffswerve.robot.commands;
 
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
-import edu.wpi.first.wpiutil.math.numbers.*;
 import org.frc5687.diffswerve.robot.subsystems.DriveTrain;
 
 public class SetModuleReference extends OutliersCommand {
@@ -13,7 +12,6 @@ public class SetModuleReference extends OutliersCommand {
     public SetModuleReference(DriveTrain driveTrain, SwerveModuleState state) {
         _driveTrain = driveTrain;
         _state = state;
-        startPeriodic(0.05);
     }
 
     @Override

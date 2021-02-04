@@ -11,8 +11,11 @@ import java.util.function.Consumer;
 import org.frc5687.diffswerve.robot.util.OutliersProxy;
 
 /**
- * Provides a convenient Java interface to the Intel RealSense T265 V-SLAM camera. Only the subset
- * of the librealsense that is useful to robot tracking is exposed in this class.
+ * Original at
+ * https://github.com/Spartronics4915/SpartronicsLib/blob/master/src/main/java/com/spartronics4915/lib/hardware/sensors/T265Camera.java
+ * Many thanks to Declan from team 4915! Provides a convenient Java interface to the Intel RealSense
+ * T265 V-SLAM camera. Only the subset of the librealsense that is useful to robot tracking is
+ * exposed in this class.
  *
  * <p>We employ JNI to call librealsense. There <i>are</i> Java bindings for librealsense, but they
  * are not complete and do not support our usecase.
@@ -131,7 +134,7 @@ public class T265Camera extends OutliersProxy {
         mIsStarted = true;
     }
 
-    /** This allows the callback to receivez data, but it does not internally stop the camera. */
+    /** This allows the callback to receive data, but it does not internally stop the camera. */
     public synchronized void stop() {
         mIsStarted = false;
     }

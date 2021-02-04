@@ -1,7 +1,7 @@
+/* (C)2021 */
 package org.frc5687.diffswerve.robot.util;
 
 import edu.wpi.first.wpilibj.DriverStation;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,12 +10,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-//Imported from RobotCasserole2017
+// Imported from RobotCasserole2017
 public class RioLogger {
     private static RioLogger _instance;
 
     public static RioLogger getInstance() {
-        if (_instance==null) {
+        if (_instance == null) {
             _instance = new RioLogger();
         }
         return _instance;
@@ -24,18 +24,34 @@ public class RioLogger {
     public static void warn(String source, String message) {
         log(LogLevel.warn, source, message);
     }
-    public static void error(String source, String message) { log(LogLevel.error, source, message); }
+
+    public static void error(String source, String message) {
+        log(LogLevel.error, source, message);
+    }
+
     public static void debug(String source, String message) {
         log(LogLevel.debug, source, message);
     }
+
     public static void info(String source, String message) {
         log(LogLevel.info, source, message);
     }
 
-    public static void warn(Object source, String message) { warn(source.getClass().getSimpleName(), message); }
-    public static void error(Object source, String message) { error(source.getClass().getSimpleName(), message); }
-    public static void debug(Object source, String message) { debug(source.getClass().getSimpleName(), message); }
-    public static void info(Object source, String message) { info(source.getClass().getSimpleName(), message); }
+    public static void warn(Object source, String message) {
+        warn(source.getClass().getSimpleName(), message);
+    }
+
+    public static void error(Object source, String message) {
+        error(source.getClass().getSimpleName(), message);
+    }
+
+    public static void debug(Object source, String message) {
+        debug(source.getClass().getSimpleName(), message);
+    }
+
+    public static void info(Object source, String message) {
+        info(source.getClass().getSimpleName(), message);
+    }
 
     public static void log(LogLevel level, String source, String message) {
         getInstance().logint(level, source, message);
@@ -69,7 +85,10 @@ public class RioLogger {
             log_name = output_dir + "log_" + getDateTimeString() + ".txt";
             // Open File
             FileWriter fstream = new FileWriter(log_name, true);
-            log_file = new BufferedWriter(fstream);  // 8K by default. Probably big enough but size is 2nd arg if not.
+            log_file =
+                    new BufferedWriter(
+                            fstream); // 8K by default. Probably big enough but size is 2nd arg if
+            // not.
             // End of line
             log_file.write("\n\r");
             log_open = true;
@@ -80,7 +99,7 @@ public class RioLogger {
             System.out.println("Error initializing log file: " + e.getMessage());
             return -1;
         }
-        
+
         log_open = true;
 
         return 0;
@@ -96,7 +115,7 @@ public class RioLogger {
         if (level.getValue() >= _dsLogLevel.getValue()) {
             DriverStation.reportError(level.toString() + "\t" + source + "\t" + message, false);
         }
-        if (_fileLogLevel== LogLevel.none) {
+        if (_fileLogLevel == LogLevel.none) {
             return;
         }
 
@@ -135,8 +154,6 @@ public class RioLogger {
         return 0;
     }
 
-
-
     /**
      * Clears the buffer in memory and forces things to file. Generally a good idea to use this as
      * infrequently as possible (because it increases logging overhead), but definitely use it
@@ -160,10 +177,7 @@ public class RioLogger {
         }
 
         return 0;
-
     }
-
-
 
     /**
      * Closes the log file and ensures everything is written to disk. init() must be called again in
@@ -206,8 +220,5 @@ public class RioLogger {
         public int getValue() {
             return _value;
         }
-
     }
-
 }
-

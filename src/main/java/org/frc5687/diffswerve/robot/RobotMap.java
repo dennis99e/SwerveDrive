@@ -47,8 +47,10 @@ public class RobotMap {
      * for Analog only one device can connect to each port, so the numbers should be unique.
      */
     public static class Analog {
-        public static final AnalogInput ENCODER_FR = new AnalogInput(0);
-        public static final AnalogInput ENCODER_BL = new AnalogInput(3);
+        public static final AnalogInput ENCODER_FR = new AnalogInput(2);
+        public static final AnalogInput ENCODER_FL = new AnalogInput(1);
+        public static final AnalogInput ENCODER_BR = new AnalogInput(3);
+        public static final AnalogInput ENCODER_BL = new AnalogInput(0);
     }
 
     /**
