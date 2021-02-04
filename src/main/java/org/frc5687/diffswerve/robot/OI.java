@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.ArrayList;
@@ -37,17 +38,17 @@ public class OI extends OutliersProxy {
         _driverXButton = new JoystickButton(_driverGamepad, Gamepad.Buttons.X.getNumber());
     }
 
-    public void initializeButtons(DriveTrain driveTrain) {
+    public void initializeButtons(DriveTrain driveTrain, Trajectory trajectory) {
         var waypoints = new ArrayList<Translation2d>();
         waypoints.add(new Translation2d(1, -1));
         //                waypoints.add(new Translation2d(2, 0));
         _driverAButton.whenPressed(
                 new DriveTrajectory(
                         driveTrain,
-                        driveTrain.getPose(),
+                        driveTrain.getOdometryPose(),
                         waypoints,
                         new Pose2d(0, 0, new Rotation2d(0))));
-        //        _driverAButton.whenPressed(null);
+        _driverBButton.whenPressed(new DriveTrajectory(driveTrain, trajectory));
         //        _driverBButton.whenPressed(null);
         //        _driverXButton.whenPressed(null);
     }

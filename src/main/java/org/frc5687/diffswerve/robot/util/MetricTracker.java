@@ -1,7 +1,7 @@
+/* (C)2021 */
 package org.frc5687.diffswerve.robot.util;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -31,13 +31,17 @@ public class MetricTracker {
 
     private String _instrumentedClassName;
     /**
-     * MetricsTracker factory method - Creates a new Metrics Tracker and registers the associated object with a list
-     * of metrics so they can all be flushed to SD by calling the static flushAll method.
-     * @param instrumentedClassName name of the class being measured - used to generate the metric file name.
-     * @param metrics list of the metric names to track.  Other metrics will be ignored.
+     * MetricsTracker factory method - Creates a new Metrics Tracker and registers the associated
+     * object with a list of metrics so they can all be flushed to SD by calling the static flushAll
+     * method.
+     *
+     * @param instrumentedClassName name of the class being measured - used to generate the metric
+     *     file name.
+     * @param metrics list of the metric names to track. Other metrics will be ignored.
      * @return a fresh new MetricTracker.
      */
-    public static MetricTracker createMetricTracker(String instrumentedClassName, String... metrics) {
+    public static MetricTracker createMetricTracker(
+            String instrumentedClassName, String... metrics) {
         if (_allMetricsTrackers.containsKey(instrumentedClassName)) {
             return _allMetricsTrackers.get(instrumentedClassName);
         }
@@ -50,8 +54,10 @@ public class MetricTracker {
 
     /**
      * Shorthand version of the ctor
-     * @param instrumentedObject name of the class being measured - used to generate the metric file name.
-     * @param metrics list of the metric names to track.  Other metrics will be ignored.
+     *
+     * @param instrumentedObject name of the class being measured - used to generate the metric file
+     *     name.
+     * @param metrics list of the metric names to track. Other metrics will be ignored.
      * @return a fresh new MetricTracker.
      */
     public static MetricTracker createMetricTracker(Object instrumentedObject, String... metrics) {
@@ -59,7 +65,8 @@ public class MetricTracker {
     }
 
     /**
-     * Starts a new row for all instrumented objects. This is called by robotPeriodic once per cycle.
+     * Starts a new row for all instrumented objects. This is called by robotPeriodic once per
+     * cycle.
      */
     public static void newMetricRowAll() {
         for (MetricTracker metricTracker : MetricTracker._allMetricsTrackers.values()) {
@@ -77,11 +84,12 @@ public class MetricTracker {
         }
     }
 
-
     /**
      * Private ctor. Call createMetricsTracker.
-     * @param instrumentedClassName The name of the instrumented class. This is used to name the output file.
-     * @param metrics list of the metric names to track.  Other metrics will be ignored.
+     *
+     * @param instrumentedClassName The name of the instrumented class. This is used to name the
+     *     output file.
+     * @param metrics list of the metric names to track. Other metrics will be ignored.
      */
     private MetricTracker(String instrumentedClassName, String... metrics) {
         _instrumentedClassName = instrumentedClassName;
@@ -98,8 +106,8 @@ public class MetricTracker {
         }
 
         _metricBuffer = new Object[BUFFER_LENGTH][_metricCount + 1];
-        _in=0;
-        _out=0;
+        _in = 0;
+        _out = 0;
 
         // Don't use the c'tor. Use createMetricTracker.
         String outputDir = "/U/"; // USB drive is symlinked to /U on roboRIO
@@ -117,24 +125,30 @@ public class MetricTracker {
         }
     }
 
-
     /**
      * Adds a metric (name,value) pair to this row of metrics
+     *
      * @param name
      * @param value
      */
     public void put(String name, Object value) {
         // If this tracker is paused, just return.
-        if (_paused) { return; }
+        if (_paused) {
+            return;
+        }
 
         // If our buffer is full, don't try to write to it
-        if (_bufferOverflowed) { return; }
+        if (_bufferOverflowed) {
+            return;
+        }
 
         // Find the metric index
         int index = _metrics.getOrDefault(name, -1);
 
         // If not found, exit (ie, this metric isn't flagged for logging)
-        if (index<0) { return; }
+        if (index < 0) {
+            return;
+        }
 
         int row = -1;
         synchronized (this) {
@@ -142,25 +156,25 @@ public class MetricTracker {
         }
         // Record the metric (the +1 is because the first column is the timestamp)
         _metricBuffer[row][index + 1] = value;
-
     }
 
     /**
-     * Pause collection of metrics by this tracker.  This does NOT prevent writing already-buffered metrics to the file!
+     * Pause collection of metrics by this tracker. This does NOT prevent writing already-buffered
+     * metrics to the file!
      */
     public void pause() {
         _paused = true;
     }
 
     /**
-     * Resume collection of metrics by this tracker.  This does NOT prevent writing already-buffered metrics to the file!
+     * Resume collection of metrics by this tracker. This does NOT prevent writing already-buffered
+     * metrics to the file!
      */
     public void resume() {
         if (SmartDashboard.getBoolean("MetricTracker/" + _instrumentedClassName, false)) {
             _paused = false;
         }
     }
-
 
     public void enable() {
         SmartDashboard.putBoolean("MetricTracker/" + _instrumentedClassName, true);
@@ -171,8 +185,8 @@ public class MetricTracker {
     }
 
     /**
-     * Starts a new row of metrics. You'd call this, e.g., once per tick.  Normally this is called from the static
-     * newMetricRowAll method, so there's no need to call it directly.
+     * Starts a new row of metrics. You'd call this, e.g., once per tick. Normally this is called
+     * from the static newMetricRowAll method, so there's no need to call it directly.
      */
     protected void newMetricRow() {
         if (!_streamOpen || _paused) {
@@ -180,7 +194,7 @@ public class MetricTracker {
         }
         // Synchronized for threadsafety
         synchronized (this) {
-            if (_out==_in+1 || (_out==0 && _in==BUFFER_LENGTH-1)) {
+            if (_out == _in + 1 || (_out == 0 && _in == BUFFER_LENGTH - 1)) {
                 // Buffer overflow...we can't log any new metrics until the writer catches up!
                 _bufferOverflowed = true;
                 return;
@@ -191,34 +205,37 @@ public class MetricTracker {
             }
             _bufferOverflowed = false;
         }
-        _metricBuffer[_in][0]=System.currentTimeMillis();
-        for (int index = 0; index<_metricCount; index++) {
-            _metricBuffer[_in][index+1]=null;
+        _metricBuffer[_in][0] = System.currentTimeMillis();
+        for (int index = 0; index < _metricCount; index++) {
+            _metricBuffer[_in][index + 1] = null;
         }
     }
 
     /**
-     * Helper function to determine in a threadsafe way whether there are rows to write.
-     * We know we've written all the rows when _out reaches _in.
+     * Helper function to determine in a threadsafe way whether there are rows to write. We know
+     * we've written all the rows when _out reaches _in.
+     *
      * @return
      */
     private boolean hasUnwrittenRows() {
         synchronized (this) {
-            return _out!=_in;
+            return _out != _in;
         }
     }
 
-    /**
-     * Flushes the buffer of stats for an instance of a metrics tracker to perm storage.
-     */
+    /** Flushes the buffer of stats for an instance of a metrics tracker to perm storage. */
     protected void flushMetricsTracker() {
-        if (_bufferedWriter==null) { return; }
+        if (_bufferedWriter == null) {
+            return;
+        }
         // Keep writing rows as long at there are rows left to write...
-        while(hasUnwrittenRows()) {
+        while (hasUnwrittenRows()) {
             writeMetricRow(_out);
             synchronized (this) {
                 _out++;
-                if (_out>=BUFFER_LENGTH) { _out = 0; }
+                if (_out >= BUFFER_LENGTH) {
+                    _out = 0;
+                }
             }
         }
 
@@ -229,15 +246,17 @@ public class MetricTracker {
         }
     }
 
-    /**
-     * Formats a row of metrics as a comma-delimited quoted string.
-     */
+    /** Formats a row of metrics as a comma-delimited quoted string. */
     private void writeMetricRow(int row) {
-        if (_bufferedWriter==null) { return; }
+        if (_bufferedWriter == null) {
+            return;
+        }
         try {
-            for (int i=0; i<=_metricCount;i++) {
-                if (i>0) {_bufferedWriter.write(","); }
-                if (_metricBuffer[row][i]!=null) {
+            for (int i = 0; i <= _metricCount; i++) {
+                if (i > 0) {
+                    _bufferedWriter.write(",");
+                }
+                if (_metricBuffer[row][i] != null) {
                     _bufferedWriter.write(_metricBuffer[row][i].toString());
                 }
             }
@@ -249,6 +268,7 @@ public class MetricTracker {
 
     /**
      * Creates a timestamp to include in the log file name.
+     *
      * @return Formatted timestamp
      */
     private String getDateTimeString() {

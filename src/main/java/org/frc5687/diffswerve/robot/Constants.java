@@ -24,8 +24,8 @@ public class Constants {
 
         public static final double T265_MEASUREMENT_COVARIANCE = 0.5;
 
-        public static final double WIDTH = 0.31115; // TODO: Figure out which units to use.
-        public static final double LENGTH = 0.31115; // TODO: Figure out which units to use.
+        public static final double WIDTH = 0.6223;
+        public static final double LENGTH = 0.6223;
         public static final Translation2d FRONT_LEFT_POSITION =
                 new Translation2d(WIDTH / 2.0, LENGTH / 2.0);
         public static final Translation2d FRONT_RIGHT_POSITION =
@@ -48,10 +48,10 @@ public class Constants {
         public static final Matrix<N3, N1> VISION_MEASUREMENT_STD_DEVS =
                 VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(20));
 
-        public static final double DEADBAND = 0.1;
-        //        public static final double MAX_MPS = 5.1816;
-        public static final double MAX_MPS = 3.0;
-        public static final double MAX_ANG_VEL = Math.PI * 4.0;
+        public static final double DEADBAND = 0.08;
+        public static final double MAX_MPS = 5.1816;
+        //        public static final double MAX_MPS = 1.0;
+        public static final double MAX_ANG_VEL = Math.PI * 2.0;
         public static final double MAX_MPSS = 1.7; // accel
 
         public static final double kP = 2.5;
@@ -63,6 +63,8 @@ public class Constants {
 
     public static class DifferentialSwerveModule {
 
+        public static final double kDt = 0.005;
+        public static final int TIMEOUT = 200;
         public static final double GEAR_RATIO_WHEEL = 6.46875;
         public static final double GEAR_RATIO_STEER = 11.5;
         public static final double FALCON_RATE = 600.0;
@@ -74,7 +76,7 @@ public class Constants {
         // Create Parameters for DiffSwerve State Space
         public static final double INERTIA_WHEEL = 0.007;
         public static final double INERTIA_STEER = 0.007;
-        public static final double Q_AZIMUTH_ANG_VELOCITY = 0.5; // radians per sec
+        public static final double Q_AZIMUTH_ANG_VELOCITY = 0.2; // radians per sec
         public static final double Q_AZIMUTH = 0.02; // radians
         public static final double Q_WHEEL_ANG_VELOCITY = 3; // radians per sec
         public static final double MODEL_AZIMUTH_ANGLE_NOISE = 1.718873; // degrees

@@ -1,3 +1,4 @@
+/* (C)2021 */
 package org.frc5687.diffswerve.robot.util;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -41,5 +42,4 @@ public abstract class OutliersRobot extends TimedRobot implements ILoggingSource
     public void debug(String message) {
         RioLogger.debug(this, message);
     }
-
 }
